@@ -16,3 +16,10 @@ El desarrollo se rige bajo estándares rigurosos de ingeniería de sistemas:
 2. **Análisis Funcional:** Definición de historias de usuario y flujos operativos.
 3. **Desarrollo Progresivo:** Construcción iterativa de módulos funcionales.
 4. **Validación y Cierre:** Pruebas con usuarios y consolidación de documentación técnica.
+## 🛠️ Instalación y Configuración del Entorno
+Este proyecto utiliza una arquitectura de microservicios contenedorizada para garantizar la escalabilidad y la integridad de los datos de economía circular.
+### Requisitos Previos
+* **Docker & Docker Compose:** (Versión 20.10+ recomendada)
+* **Python:** 3.10+ (Para desarrollo local del Backend)
+* **Node.js & NPM:** v18+ (Para desarrollo local del Frontend)
+* **Angular CLI:** v16+
