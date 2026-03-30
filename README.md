@@ -23,3 +23,14 @@ Este proyecto utiliza una arquitectura de microservicios contenedorizada para ga
 * **Python:** 3.10+ (Para desarrollo local del Backend)
 * **Node.js & NPM:** v18+ (Para desarrollo local del Frontend)
 * **Angular CLI:** v16+
+## 🌿 Estructura de Ramas (Workflow)
+Para mantener la trazabilidad y calidad exigida, el repositorio sigue esta estructura de ramas:
+* **`main`**: Contiene el código en producción, estable y validado por la Gerencia de Sostenibilidad.
+* **`develop`**: Rama de integración donde se consolidan las funcionalidades terminadas de cada Sprint.
+* **`feature/`**: Ramas temporales para el desarrollo de historias de usuario específicas (ej. `feature/modulo-raee`, `feature/auth-angular`).
+* **`hotfix/`**: Ramas para correcciones críticas e inmediatas en el entorno de producción.
+* **`release/`**: Ramas de preparación para la entrega final de cada incremento de software.
+### Reglas de Contribución
+1. Toda nueva funcionalidad debe nacer de `develop`.
+2. Se requiere un **Pull Request (PR)** para integrar cambios a `develop`.
+3. El código debe pasar las pruebas unitarias antes de ser fusionado.
