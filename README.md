@@ -34,3 +34,75 @@ Para mantener la trazabilidad y calidad exigida, el repositorio sigue esta estru
 1. Toda nueva funcionalidad debe nacer de `develop`.
 2. Se requiere un **Pull Request (PR)** para integrar cambios a `develop`.
 3. El código debe pasar las pruebas unitarias antes de ser fusionado.
+## 💻 Guía de Comandos Técnicos
+### Ciclo de Desarrollo de Funcionalidades
+```bash
+# 1. Asegurar sincronización con la integración actual
+git checkout develop
+git pull origin develop
+
+# 2. Crear rama técnica para la Historia de Usuario
+git checkout -b feature/diagnostico-procesos-rep
+
+# 3. Commits atómicos con referencia técnica
+git add .
+git commit -m "feat: implementar esquema de validación"
+git push origin feature/diagnostico-procesos-rep
+```
+### Finalización de Sprint e Incremento (Release)
+```bash
+# 1. Crear rama de preparación para revisión (Sprint Review)
+git checkout develop
+git checkout -b release/v1.0.0-sprint1
+
+# 2. Una vez validado por el Product Owner (Gerencia), fusionar a producción
+git checkout main
+git merge release/v1.0.0-sprint1
+git tag -a v1.0.0 -m "Entrega formal: Módulo de Gestión de Envases"
+git push origin main --tags
+
+# 3. Sincronizar develop y limpiar
+git checkout develop
+git merge main
+git branch -d release/v1.0.0-sprint1
+```
+### Gestión de Errores Críticos (Hotfix)
+```bash
+# 1. Ramificar desde el estado actual de producción
+git checkout main
+git checkout -b hotfix/error-integridad-datos
+
+# 2. Aplicar parche técnico y fusionar a ambas ramas principales
+git commit -am "fix: corrección en el cálculo de metas de recolección"
+git checkout main
+git merge hotfix/error-integridad-datos
+git checkout develop
+git merge hotfix/error-integridad-datos
+```
+## 📂 Estructura del Proyecto
+
+A continuación se detalla la organización de los directorios del repositorio, estructurados para soportar el desarrollo progresivo y la integración continua del sistema:
+
+```text
+.
+├── 📁 backend/                 # API REST desarrollada en Python
+│   ├── 📁 app/                 # Lógica de negocio y rutas
+│   ├── 📁 tests/               # Pruebas unitarias e integración (ISO 29119)
+│   ├── requirements.txt        # Dependencias de Python
+│   └── Dockerfile              # Configuración de imagen para el Backend
+├── 📁 frontend/                # Aplicación Web en Angular
+│   ├── 📁 src/                 # Componentes, servicios y modelos REP
+│   ├── 📁 e2e/                 # Pruebas de extremo a extremo
+│   ├── angular.json            # Configuración del Framework
+│   └── Dockerfile              # Configuración de imagen para el Frontend
+├── 📁 database/                # Persistencia de datos
+│   └── 📁 migrations/          # Scripts de esquema para PostgreSQL
+├── 📁 docs/                    # Transferencia de conocimiento institucional [cite: 29]
+│   ├── 📁 diagnostico/         # Caracterización de procesos operativos [cite: 67]
+│   ├── 📁 analisis/            # Historias de usuario y requerimientos [cite: 68]
+│   ├── 📁 diseño/              # Arquitectura y diagramas de interacción [cite: 69]
+│   └── 📁 entrega/             # Manuales y documentación de validación [cite: 71]
+├── .github/                    # Automatización y plantillas (PR Template)
+├── .gitignore                  # Exclusión de archivos para Git
+├── docker-compose.yml          # Orquestación de servicios (Front, Back, DB)
+└── README.md                   # Documentación principal del proyecto
