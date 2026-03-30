@@ -87,7 +87,7 @@ A continuación se detalla la organización de los directorios del repositorio, 
 .
 ├── 📁 backend/                 # API REST desarrollada en Python
 │   ├── 📁 app/                 # Lógica de negocio y rutas
-│   ├── 📁 tests/               # Pruebas unitarias e integración (ISO 29119)
+│   ├── 📁 tests/               # Pruebas unitarias e integración 
 │   ├── requirements.txt        # Dependencias de Python
 │   └── Dockerfile              # Configuración de imagen para el Backend
 ├── 📁 frontend/                # Aplicación Web en Angular
@@ -97,11 +97,11 @@ A continuación se detalla la organización de los directorios del repositorio, 
 │   └── Dockerfile              # Configuración de imagen para el Frontend
 ├── 📁 database/                # Persistencia de datos
 │   └── 📁 migrations/          # Scripts de esquema para PostgreSQL
-├── 📁 docs/                    # Transferencia de conocimiento institucional [cite: 29]
-│   ├── 📁 diagnostico/         # Caracterización de procesos operativos [cite: 67]
-│   ├── 📁 analisis/            # Historias de usuario y requerimientos [cite: 68]
-│   ├── 📁 diseño/              # Arquitectura y diagramas de interacción [cite: 69]
-│   └── 📁 entrega/             # Manuales y documentación de validación [cite: 71]
+├── 📁 docs/                    # Transferencia de conocimiento institucional 
+│   ├── 📁 diagnostico/         # Caracterización de procesos operativos 
+│   ├── 📁 analisis/            # Historias de usuario y requerimientos 
+│   ├── 📁 diseño/              # Arquitectura y diagramas de interacción 
+│   └── 📁 entrega/             # Manuales y documentación de validación 
 ├── .github/                    # Automatización y plantillas (PR Template)
 ├── .gitignore                  # Exclusión de archivos para Git
 ├── docker-compose.yml          # Orquestación de servicios (Front, Back, DB)
