@@ -1,0 +1,1632 @@
+/*
+Template Name: Velzon - Admin & Dashboard Template
+Author: Themesbrand
+Website: https://themesbrand.com/
+Contact: support@themesbrand.com
+File: Custom Css File
+*/
+
+// ng-select (disabled — no instalado en M0)
+// @import "@ng-select/ng-select/themes/default.theme.css";
+
+// flatpickr base CSS (disabled — no instalado en M0)
+// @import "flatpickr/dist/flatpickr.min.css";
+
+// Lightbox (disabled for M0 — install ngx-lightbox when needed)
+// @import "ngx-lightbox/lightbox.css";
+
+
+.emoji-mart {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+}
+
+.emoji-mart-preview {
+  display: none;
+}
+
+// Icons Sizes
+.icon-xs {
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.icon-sm {
+  height: 18px !important;
+  width: 18px !important;
+}
+
+.icon-md {
+  height: 22px !important;
+  width: 22px !important;
+}
+
+.icon-lg {
+  height: 24px !important;
+  width: 24px !important;
+}
+
+.icon-xl {
+  height: 28px !important;
+  width: 28px !important;
+}
+
+.icon-xxl {
+  height: 32px !important;
+  width: 32px !important;
+}
+
+.feather-icon-align {
+  svg {
+    vertical-align: top;
+  }
+}
+
+.close {
+  box-sizing: content-box;
+  width: $btn-close-width;
+  height: $btn-close-height;
+  padding: $btn-close-padding-y $btn-close-padding-x;
+  color: $btn-close-color;
+  background: transparent escape-svg($btn-close-bg) center / $btn-close-width auto no-repeat; // include transparent for button elements
+  border: 0; // for button elements
+  @include border-radius();
+  opacity: $btn-close-opacity;
+  margin-right: $toast-padding-x * -.5;
+  margin-left: $toast-padding-x !important;
+
+  span {
+    display: none;
+  }
+}
+
+.list-group-flush .list-group-item {
+  border-width: 0 0 1px
+}
+
+// LeafLet Chart (disabled for M0 — install leaflet when needed)
+// @import 'leaflet/dist/leaflet.css';
+
+// topbar
+
+#page-topbar {
+  .navbar-header {
+    .header-item {
+      .dropdown-toggle:after {
+        display: none;
+      }
+    }
+  }
+}
+
+// [data-layout="horizontal"] .main-content{
+//   min-height: 100vh;
+// }
+
+// @media (min-width: 1024.1px){
+//   [data-layout="horizontal"] .main-content{
+//       min-height: calc(100vh - 70px);
+//   }
+// }
+
+.checkout-accordion .accordion-button:not(.collapsed) {
+  background-color: transparent;
+}
+
+.dropzone_sec {
+  border: 2px dashed #e2e5e8 !important;
+}
+
+.dropzone .dz-message {
+  font-size: 24px;
+  min-height: 150px !important;
+  border: none !important;
+  background: var(--#{$prefix}card-bg-custom) !important;
+  color: var(--#{$prefix}body-color) !important;
+}
+
+// ── Flatpickr — Velzon integration ──────────────────────────────────────────
+.flatpickr-calendar.open {
+  z-index: 1061;
+}
+
+.flatpickr-calendar {
+  background: var(--vz-card-bg, #fff);
+  border: 1px solid var(--vz-border-color, #e9ebec);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+
+  .flatpickr-months {
+    background: var(--vz-card-bg, #fff);
+    border-radius: 6px 6px 0 0;
+
+    .flatpickr-month {
+      color: var(--vz-body-color, #212529);
+      fill: var(--vz-body-color, #212529);
+      height: 36px;
+    }
+
+    .flatpickr-prev-month,
+    .flatpickr-next-month {
+      color: var(--vz-body-color, #212529);
+      fill: var(--vz-body-color, #212529);
+      padding: 6px 10px;
+
+      &:hover svg { fill: var(--vz-primary, #405189); }
+    }
+  }
+
+  .flatpickr-current-month {
+    font-size: 13px;
+    color: var(--vz-body-color, #212529);
+
+    .flatpickr-monthDropdown-months {
+      background: var(--vz-input-bg, #fff);
+      border: 1px solid var(--vz-input-border-color, #ced4da);
+      border-radius: 4px;
+      color: var(--vz-body-color, #212529);
+      font-size: 13px;
+      font-weight: 500;
+      height: 28px;
+      padding: 2px 4px;
+      appearance: auto;
+      -webkit-appearance: menulist;
+
+      option {
+        background: var(--vz-input-bg, #fff);
+        color: var(--vz-body-color, #212529);
+      }
+    }
+
+    .numInputWrapper {
+      width: 7ch;
+
+      input.cur-year {
+        color: var(--vz-body-color, #212529);
+        font-weight: 500;
+        font-size: 13px;
+      }
+
+      span {
+        border-color: var(--vz-border-color, #e9ebec);
+
+        &:hover { background: var(--vz-light, #f3f6f9); }
+
+        &::after {
+          border-top-color: var(--vz-body-color, #212529);
+          border-bottom-color: var(--vz-body-color, #212529);
+        }
+      }
+    }
+  }
+
+  .flatpickr-weekdays {
+    background: var(--vz-light, #f3f6f9);
+    border-bottom: 1px solid var(--vz-border-color, #e9ebec);
+
+    span.flatpickr-weekday {
+      color: var(--vz-secondary-color, #878a99);
+      background: var(--vz-light, #f3f6f9);
+      font-size: 12px;
+      font-weight: 600;
+    }
+  }
+
+  .flatpickr-day {
+    color: var(--vz-body-color, #212529);
+    border-radius: 4px;
+
+    &:hover { background: var(--vz-light, #f3f6f9); border-color: var(--vz-border-color); }
+
+    &.today {
+      border-color: var(--vz-primary, #405189);
+      color: var(--vz-primary, #405189);
+      background: transparent;
+
+      &:hover {
+        background: var(--vz-primary, #405189);
+        color: #fff;
+        border-color: var(--vz-primary, #405189);
+      }
+    }
+
+    &.selected, &.selected:hover {
+      background: var(--vz-primary, #405189);
+      border-color: var(--vz-primary, #405189);
+      color: #fff;
+    }
+
+    &.flatpickr-disabled, &.prevMonthDay, &.nextMonthDay {
+      color: var(--vz-secondary-color, #878a99);
+      opacity: 0.5;
+    }
+  }
+
+  .flatpickr-days { border: none; }
+
+  .flatpickr-innerContainer {
+    border-bottom: none;
+  }
+}
+
+// Flatpickr time picker
+.flatpickr-calendar.hasTime .flatpickr-time {
+  border-top: 1px solid var(--vz-border-color, #e9ebec);
+  background: var(--vz-card-bg, #fff);
+
+  .numInputWrapper input {
+    color: var(--vz-body-color, #212529);
+    font-size: 14px;
+  }
+
+  .flatpickr-am-pm {
+    color: var(--vz-body-color, #212529);
+    background: var(--vz-input-bg, #fff);
+
+    &:hover { background: var(--vz-light, #f3f6f9); }
+  }
+
+  .flatpickr-time-separator {
+    color: var(--vz-body-color, #212529);
+  }
+}
+
+// Flatpickr inside modals
+.modal .flatpickr-calendar,
+.flatpickr-calendar.arrowTop::before,
+.flatpickr-calendar.arrowTop::after {
+  z-index: 1062;
+}
+
+// scroll bar
+.simplebar-scrollbar:before {
+  width: 100%;
+  background: #a2adb7 !important;
+}
+
+@each $color,
+$value in $theme-colors {
+  [data-simplebar-track="#{$color}"] {
+    .simplebar-scrollbar:before {
+      background: $value !important;
+    }
+  }
+}
+
+// .toast{
+//   width: auto;
+// }
+
+
+// ------------ Base Ui ---------//
+// Alert
+.custom-alert {
+  .close {
+    background: transparent;
+    border: 0;
+    font-size: 10px;
+    padding: 1.35rem 1.25rem;
+    background: transparent escape-svg($btn-close-bg) center / $btn-close-width auto no-repeat;
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.5;
+    width: 1em;
+    height: 1em;
+    z-index: 2;
+    color: $btn-close-color;
+
+    span {
+      display: none;
+    }
+  }
+}
+
+//Accordion
+.accordion {
+  .card {
+    margin-bottom: 0;
+    box-shadow: none;
+    border-bottom: 1px solid $border-color;
+
+    .card-header {
+      padding: 0;
+      border-bottom: 0;
+
+      >.btn.btn-link {
+        padding: 0;
+        width: 100%;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.checkout-accordion {
+  .accordion-item .accordion-button {
+    display: inherit;
+  }
+}
+
+.custom-accordion-border {
+  .accordion-item {
+    margin-bottom: 10px;
+  }
+}
+
+//Dropdown
+.dropdown-toggle {
+  &.arrow-none {
+    &::after {
+      content: "";
+    }
+  }
+}
+
+
+
+
+// ----- Advance Ui --------//
+// Rating
+.stars {
+  font-size: 30px;
+  color: $warning;
+}
+
+.star {
+  position: relative;
+  display: inline-block;
+  font-size: 30px;
+  color: $warning;
+}
+
+.star_fill {
+  color: $gray-500;
+}
+
+.full {
+  color: #b0c4de;
+}
+
+.half {
+  position: absolute;
+  display: inline-block;
+  overflow: hidden;
+  color: $warning;
+}
+
+.filled {
+  color: #1e90ff;
+}
+
+.bad {
+  color: #deb0b0;
+}
+
+.filled.bad {
+  color: #ff1e1e;
+}
+
+//Swiper Slider
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-family: remixicon !important;
+}
+
+
+
+// filter slider
+.ngx-slider {
+  .ngx-slider-bar {
+    background: var(--#{$variable-prefix}light) !important;
+  }
+
+  .ngx-slider-selection {
+    background: $success !important;
+  }
+
+  .ngx-slider-pointer {
+    width: 16px !important;
+    height: 16px !important;
+    top: -7px !important;
+    background-color: $success !important;
+
+    &:after {
+      top: 4px !important;
+      left: 4px !important;
+      background: transparent !important;
+    }
+  }
+
+  .ngx-slider-tick {
+    background: lighten($success, 40%) !important;
+
+    &.ngx-slider-selected {
+      background: $success !important;
+    }
+  }
+}
+
+
+//form
+//select
+.ng-dropdown-panel {
+  .ng-dropdown-panel-items {
+    .ng-optgroup {
+      font-weight: $font-weight-semibold;
+      font-size: 12px;
+      padding: 10px 16px;
+      border-bottom: 1px solid $border-color;
+      color: $text-muted;
+    }
+
+    .ng-option {
+      &.ng-option-child {
+        position: relative;
+        font-size: $dropdown-font-size;
+        padding: $dropdown-item-padding-y $dropdown-item-padding-x $dropdown-item-padding-y 16px;
+      }
+
+      &.ng-option-selected,
+      &.ng-option-selected.ng-option-marked {
+        background-color: var(--#{$prefix}light);
+        color: $dropdown-color;
+      }
+
+      &.ng-option-marked {
+        background-color: var(--#{$prefix}light);
+        color: $dropdown-color;
+      }
+    }
+  }
+}
+
+// multiple
+// .ng-select.ng-select-multiple {
+//   .ng-select-container {
+//     .ng-value-container .ng-value {
+//       color: $white;
+//       background-color: $primary;
+//       border-radius: 5px;
+
+//       .ng-value-icon:hover {
+//         background-color: $primary;
+//       }
+//     }
+//   }
+// }
+
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+  white-space: nowrap;
+  background-color: var(--vz-primary);
+  border: 1px solid var(--vz-primary);
+  color: #fff;
+  border-radius: 7px;
+  padding: 2px 7px;
+  font-size: 11px;
+}
+
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value.ng-value-disabled {
+  background-color: #3281f3;
+  border: 1px solid #3281f3;
+}
+
+
+
+// .ng-select.ng-select-disabled>.ng-select-container {
+//   background-color: rgba(var(--#{$variable-prefix}light-rgb), 0.75);
+
+//   .ng-value-container .ng-value.ng-value-disabled {
+//     background-color: $secondary;
+//   }
+// }
+
+
+
+// grid js
+
+
+.table-gridjs {
+
+  th,
+  td {
+    border: 1px solid $table-border-color;
+    padding: $table-cell-padding-y $table-cell-padding-x;
+  }
+
+  th {
+    color: $table-color;
+    background-color: rgba(var(--#{$variable-prefix}light-rgb), 0.75);
+
+    &.gridjs-th-sort {
+
+      &:focus,
+      &:hover {
+        background-color: rgba(var(--#{$variable-prefix}light-rgb), 0.85);
+      }
+    }
+  }
+}
+
+.gridjs-pagination {
+  .pagination {
+    margin: 0;
+
+    .page-item {
+      .page-link {
+        margin-left: 0.3rem;
+        border-radius: $border-radius !important;
+        border: 1px solid $pagination-border-color;
+      }
+    }
+  }
+}
+
+.gridjs-checkbox {
+  width: $form-check-input-width;
+  height: $form-check-input-width;
+  vertical-align: top;
+  background-color: $form-check-input-bg;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: $form-check-input-border;
+  appearance: none;
+  color-adjust: exact; // Keep themed appearance for print
+  @include transition($form-check-transition);
+
+  &[type="checkbox"] {
+    @include border-radius($form-check-input-border-radius);
+  }
+}
+
+.gridjs-checkbox[type=checkbox]:checked {
+  background-color: $form-check-input-checked-bg-color;
+  border-color: $form-check-input-checked-border-color;
+
+  @if $enable-gradients {
+    background-image: escape-svg($form-check-input-checked-bg-image),
+    var(--#{$variable-prefix}gradient);
+  }
+
+  @else {
+    background-image: escape-svg($form-check-input-checked-bg-image);
+  }
+}
+
+// list js
+
+.listjs-pagination {
+  .pagination {
+    margin-bottom: 0;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+// profile timeline
+
+.profile-timeline {
+  .card {
+    position: relative;
+    border: 0;
+
+    .accordion-button {
+      background-color: transparent;
+
+      &::after {
+        background: none;
+      }
+    }
+
+    &::before {
+      content: "";
+      border-left: 2px dashed $border-color;
+      position: absolute;
+      height: 100%;
+      left: 23px;
+    }
+
+    &:first-child {
+      &::before {
+        top: 8px;
+      }
+    }
+
+    &:last-child {
+      &::before {
+        height: 20px;
+        top: 3px;
+      }
+    }
+  }
+}
+
+.flush_accordion {
+  .accordion-item {
+    border: none;
+    border-bottom: 1px solid var(--vz-border-color)
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+// task
+// kanban board
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.kanban-accordion {
+  .accordion-header {
+    .accordion-button::after {
+      display: none;
+    }
+  }
+
+  .accordion-body {
+    padding: 0;
+  }
+
+  .card {
+    box-shadow: $box-shadow;
+  }
+
+  >.card {
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+
+    >.collapse {
+      >.accordion-body {
+        padding: 0;
+      }
+
+      >.card-body {
+        padding: 0;
+
+        .card {
+          margin-bottom: 0.25rem;
+        }
+      }
+
+      .card-header {
+        >.btn.btn-link {
+          padding: 16px;
+        }
+      }
+    }
+
+    .card-header {
+      background-color: transparent;
+    }
+  }
+
+  #lead-1-header {
+    .accordion-button {
+      padding: 0;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+}
+
+// dashboard
+
+.upcoming-scheduled {
+  input[readonly] {
+    display: none;
+  }
+}
+
+.products-filter {
+  .card {
+    border-bottom: none;
+  }
+}
+
+.light-dark-mode {
+  .bx-moon {
+    display: block;
+  }
+
+  .bx-sun {
+    display: none;
+  }
+}
+
+// dropzone
+
+dropzone>.dropzone.dz-wrapper .dz-message .dz-text {
+  font-size: 16px;
+}
+
+// Swiper
+.swiper-pagination {
+  bottom: -5px !important;
+}
+
+.swiper-pagination-bullet {
+  width: 22px !important;
+  height: 5px !important;
+  border-radius: 50px !important;
+  box-shadow: $element-shadow !important;
+  border: none !important;
+
+  .swiper-pagination-bullet-active {
+    opacity: 1 !important;
+  }
+}
+
+swiper>.swiper.s-wrapper .swiper-pagination .swiper-pagination-handle {
+  height: 10px !important;
+}
+
+.dynamic-pagination {
+  .swiper-pagination-bullet {
+    width: 8px !important;
+    height: 8px !important;
+    background-color: $white !important;
+    opacity: 0.5 !important;
+    transition: all 0.5s ease;
+
+    &.swiper-pagination-bullet-active {
+      opacity: 1 !important;
+      width: 20px !important;
+    }
+  }
+}
+
+[data-bs-theme="dark"] {
+  .light-dark-mode {
+    .bx-moon {
+      display: none;
+    }
+
+    .bx-sun {
+      display: block;
+    }
+  }
+}
+
+.leaflet-container {
+  z-index: 1 !important;
+}
+
+@media (max-width: 600px) {
+  .navbar-header .dropdown .dropdown-menu {
+    left: 10px !important;
+    right: 10px !important;
+    transform: translate(0, 56px) !important;
+    width: auto !important;
+  }
+}
+
+.dropdown-menu-end {
+  left: auto !important;
+  right: 0 !important;
+}
+
+// Pages Team
+.team-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(33, 37, 41, 0.35);
+  z-index: 1003;
+  display: none;
+}
+
+.team-overlay.show {
+  display: block;
+}
+
+// twostep input
+
+.twostep-input {
+  .wrapper {
+    display: flex;
+    justify-content: center;
+
+    input {
+      background-color: $light;
+      border-color: $light;
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .otp-input {
+    width: 50px !important;
+    font-size: 24px !important;
+    height: 50px !important;
+  }
+}
+
+// team list
+.team-list.grid-view-filter .team-box .team-settings .dropdown {
+  .dropdown-menu {
+    transform: translate(0, 26px) !important;
+  }
+}
+
+//autocomplete
+.autocomplete-container {
+  box-shadow: none !important;
+}
+
+.autocomplete-container .input-container input {
+  background-color: $input-bg !important;
+  border: 1px solid $input-border-color !important;
+  height: 37.5px !important;
+  @include border-radius($input-border-radius, 0);
+
+}
+
+.autocomplete-container .input-container .x {
+  right: 6px;
+
+  i {
+    font-size: 12px !important;
+  }
+}
+
+// landing
+.testimonial-slider {
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    height: 32px !important;
+    width: 32px !important;
+    background-color: $white;
+    border-radius: 50%;
+
+    &:after {
+      font-size: 28px !important;
+    }
+  }
+
+  .swiper-pagination {
+    position: relative;
+  }
+}
+
+.marketplace-swiper {
+  .swiper-wrapper {
+    padding-top: 75px;
+  }
+}
+
+.marketplace-swiper {
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    top: 52px;
+
+    &::after {
+      font-size: 28px;
+    }
+  }
+}
+
+.ngx-slider-span {
+  &.ngx-slider-bubble {
+
+    &.ngx-slider-floor,
+    &.ngx-slider-ceil {
+      display: none;
+    }
+  }
+}
+
+// Data Table Css
+.custom-datatable {
+  &.table {
+    &.dataTable {
+      width: 100%;
+      margin: 0 auto;
+      clear: both;
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    &.no-footer {
+      border-bottom: $border-width solid $table-border-color;
+    }
+
+    thead th,
+    thead td {
+      border-bottom: 1px solid $table-border-color;
+    }
+  }
+}
+
+
+.dataTables_wrapper {
+  .dataTables_paginate {
+    &.paging_simple_numbers {
+      padding-top: 1.25em;
+
+      .paginate_button {
+        padding: $pagination-padding-y $pagination-padding-x;
+        border-radius: $pagination-border-radius-sm;
+        border: $pagination-border-width solid $pagination-border-color;
+
+        &.disabled,
+        &.disabled:hover,
+        &.disabled:active {
+          cursor: default;
+          color: #666;
+          border: $pagination-border-width solid $pagination-border-color;
+          background: transparent;
+          box-shadow: none;
+        }
+
+        &.current {
+          background-color: $pagination-active-bg;
+          color: $pagination-active-color !important;
+          border-color: $pagination-active-border-color;
+
+          &:hover {
+            background-color: $pagination-active-bg;
+            color: $pagination-active-color !important;
+            border-color: $pagination-active-border-color;
+          }
+        }
+
+        &:hover {
+          background: $pagination-hover-bg;
+          color: $pagination-hover-color !important;
+          border-color: $pagination-hover-border-color;
+        }
+      }
+    }
+  }
+
+  .dataTables_info {
+    padding-top: 1.75em !important;
+  }
+}
+
+.order-status {
+  .accordion-item {
+    border: none;
+
+    .accordion-button {
+      padding: 0;
+      box-shadow: none;
+    }
+  }
+}
+
+.modal-content {
+  border: none;
+}
+
+#abc {
+  >tr {
+    display: table;
+  }
+}
+
+// select2 Css
+// .ng-select {
+//   .ng-select-container {
+//     background-color: $input-bg;
+//     border-color: $input-border-color;
+//     color: $input-color;
+
+//     .ng-value-container .ng-input>input {
+//       color: $input-color;
+//     }
+//   }
+
+//   &.ng-select-opened>.ng-select-container {
+//     background-color: $input-bg;
+//     border-color: $input-border-color;
+//   }
+// }
+
+// .ng-dropdown-panel {
+//   border-color: $input-border-color;
+//   background-color: var(--#{$prefix}card-bg-custom);
+// }
+
+// .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+//   background-color: var(--#{$prefix}card-bg-custom);
+//   color: var(--#{$prefix}body-color);
+// }
+
+// .ng-dropdown-panel.ng-select-bottom {
+//   border-top-color: $input-border-color;
+// }
+
+// .ng-dropdown-panel.ng-select-top {
+//   border-bottom-color: $input-border-color;
+// }
+
+//dropzone
+.dropzone>.dropzone.dz-wrapper .dz-message {
+  background: var(--#{$prefix}custom-white) !important;
+  color: var(--#{$prefix}body-color) !important;
+}
+
+// ck editor
+.ck.ck-toolbar {
+  background-color: var(--#{$prefix}light) !important;
+  border: 1px solid $input-border-color !important;
+}
+
+.ck-reset_all :not(.ck-reset_all-excluded *),
+.ck.ck-reset_all {
+  color: var(--#{$prefix}body-color) !important;
+}
+
+.ck.ck-editor__main>.ck-editor__editable {
+  background-color: var(--#{$prefix}custom-white) !important;
+  color: var(--#{$prefix}body-color) !important;
+}
+
+.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+  border-color: $input-border-color !important;
+}
+
+.ck.ck-button:not(.ck-disabled):hover,
+a.ck.ck-button:not(.ck-disabled):hover,
+.ck.ck-button.ck-on,
+a.ck.ck-button.ck-on {
+  background-color: var(--#{$prefix}light) !important;
+}
+
+.ck.ck-toolbar .ck.ck-toolbar__separator {
+  background: $input-border-color !important;
+}
+
+.swiper-container {
+  overflow: hidden;
+}
+
+// .vertical-swiper swiper, .mousewheel-control-swiper swiper{
+//   height: 324px; width: auto;
+// }
+@media (max-width: 576px) {
+  // .vertical-swiper swiper, .mousewheel-control-swiper swiper{
+  //   height: 230px; width: auto;
+  // }
+}
+
+// ── Mobile-first shell (bottom nav + mobile header) ─────────────────────────
+:root {
+  --app-bottom-nav-height: 0px;
+  --app-mobile-header-height: 56px;
+}
+@media (max-width: 767.98px) {
+  :root {
+    --app-bottom-nav-height: 64px;
+  }
+}
+
+// ── Topbar removido: sobreescribir paddings de Velzon que compensaban header-height ──
+// Velzon default: padding-top = calc(70px + 1.5rem), padding-bottom = 60px (footer)
+// Sin topbar ni footer, usamos padding mínimo
+.page-content {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+// Velzon default: .navbar-menu padding-bottom = calc(70px + 25px) = 95px
+// Sin topbar/footer, eliminamos ese espacio muerto
+.navbar-menu {
+  padding-bottom: 0 !important;
+}
+
+// ── Vertical layout: flex chain para evitar overflow del body ────────────────
+// Problema: sin topbar/footer, main-content no tiene altura limitada → body
+// crece y aparece scrollbar + fondo del body visible en top/bottom.
+// Solución: main-content = 100dvh (constrained), page-content = scroll container.
+// Páginas normales scrollean dentro de page-content (no window).
+// Páginas full-height (agenda) usan height: var(--app-content-vh) = fill exacto.
+[data-layout="vertical"] .main-content {
+  height: 100vh;    // fallback para browsers sin dvh
+  height: 100dvh;   // compensa chrome mobile dinámico
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-layout="vertical"] .page-content {
+  flex: 1 1 auto;
+  min-height: 0;      // permite que flex hijo shrinkee bajo su contenido
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 767.98px) {
+  .page-content {
+    padding-top: calc(var(--app-mobile-header-height) + 0.75rem) !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-bottom: calc(0.75rem + var(--app-bottom-nav-height) + env(safe-area-inset-bottom)) !important;
+  }
+
+  .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+// Mobile header (fixed top)
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--app-mobile-header-height);
+  z-index: 1002;
+  background-color: var(--vz-header-bg, #fff);
+  border-bottom: 1px solid var(--vz-header-border, #e9ebec);
+
+  .mobile-header-hamburger {
+    color: var(--vz-header-item-color, #555b6d);
+    line-height: 1;
+  }
+
+  .mobile-header-brand {
+    max-width: 60%;
+    color: var(--vz-body-color, #212529);
+  }
+
+  .mobile-header-logo {
+    flex-shrink: 0;
+  }
+
+  .mobile-header-business-name {
+    font-size: 0.9375rem;
+    color: var(--vz-body-color, #212529);
+  }
+}
+
+[data-bs-theme="dark"] .mobile-header {
+  background-color: var(--vz-header-bg, #212529);
+
+  .mobile-header-business-name {
+    color: var(--vz-body-color, #ced4da);
+  }
+}
+
+// Mobile-first: aprovechar mejor espacio en cards y grids
+@media (max-width: 767.98px) {
+  .page-title-box {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+
+    h4 { font-size: 1rem; }
+  }
+
+  .card {
+    margin-bottom: 0.5rem;
+    border-radius: 0.375rem;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  .card-header {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .row {
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 0.5rem;
+  }
+
+  .table td,
+  .table th {
+    padding: 0.5rem 0.35rem;
+    font-size: 0.8125rem;
+  }
+
+  .table .btn-sm {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+  }
+
+  .btn {
+    font-size: 0.8125rem;
+  }
+
+  .form-label {
+    font-size: 0.8125rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .form-control,
+  .form-select,
+  .ng-select .ng-select-container {
+    font-size: 0.8125rem;
+  }
+
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .modal-body {
+    padding: 0.75rem;
+  }
+
+  .modal-header,
+  .modal-footer {
+    padding: 0.6rem 0.75rem;
+  }
+}
+
+// Sidebar: asegurar scroll correcto en mobile overlay
+@media (max-width: 767.98px) {
+  .vertical-sidebar-enable .app-menu {
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// ── ng-select — Velzon Bootstrap integration ───────────────────────────────
+// Match form-select / form-control look & feel from Velzon
+.ng-select {
+  .ng-select-container {
+    min-height: calc(1.5em + 1rem + 2px); // matches $input-height
+    height: auto;
+    background-color: var(--vz-input-bg-custom, var(--vz-input-bg, #fff));
+    border: 1px solid var(--vz-input-border-custom, var(--vz-input-border-color, #ced4da));
+    border-radius: var(--vz-border-radius, 0.25rem);
+    color: var(--vz-body-color, #212529);
+    font-size: 0.8125rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    .ng-value-container {
+      padding-left: 0.75rem;
+
+      .ng-placeholder {
+        color: var(--vz-secondary-color, #878a99);
+        font-size: 0.8125rem;
+      }
+
+      .ng-input {
+        padding-left: 0;
+        > input {
+          color: var(--vz-body-color, #212529);
+          font-size: 0.8125rem;
+        }
+      }
+
+      .ng-value {
+        font-size: 0.8125rem;
+        color: var(--vz-body-color, #212529);
+      }
+    }
+  }
+
+  // Single-select: vertically center value
+  &.ng-select-single .ng-select-container {
+    height: calc(1.5em + 1rem + 2px);
+
+    .ng-value-container {
+      .ng-value {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  // Focus / opened
+  &.ng-select-opened .ng-select-container {
+    border-color: rgba(var(--vz-primary-rgb, 64, 81, 137), 0.5);
+    box-shadow: 0 0 0 0.25rem rgba(var(--vz-primary-rgb, 64, 81, 137), 0.1);
+  }
+
+  &.ng-select-focused:not(.ng-select-opened) .ng-select-container {
+    border-color: var(--vz-input-border-custom, var(--vz-input-border-color, #ced4da));
+    box-shadow: none;
+  }
+
+  // Disabled
+  &.ng-select-disabled .ng-select-container {
+    background-color: var(--vz-input-disabled-bg, #eff2f7);
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  // Clear button
+  .ng-clear-wrapper {
+    color: var(--vz-secondary-color, #878a99);
+    width: 18px;
+    text-align: center;
+    &:hover { color: var(--vz-danger, #f06548); }
+  }
+
+  // Arrow
+  .ng-arrow-wrapper {
+    width: 24px;
+    padding-right: 6px;
+
+    .ng-arrow {
+      border-color: var(--vz-secondary-color, #878a99) transparent transparent;
+      border-width: 5px 5px 2.5px;
+    }
+  }
+
+  &.ng-select-opened .ng-arrow-wrapper .ng-arrow {
+    border-color: transparent transparent var(--vz-secondary-color, #878a99);
+    border-width: 2.5px 5px 5px;
+  }
+
+  // Invalid state (reactive forms)
+  &.ng-invalid.ng-touched .ng-select-container {
+    border-color: var(--vz-danger, #f06548);
+  }
+
+  // Multi-select value tags
+  &.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    background-color: rgba(var(--vz-primary-rgb, 64, 81, 137), 0.1);
+    border-radius: var(--vz-border-radius-sm, 0.2rem);
+    color: var(--vz-primary, #405189);
+    font-size: 0.75rem;
+    padding: 1px 6px;
+    margin: 2px 4px 2px 0;
+
+    .ng-value-icon {
+      &:hover { background-color: rgba(var(--vz-primary-rgb), 0.2); }
+    }
+  }
+}
+
+// Dropdown panel
+.ng-dropdown-panel {
+  z-index: 1060 !important;
+  margin-top: 2px;
+  border: 1px solid var(--vz-border-color, #e9ebec);
+  border-radius: var(--vz-border-radius, 0.25rem);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.08);
+  background: var(--vz-card-bg, #fff);
+  overflow: hidden;
+
+  &.ng-select-top {
+    margin-top: 0;
+    margin-bottom: 2px;
+  }
+
+  .ng-dropdown-panel-items {
+    max-height: 240px;
+
+    .ng-option {
+      background-color: var(--vz-card-bg, #fff);
+      color: var(--vz-body-color, #212529);
+      padding: 6px 12px;
+      font-size: 0.8125rem;
+      line-height: 1.5;
+
+      &.ng-option-marked {
+        background-color: var(--vz-light, #f3f6f9);
+        color: var(--vz-body-color, #212529);
+      }
+
+      &.ng-option-selected,
+      &.ng-option-selected.ng-option-marked {
+        background-color: rgba(var(--vz-primary-rgb, 64, 81, 137), 0.08);
+        color: var(--vz-primary, #405189);
+        font-weight: 500;
+      }
+
+      &.ng-option-disabled {
+        color: var(--vz-secondary-color, #878a99);
+      }
+    }
+  }
+}
+
+// Mobile responsive size
+@media (max-width: 767.98px) {
+  .ng-select .ng-select-container {
+    font-size: 0.8125rem;
+  }
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    padding: 8px 12px;
+  }
+}
+
+// Fix: Bootstrap .form-control-sm sets padding on the host element;
+// when ng-select is the host, that padding propagates to .ng-value-container
+// and misaligns the displayed value. Override to zero on the host itself.
+.ng-select.form-control-sm,
+.ng-select.form-control {
+  padding: 0 !important;
+}
+
+.hamburger-icon {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 24px;
+  height: 24px;
+
+  span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+  }
+}
+
+// Velzon: vertical layout usa _vertical.scss y _layouts.scss
+
+// ── ModoN App — Layout tokens ────────────────────────────────────────────────
+// Esta app NO tiene Velzon topbar ni footer: solo mobile-header (56px) + bottom-nav (64px mobile).
+// page-content tiene: padding-top 1.5rem, padding-bottom 1.5rem en desktop.
+// En mobile: padding-top calc(56px + 0.75rem), padding-bottom calc(0.75rem + 64px + safe-area).
+:root {
+  // Available content height (excluyendo padding de page-content)
+  // Desktop: 100vh - 1.5rem(top) - 1.5rem(bottom) = 100vh - 3rem
+  --app-content-vh: calc(100vh - 3rem);
+
+  // Page title box height (para cálculos de full-height cards)
+  --app-page-title-h: 56px;
+}
+
+// Mobile: resta mobile-header + padding extra + bottom-nav + safe-area
+@media (max-width: 767.98px) {
+  :root {
+    --app-content-vh: calc(
+      100vh
+      - var(--app-mobile-header-height)
+      - 1.5rem
+      - var(--app-bottom-nav-height)
+      - env(safe-area-inset-bottom, 0px)
+    );
+  }
+}
+
+// ── Full-height card pattern ─────────────────────────────────────────────────
+// Uso: <div class="card app-fullheight-card">
+// --app-content-vh ya descuenta header, footer y bottom-nav según breakpoint
+.app-fullheight-card {
+  height: calc(var(--app-content-vh) - var(--app-page-title-h));
+  min-height: 380px;
+  overflow: hidden;
+  margin-bottom: 0 !important;
+}
+
+// ── AG Grid consistent height ────────────────────────────────────────────────
+.app-ag-grid-container {
+  height: calc(var(--app-content-vh) - var(--app-page-title-h) - 16px);
+  min-height: 300px;
+}
+
+// ── Page title box Velzon standard ───────────────────────────────────────────
+// Asegura altura consistente del title box en todas las páginas
+.page-title-box {
+  min-height: var(--app-page-title-h);
+}
+
+// ── Agenda full-bleed ─────────────────────────────────────────────────────────
+// El wrapper cancela TODOS los gutters de page-content y container-fluid para
+// que la agenda llegue a todos los bordes del viewport.
+//
+// Técnica: CSS :has() (Chrome 105+, Safari 15.4+, FF 121+)
+// Cuando page-content contiene .app-agenda-wrapper, se zerean sus paddings
+// verticales en desktop (en mobile se mantiene el padding-top para el header fijo).
+//
+// Gutters horizontales:
+//   Desktop: page-content L/R 0.75rem + container-fluid L/R 0.75rem = 1.5rem
+//   Mobile:  page-content L/R 0.75rem + container-fluid L/R 0     = 0.75rem
+:root {
+  --app-content-gutter-x: 1.5rem;  // desktop: page-content L/R 0.75rem + container-fluid L/R 0.75rem
+}
+@media (max-width: 767.98px) {
+  :root {
+    --app-content-gutter-x: 0.75rem;  // mobile: solo page-content L/R (container-fluid es 0)
+  }
+}
+
+// Desktop: zerear padding vertical de page-content cuando contiene la agenda
+@media (min-width: 768px) {
+  [data-layout="vertical"] .page-content:has(.app-agenda-wrapper) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+// POS fullscreen: deshabilitar overflow-y:auto del scroll container cuando POS está activo.
+// iOS Safari atrapa position:fixed dentro de scroll containers → modal no cubre el viewport.
+// Con overflow:visible el modal fixed escapa correctamente al viewport completo.
+[data-layout="vertical"] .page-content:has(app-pos) {
+  overflow: visible !important;
+}
+
+// Wrapper: cancela gutters horizontales + ocupa altura completa
+// Desktop: con padding vertical = 0, el wrapper llena 100dvh de main-content
+// Mobile:  padding-top del header fijo se mantiene → usa --app-content-vh
+.app-agenda-wrapper {
+  margin-left:  calc(-1 * var(--app-content-gutter-x));
+  margin-right: calc(-1 * var(--app-content-gutter-x));
+  height: var(--app-content-vh);   // mobile default (descuenta header + bottom-nav)
+}
+
+@media (min-width: 768px) {
+  .app-agenda-wrapper {
+    height: 100vh;    // fallback
+    height: 100dvh;   // desktop: page-content sin padding → llena todo main-content
+  }
+}
+
+// Toolbar dentro del wrapper: div simple (NO Bootstrap .row).
+// Solo restaura padding horizontal para alinear con el resto del layout.
+.app-agenda-toolbar {
+  padding-left:  var(--app-content-gutter-x);
+  padding-right: var(--app-content-gutter-x);
+  border-bottom: 1px solid var(--vz-border-color, #e9ebec);
+  background: var(--vz-card-bg, #fff);
+}
+
+// ── Scrollable content area ───────────────────────────────────────────────────
+.app-scroll-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Business Hero: cover section for /t/:slug/dashboard
+.biz-hero-cover {
+  height: 220px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #405189 0%, #0ab39c 100%);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(20, 24, 40, 0.88) 0%,
+      rgba(20, 24, 40, 0.35) 55%,
+      transparent 100%
+    );
+    z-index: 1;
+  }
+
+  .biz-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
+
+  .biz-hero-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.9rem 1.25rem;
+    z-index: 2;
+  }
+}

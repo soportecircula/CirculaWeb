@@ -1,0 +1,128 @@
+# compose.override.yml — desarrollo local: puertos directos, watch, imágenes fijas
+# Para docker compose up / docker compose watch sin variables DOCKER_IMAGE_*
+
+services:
+  prestart:
+    image: circula-backend:latest
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      MINIO_ENDPOINT: "http://minio:9000"
+      MINIO_PUBLIC_URL: "http://localhost:9100"
+      STORAGE_BACKEND: "minio"
+
+  proxy:
+    image: traefik:3.6
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "80:80"
+      - "8090:8080"
+    command:
+      - --providers.docker
+      - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --accesslog
+      - --log
+      - --log.level=INFO
+      - --api
+      - --api.insecure=true
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label=traefik-public
+      - traefik.http.middlewares.https-redirect.contenttype.autodetect=false
+    networks:
+      - traefik-public
+      - default
+
+  db:
+    restart: "no"
+    ports:
+      - "5433:5432"
+
+  adminer:
+    restart: "no"
+    ports:
+      - "8080:8080"
+
+  minio:
+    restart: "no"
+    ports:
+      - "9100:9000"   # S3 API (local: 9100 → contenedor: 9000)
+      - "9001:9001"   # MinIO Console
+
+  backend:
+    image: circula-backend:latest
+    restart: "no"
+    ports:
+      - "8000:8000"
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command:
+      - fastapi
+      - run
+      - --reload
+      - "app/main.py"
+    develop:
+      watch:
+        - path: ./backend/app
+          action: sync
+          target: /app/backend/app
+        - path: ./backend/pyproject.toml
+          action: rebuild
+        - path: uv.lock
+          action: rebuild
+    volumes:
+      - ./backend/htmlcov:/app/backend/htmlcov
+    environment:
+      SMTP_HOST: "mailcatcher"
+      SMTP_PORT: "1025"
+      SMTP_TLS: "false"
+      EMAILS_FROM_EMAIL: "noreply@example.com"
+      MINIO_ENDPOINT: "http://minio:9000"
+      MINIO_PUBLIC_URL: "http://localhost:9100"
+      STORAGE_BACKEND: "minio"
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-changeme}"
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
+  frontend:
+    image: circula-frontend:latest
+    restart: "no"
+    ports:
+      - "4200:80"
+    depends_on:
+      backend:
+        condition: service_started
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    develop:
+      watch:
+        - path: ./frontend/src
+          action: rebuild
+        - path: ./frontend/package.json
+          action: rebuild
+        - path: ./frontend/angular.json
+          action: rebuild
+        - path: ./frontend/tsconfig.json
+          action: rebuild
+
+  redis:
+    restart: "no"
+    ports:
+      - "127.0.0.1:6380:6379"
+
+networks:
+  traefik-public:
+    external: false
