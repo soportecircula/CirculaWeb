@@ -1,0 +1,355 @@
+$c-primary: #2ab1f0;
+$c-brand-text: #007bb6;
+$c-text-dark: #1e293b;
+$c-text-muted: #475569;
+$c-border-subtle: #e2e8f0;
+$c-bg-subtle: #f0f6fa;
+$c-white: #ffffff;
+
+// ─── Reutilizados de home ──────────────────────────────────────────────────
+.page-background-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: $c-bg-subtle;
+}
+
+.hero-grid-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: 32px 32px;
+  background-image:
+    linear-gradient(to right, rgba(42, 177, 240, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 177, 240, 0.06) 1px, transparent 1px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba($c-border-subtle, 0.6);
+
+  @media (max-width: 992px) {
+    border-radius: 16px;
+  }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f0f9ff;
+  border: 1px solid rgba($c-primary, 0.15);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: $c-brand-text;
+  margin-bottom: 28px;
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: $c-primary;
+  }
+}
+
+.text-hero-primary {
+  color: $c-brand-text;
+}
+
+.ps-badge {
+  font-size: 14px;
+  font-weight: 700;
+  color: $c-brand-text;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: block;
+}
+
+// Botones — mismo estilo que home
+.btn {
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.btn-solid {
+  background: linear-gradient(135deg, $c-primary 0%, #008ece 100%);
+  border: none;
+  color: $c-white;
+  box-shadow: 0 6px 16px rgba($c-primary, 0.35);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba($c-primary, 0.45);
+  }
+}
+
+.btn-outline {
+  background-color: $c-white;
+  border: 1px solid rgba($c-border-subtle, 0.8);
+  color: $c-brand-text;
+
+  &:hover {
+    background-color: #f0f9ff;
+    border-color: rgba($c-primary, 0.3);
+    color: darken($c-brand-text, 5%);
+  }
+}
+
+// ─── Sección principal ────────────────────────────────────────────────────
+.products-section {
+  position: relative;
+  z-index: 1;
+  padding: 48px 0 32px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.products-container {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// ─── Encabezado ───────────────────────────────────────────────────────────
+.products-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.products-title {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: $c-text-dark;
+  letter-spacing: -0.5px;
+  margin: 0 0 20px;
+
+  @media (max-width: 768px) {
+    font-size: 30px;
+  }
+}
+
+.products-subtitle {
+  font-size: 15.5px;
+  color: $c-text-muted;
+  max-width: 640px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+// ─── Card grande con dos columnas ─────────────────────────────────────────
+.products-card {
+  padding: 56px 64px;
+
+  @media (max-width: 992px) {
+    padding: 32px 24px;
+  }
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.products-divider {
+  width: 1px;
+  background: rgba($c-border-subtle, 0.8);
+  margin: 0 56px;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
+}
+
+// ─── Columna de producto ──────────────────────────────────────────────────
+.product-col {
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 1024px) {
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid rgba($c-border-subtle, 0.8);
+
+    &:last-child {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+  }
+}
+
+.product-col-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: $c-text-dark;
+  line-height: 1.3;
+  margin: 0 0 12px;
+  letter-spacing: -0.3px;
+}
+
+.product-col-text {
+  font-size: 15px;
+  color: $c-text-muted;
+  line-height: 1.65;
+  margin: 0 0 28px;
+}
+
+// ─── Lista de features ────────────────────────────────────────────────────
+.product-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.product-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: $c-white;
+  border: 1px solid rgba($c-border-subtle, 0.8);
+  border-radius: 10px;
+  padding: 13px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $c-text-dark;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    transform: translateX(4px);
+    border-color: rgba($c-primary, 0.35);
+  }
+
+  .feature-icon {
+    color: $c-primary;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+}
+
+.product-actions {
+  display: flex;
+  gap: 12px;
+}
+
+// ─── Banner tesis ─────────────────────────────────────────────────────────
+.tesis-card {
+  padding: 40px 56px;
+
+  @media (max-width: 992px) {
+    padding: 28px 24px;
+  }
+}
+
+.tesis-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+  }
+}
+
+.tesis-banner-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.tesis-banner-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: $c-brand-text;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.tesis-banner-text {
+  font-size: 15px;
+  color: $c-text-muted;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.tesis-banner-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex-shrink: 0;
+
+  @media (max-width: 900px) {
+    width: 100%;
+  }
+}
+
+.tesis-pill {
+  background: #f4fbff;
+  border: 1px solid rgba($c-primary, 0.2);
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: $c-brand-text;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background: rgba($c-primary, 0.1);
+    border-color: rgba($c-primary, 0.4);
+  }
+}
+
+// ─── Overlay REP ──────────────────────────────────────────────────────────
+.rep-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  animation: overlay-in 0.22s ease;
+}
+
+.rep-drawer {
+  width: 100%;
+  max-width: 1000px;
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

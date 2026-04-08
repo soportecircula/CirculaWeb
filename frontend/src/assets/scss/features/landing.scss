@@ -1,0 +1,14 @@
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8fafc; // Un gris muy suave de fondo como en la captura
+}
+
+.content-area {
+  flex: 1;
+  width: 100%;
+  max-width: 1440px; // Evita que se estire demasiado en monitores grandes
+  margin: 0 auto;
+  padding: 2rem 5%; // Margen lateral para que el contenido no pegue a los bordes
+}

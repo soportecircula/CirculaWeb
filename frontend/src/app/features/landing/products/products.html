@@ -1,0 +1,126 @@
+<div class="page-background-wrapper">
+  <div class="hero-grid-pattern"></div>
+
+  <section class="products-section">
+    <div class="products-container">
+      <!-- Encabezado -->
+      <div class="products-header">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Nuestros Servicios
+        </div>
+        <h1 class="products-title">
+          Infraestructura circular para<br />
+          <span class="text-hero-primary">cumplimiento REP</span> y escalamiento hacia
+          <span class="text-hero-primary">ESG</span>
+        </h1>
+        <p class="products-subtitle">
+          Circula no es un software aislado. Es una infraestructura circular basada en blockchain
+          que integra a todos los actores de la cadena, desde el productor hasta el consumidor
+          final.
+        </p>
+      </div>
+
+      <!-- Cards de productos -->
+      <div
+        class="hero-card products-card"
+        style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px)"
+      >
+        <div class="products-grid">
+          <!-- REP HOY -->
+          <div class="product-col">
+            <span class="ps-badge">REP HOY</span>
+            <h2 class="product-col-title">Infraestructura para cumplimiento REP</h2>
+            <p class="product-col-text">
+              REP resuelve el cumplimiento desde una arquitectura trazable, auditable y operativa.
+            </p>
+
+            <ul class="product-feature-list">
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Levantamiento de línea base
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Conciliación técnica
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Cálculo de metas
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Dashboard integral
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Trazabilidad documental
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Expediente técnico y cierre ANLA
+              </li>
+            </ul>
+
+            <div class="product-actions">
+              <button class="btn btn-outline" (click)="showRep.set(true)">Ver flujo REP</button>
+            </div>
+          </div>
+
+          <!-- Divisor vertical -->
+          <div class="products-divider"></div>
+
+          <!-- ESG MAÑANA -->
+          <div class="product-col">
+            <span class="ps-badge">ESG MAÑANA</span>
+            <h2 class="product-col-title">Infraestructura para sostenibilidad escalable</h2>
+            <p class="product-col-text">
+              La misma infraestructura que resuelve REP habilita ESG sin duplicar el esfuerzo de
+              captura.
+            </p>
+
+            <ul class="product-feature-list">
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Gobierno de datos
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Indicadores ESG
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Trazabilidad extendida
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Integración de cadena
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Visibilidad para sostenibilidad corporativa
+              </li>
+              <li class="product-feature-item">
+                <i class="bi bi-check-circle-fill feature-icon"></i>
+                Expansión natural del valor
+              </li>
+            </ul>
+
+            <div class="product-actions">
+              <button class="btn btn-outline">Ver expansión ESG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Overlay REP ─────────────────────────────────────────────────── -->
+  @if (showRep()) {
+    <div class="rep-overlay" (click)="showRep.set(false)">
+      <div class="rep-drawer" (click)="$event.stopPropagation()">
+        <app-rep (close)="showRep.set(false)" />
+      </div>
+    </div>
+  }
+</div>
