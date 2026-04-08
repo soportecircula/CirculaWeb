@@ -1,10 +1,12 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImpactMetric, ImpactService } from '../../../core/services/impact_metrics';
+import { BtnDemo } from '../../../shared/components/btn-demo/btn-demo';
+import { BtnLogin } from '../../../shared/components/btn-login/btn-login';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, BtnDemo, BtnLogin],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.html',
   styleUrl: '../../../../assets/scss/pages/home.scss',
@@ -17,6 +19,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   displayValues = signal<Record<number, number | undefined>>({});
   loading = signal<boolean>(true);
   error = signal<boolean>(false);
+  brandsReady = signal<boolean>(false);
 
   private readonly impactMetricsService = inject(ImpactService);
   private observer: IntersectionObserver | null = null;
@@ -62,6 +65,15 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    // Esperar dos frames de animación antes de iniciar el slider.
+    // El doble rAF garantiza que el primer frame ya fue pintado y el
+    // compositor GPU tiene sus capas listas, evitando el arranque lento.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        this.brandsReady.set(true);
+      });
+    });
+
     if (this.heroVideo) {
       const video = this.heroVideo.nativeElement;
       video.muted = true;

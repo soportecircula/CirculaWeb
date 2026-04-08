@@ -1,13 +1,12 @@
-$c-primary: #2ab1f0;
-$c-brand-text: #007bb6;
+$c-esg: #2ab1f0;
+$c-esg-light: #007bb6;
+$c-esg-text: #007bb6;
 $c-text-dark: #1e293b;
 $c-text-muted: #475569;
 $c-border-subtle: #e2e8f0;
-$c-bg-subtle: #f0f6fa;
 $c-white: #ffffff;
-$c-dark-btn: #1a2530;
 
-.rep-hero-section {
+.esg-hero-section {
   position: relative;
   width: 100%;
   padding: 80px 0;
@@ -27,18 +26,18 @@ $c-dark-btn: #1a2530;
   }
 }
 
-.rep-grid-pattern {
+.esg-grid-pattern {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
   background-size: 24px 24px;
   background-image:
-    linear-gradient(to right, rgba(42, 177, 240, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(42, 177, 240, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(22, 163, 74, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(22, 163, 74, 0.05) 1px, transparent 1px);
   z-index: 0;
   pointer-events: none;
 }
 
-.rep-container {
+.esg-container {
   position: relative;
   z-index: 1;
   width: 100%;
@@ -62,7 +61,7 @@ $c-dark-btn: #1a2530;
   }
 }
 
-.rep-content-left {
+.esg-content-left {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -71,15 +70,15 @@ $c-dark-btn: #1a2530;
     align-items: center;
   }
 
-  .rep-badge {
-    color: $c-primary;
+  .esg-badge {
+    color: $c-esg;
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 20px;
     letter-spacing: 0.5px;
   }
 
-  .rep-title {
+  .esg-title {
     font-size: 3rem;
     line-height: 1.15;
     font-weight: 700;
@@ -88,7 +87,7 @@ $c-dark-btn: #1a2530;
     letter-spacing: -1px;
 
     .text-highlight {
-      color: $c-primary;
+      color: $c-esg;
     }
 
     @media (max-width: 768px) {
@@ -103,7 +102,7 @@ $c-dark-btn: #1a2530;
 }
 
 /* Right side cycle chart */
-.rep-content-right {
+.esg-content-right {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,7 +117,6 @@ $c-dark-btn: #1a2530;
     min-height: 500px;
   }
 
-  // A escala 0.72: visual = 360px, compensar espacio extra = (500-360)/2 = 70px
   @media (max-width: 600px) {
     min-height: 360px;
     margin-left: 0;
@@ -130,7 +128,7 @@ $c-dark-btn: #1a2530;
   }
 }
 
-.cycle-graphic {
+.esg-cycle-graphic {
   position: relative;
   width: 100%;
   max-width: 500px;
@@ -139,15 +137,12 @@ $c-dark-btn: #1a2530;
   justify-content: center;
   align-items: center;
 
-  // Escala reducida: compensar con margen negativo para no dejar espacio vacío
-  // scale(0.72) → visual 360px, extra = 70px cada lado
   @media (max-width: 600px) {
     transform: scale(0.72);
     transform-origin: center center;
     margin: -70px auto;
   }
 
-  // scale(0.58) → visual 290px, extra = 105px cada lado
   @media (max-width: 400px) {
     transform: scale(0.58);
     margin: -105px auto;
@@ -155,7 +150,7 @@ $c-dark-btn: #1a2530;
 }
 
 /* Inner Concentric Rings */
-.inner-rings {
+.esg-inner-rings {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -163,24 +158,24 @@ $c-dark-btn: #1a2530;
   z-index: 1;
   pointer-events: none;
 
-  .ring {
+  .esg-ring {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
   }
 
-  .r1 { width: 140px; height: 140px; border: 1px dashed rgba($c-primary, 0.2); }
-  .r2 { width: 210px; height: 210px; border: 1px dashed rgba($c-primary, 0.3); }
+  .r1 { width: 140px; height: 140px; border: 1px dashed rgba($c-esg, 0.2); }
+  .r2 { width: 210px; height: 210px; border: 1px dashed rgba($c-esg, 0.3); }
   .r3 {
     width: 280px; height: 280px;
-    border: 3px solid rgba($c-primary, 0.15);
-    background-color: rgba($c-primary, 0.03);
+    border: 3px solid rgba($c-esg, 0.15);
+    background-color: rgba($c-esg, 0.03);
   }
-  .r4 { width: 340px; height: 340px; border: 2px dashed rgba($c-primary, 0.4); }
+  .r4 { width: 340px; height: 340px; border: 2px dashed rgba($c-esg, 0.4); }
 }
 
-.cycle-center {
+.esg-cycle-center {
   position: relative;
   z-index: 2;
   display: flex;
@@ -189,21 +184,22 @@ $c-dark-btn: #1a2530;
   align-items: center;
   text-align: center;
 
-  .center-title {
+  .esg-center-title {
     font-size: 22px;
     font-weight: 800;
     color: $c-text-dark;
     margin-bottom: 4px;
     letter-spacing: -0.5px;
   }
-  .center-subtitle {
+
+  .esg-center-subtitle {
     font-size: 13px;
     color: rgba($c-text-muted, 0.85);
     font-weight: 500;
   }
 }
 
-.cycle-node {
+.esg-cycle-node {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
   pointer-events: none;
@@ -216,11 +212,11 @@ $c-dark-btn: #1a2530;
   height: 46px;
   background-color: $c-white;
   border-radius: 50%;
-  border: 2px solid $c-primary;
+  border: 2px solid $c-esg;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba($c-primary, 0.1);
+  box-shadow: 0 4px 10px rgba($c-esg, 0.1);
   transform: translate(-50%, -50%);
   pointer-events: auto;
   z-index: 4;
@@ -228,14 +224,14 @@ $c-dark-btn: #1a2530;
 
   i {
     font-size: 18px;
-    color: $c-primary;
+    color: $c-esg;
   }
 }
 
 .node-line {
   position: absolute;
   height: 1.5px;
-  background-image: linear-gradient(to right, rgba($c-primary, 0.4) 50%, transparent 50%);
+  background-image: linear-gradient(to right, rgba($c-esg, 0.4) 50%, transparent 50%);
   background-size: 6px 1.5px;
   background-repeat: repeat-x;
   transform-origin: 0 50%;
@@ -262,7 +258,7 @@ $c-dark-btn: #1a2530;
 
   .tt-title {
     font-size: 11px;
-    color: $c-brand-text;
+    color: $c-esg-text;
     font-weight: 700;
     margin-bottom: 3px;
   }
@@ -281,61 +277,64 @@ $c-dark-btn: #1a2530;
   }
 }
 
-/* Active & Hover Highlight Styling */
-.cycle-node.active-node,
-.cycle-node:hover {
+/* Active & Hover Highlight */
+.esg-cycle-node.active-node,
+.esg-cycle-node:hover {
   z-index: 10;
+
   .node-icon {
     border-width: 2px;
-    border-color: $c-primary;
-    background-color: #f4fbff;
-    box-shadow: 0 0 0 6px rgba($c-primary, 0.15);
+    border-color: $c-esg;
+    background-color: #f0fdf4;
+    box-shadow: 0 0 0 6px rgba($c-esg, 0.12);
 
     i {
       transform: scale(1.1);
     }
   }
+
   .node-tooltip {
-    border: 2px solid $c-primary;
-    box-shadow: 0 12px 32px rgba($c-primary, 0.18);
+    border: 2px solid $c-esg;
+    box-shadow: 0 12px 32px rgba($c-esg, 0.18);
   }
+
   .node-line {
-    background-image: linear-gradient(to right, $c-primary 50%, transparent 50%);
+    background-image: linear-gradient(to right, $c-esg 50%, transparent 50%);
     opacity: 1;
     height: 2px;
   }
 }
 
-/* Coordinates */
-/* R = 140px, Re = 210px, Line Width = 70px */
+/* Coordinates — misma geometría que REP */
+/* R = 140px, Re = 210px, Line Width = 70px    */
 
 .node-top {
-  .node-icon { top: calc(50% - 140px); left: 50%; }
-  .node-line { top: calc(50% - 140px); left: 50%; transform: translateY(-50%) rotate(-90deg); width: 70px; }
+  .node-icon    { top: calc(50% - 140px); left: 50%; }
+  .node-line    { top: calc(50% - 140px); left: 50%; transform: translateY(-50%) rotate(-90deg); width: 70px; }
   .node-tooltip { top: calc(50% - 210px); left: 50%; transform: translate(-50%, calc(-100% - 8px)); }
 }
 .node-top-right {
-  .node-icon { top: calc(50% - 70px); left: calc(50% + 121.2px); }
-  .node-line { top: calc(50% - 70px); left: calc(50% + 121.2px); transform: translateY(-50%) rotate(-30deg); width: 70px; }
+  .node-icon    { top: calc(50% - 70px); left: calc(50% + 121.2px); }
+  .node-line    { top: calc(50% - 70px); left: calc(50% + 121.2px); transform: translateY(-50%) rotate(-30deg); width: 70px; }
   .node-tooltip { top: calc(50% - 105px); left: calc(50% + 181.8px); transform: translateY(-50%) translateX(8px); }
 }
 .node-bottom-right {
-  .node-icon { top: calc(50% + 70px); left: calc(50% + 121.2px); }
-  .node-line { top: calc(50% + 70px); left: calc(50% + 121.2px); transform: translateY(-50%) rotate(30deg); width: 70px; }
+  .node-icon    { top: calc(50% + 70px); left: calc(50% + 121.2px); }
+  .node-line    { top: calc(50% + 70px); left: calc(50% + 121.2px); transform: translateY(-50%) rotate(30deg); width: 70px; }
   .node-tooltip { top: calc(50% + 105px); left: calc(50% + 181.8px); transform: translateY(-50%) translateX(8px); }
 }
 .node-bottom {
-  .node-icon { top: calc(50% + 140px); left: 50%; }
-  .node-line { top: calc(50% + 140px); left: 50%; transform: translateY(-50%) rotate(90deg); width: 70px; }
+  .node-icon    { top: calc(50% + 140px); left: 50%; }
+  .node-line    { top: calc(50% + 140px); left: 50%; transform: translateY(-50%) rotate(90deg); width: 70px; }
   .node-tooltip { top: calc(50% + 210px); left: 50%; transform: translate(-50%, 8px); }
 }
 .node-bottom-left {
-  .node-icon { top: calc(50% + 70px); left: calc(50% - 121.2px); }
-  .node-line { top: calc(50% + 70px); left: calc(50% - 121.2px); transform: translateY(-50%) rotate(150deg); width: 70px; }
+  .node-icon    { top: calc(50% + 70px); left: calc(50% - 121.2px); }
+  .node-line    { top: calc(50% + 70px); left: calc(50% - 121.2px); transform: translateY(-50%) rotate(150deg); width: 70px; }
   .node-tooltip { top: calc(50% + 105px); left: calc(50% - 181.8px); transform: translate(calc(-100% - 8px), -50%); }
 }
 .node-top-left {
-  .node-icon { top: calc(50% - 70px); left: calc(50% - 121.2px); }
-  .node-line { top: calc(50% - 70px); left: calc(50% - 121.2px); transform: translateY(-50%) rotate(-150deg); width: 70px; }
+  .node-icon    { top: calc(50% - 70px); left: calc(50% - 121.2px); }
+  .node-line    { top: calc(50% - 70px); left: calc(50% - 121.2px); transform: translateY(-50%) rotate(-150deg); width: 70px; }
   .node-tooltip { top: calc(50% - 105px); left: calc(50% - 181.8px); transform: translate(calc(-100% - 8px), -50%); }
 }

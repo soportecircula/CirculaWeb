@@ -40,8 +40,8 @@
             </div>
 
             <div class="hero-actions">
-              <button class="btn btn-solid">Agendar un DEMO</button>
-              <button class="btn btn-outline">Iniciar Sesión</button>
+              <app-btn-demo variant="hero" />
+              <app-btn-login variant="hero" />
             </div>
           </div>
 
@@ -104,7 +104,7 @@
       <div class="brands-fade brands-fade--left"></div>
       <div class="brands-fade brands-fade--right"></div>
 
-      <div class="brands-track">
+      <div class="brands-track" [class.brands-track--running]="brandsReady()">
         <div class="brands-list" aria-hidden="false">
           <div class="brand-item">
             <div class="brand-logo-wrap">

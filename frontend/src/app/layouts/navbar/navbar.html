@@ -58,16 +58,8 @@
       <div class="nav-divider"></div>
 
       <div class="nav-actions">
-        <button class="nav-pill action-outline" routerLink="/login" (click)="isMenuOpen.set(false)">
-          Iniciar sesión
-        </button>
-        <button
-          class="nav-pill action-solid"
-          routerLink="/agendar-demo"
-          (click)="isMenuOpen.set(false)"
-        >
-          Agendar DEMO
-        </button>
+        <app-btn-login variant="navbar" (clicked)="isMenuOpen.set(false)" />
+        <app-btn-demo variant="navbar" (clicked)="isMenuOpen.set(false)" />
       </div>
     </div>
   </div>

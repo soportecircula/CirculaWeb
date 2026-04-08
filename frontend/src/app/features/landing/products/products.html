@@ -107,7 +107,7 @@
             </ul>
 
             <div class="product-actions">
-              <button class="btn btn-outline">Ver expansión ESG</button>
+              <button class="btn btn-outline" (click)="showEsg.set(true)">Ver expansión ESG</button>
             </div>
           </div>
         </div>
@@ -120,6 +120,15 @@
     <div class="rep-overlay" (click)="showRep.set(false)">
       <div class="rep-drawer" (click)="$event.stopPropagation()">
         <app-rep (close)="showRep.set(false)" />
+      </div>
+    </div>
+  }
+
+  <!-- ── Overlay ESG ─────────────────────────────────────────────────── -->
+  @if (showEsg()) {
+    <div class="rep-overlay" (click)="showEsg.set(false)">
+      <div class="rep-drawer" (click)="$event.stopPropagation()">
+        <app-esg (close)="showEsg.set(false)" />
       </div>
     </div>
   }

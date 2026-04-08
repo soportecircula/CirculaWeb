@@ -1,0 +1,63 @@
+$c-primary: #2ab1f0;
+$c-brand-text: #007bb6;
+$c-white: #ffffff;
+$c-border-subtle: #e2e8f0;
+$c-text-muted: #64748b;
+$c-text-dark: #334155;
+$c-highlight-bg: #f0f9ff;
+
+// ── Variante hero ──────────────────────────────────────────────
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+.btn-outline {
+    background-color: $c-white;
+    border: 1px solid rgba($c-border-subtle, 0.8);
+    color: $c-brand-text;
+
+    &:hover {
+        background-color: $c-highlight-bg;
+        border-color: rgba($c-primary, 0.3);
+        color: darken($c-brand-text, 5%);
+    }
+}
+
+// ── Variante navbar ────────────────────────────────────────────
+.nav-pill {
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: $c-text-muted;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    white-space: nowrap;
+    font-family: inherit;
+    line-height: 1;
+
+    &:hover {
+        background: #f8fafc;
+        color: $c-text-dark;
+    }
+}
+
+.action-outline {
+    border-color: rgba($c-primary, 0.6);
+    color: $c-primary;
+    font-weight: 600;
+
+    &:hover {
+        background: rgba($c-primary, 0.06);
+        border-color: $c-primary;
+        color: $c-brand-text;
+    }
+}

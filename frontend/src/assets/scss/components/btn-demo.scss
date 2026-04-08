@@ -1,0 +1,72 @@
+$c-primary: #2ab1f0;
+$c-white: #ffffff;
+$c-text-muted: #64748b;
+$c-text-dark: #334155;
+
+// ── Variante hero ──────────────────────────────────────────────
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+.btn-solid {
+    background: linear-gradient(135deg, $c-primary 0%, #008ece 100%);
+    border: none;
+    color: $c-white;
+    box-shadow: 0 6px 16px rgba($c-primary, 0.35);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba($c-primary, 0.45);
+        background: linear-gradient(135deg, lighten($c-primary, 5%) 0%, lighten(#008ece, 5%) 100%);
+    }
+}
+
+// ── Variante navbar ────────────────────────────────────────────
+.nav-pill {
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: $c-text-muted;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    white-space: nowrap;
+    font-family: inherit;
+    line-height: 1;
+
+    &:hover {
+        background: #f8fafc;
+        color: $c-text-dark;
+    }
+}
+
+.action-solid {
+    background: linear-gradient(135deg, $c-primary 0%, #008ece 100%);
+    border-color: transparent;
+    color: #ffffff !important;
+    padding: 8px 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(42, 177, 240, 0.35);
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &:hover {
+        transform: translateY(-1.5px);
+        box-shadow: 0 6px 18px rgba(42, 177, 240, 0.5);
+        background: linear-gradient(135deg, lighten($c-primary, 5%) 0%, lighten(#008ece, 5%) 100%);
+        color: #ffffff !important;
+    }
+
+    &:active {
+        transform: translateY(0.5px);
+        box-shadow: 0 2px 6px rgba(42, 177, 240, 0.3);
+        filter: brightness(0.97);
+    }
+}

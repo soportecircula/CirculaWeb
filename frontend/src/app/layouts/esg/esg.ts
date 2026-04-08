@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { BtnDemo } from '../../shared/components/btn-demo/btn-demo';
 
 @Component({
-  selector: 'app-rep',
+  selector: 'app-esg',
   imports: [BtnDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './rep.html',
-  styleUrl: '../../../assets/scss/structure/rep.scss',
+  templateUrl: './esg.html',
+  styleUrl: '../../../assets/scss/structure/esg.scss',
 })
-export class REP {
+export class Esg {
   close = output<void>();
 }
