@@ -1,0 +1,93 @@
+<div class="auth-split-layout">
+  <!-- Columna Izquierda -->
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <div class="auth-header-badges">
+        <a routerLink="/" class="btn-back"> &larr; Volver </a>
+        <div class="platform-badge"><span class="dot"></span> Acceso a la plataforma</div>
+      </div>
+
+      <h1 class="auth-title">
+        Ingresa a la infraestructura<br />
+        circular de Circula.
+      </h1>
+      <p class="auth-description">
+        Accede a un entorno donde convergen productores, planes, operadores, gestores y
+        transformadores sobre una misma arquitectura de trazabilidad basada en blockchain.
+      </p>
+
+      <div class="auth-msg-card">
+        <h4 class="msg-title">MENSAJE DE EMPRESA</h4>
+        <p class="msg-text">
+          Circula convierte la economía circular en una red operativa integrada. Aquí la
+          trazabilidad deja de ser un discurso y se vuelve operación auditable, intuitiva y
+          escalable.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna Derecha -->
+  <div class="auth-right">
+    <div class="auth-form-card">
+      <div class="auth-form-header">
+        <span class="auth-form-subtitle">INICIAR SESIÓN</span>
+        <h2 class="auth-form-title">Bienvenido de nuevo</h2>
+        <p class="auth-form-desc">
+          Ingresa con tu correo y contraseña para acceder a la plataforma.
+        </p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-group mb-4">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <input
+            type="email"
+            class="form-control auth-input"
+            id="email"
+            formControlName="email"
+            placeholder="nombre@empresa.com"
+            maxlength="255"
+          />
+        </div>
+
+        <div class="form-group mb-4">
+          <label class="form-label" for="password-input">Contraseña</label>
+          <div class="position-relative auth-pass-inputgroup">
+            <input
+              [type]="showPassword() ? 'text' : 'password'"
+              class="form-control auth-input pe-5 password-input"
+              id="password-input"
+              formControlName="password"
+              placeholder="••••••••••••"
+              maxlength="255"
+            />
+            <button
+              class="btn btn-icon position-absolute end-0 top-0 password-toggle"
+              type="button"
+              tabindex="-1"
+              (click)="togglePassword()"
+            >
+              @if (showPassword()) {
+                <i class="mdi mdi-eye-outline"></i>
+              } @else {
+                <i class="mdi mdi-eye-off-outline"></i>
+              }
+            </button>
+          </div>
+        </div>
+
+        <button
+          class="btn btn-primary auth-submit-btn w-100"
+          type="submit"
+          [disabled]="loginForm.invalid || submitting()"
+        >
+          @if (submitting()) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+          }
+          Ingresar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

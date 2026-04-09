@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-resources',
-  imports: [],
+  standalone: true,
+  imports: [RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './resources.html',
   styleUrl: '../../../../assets/scss/pages/resources.scss',

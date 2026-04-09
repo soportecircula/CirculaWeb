@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ViewportScroller } from '@angular/common';
 import { Store } from '@ngrx/store';
 import * as AuthActions from './store/Authentication/authentication.actions';
 import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
@@ -18,5 +19,6 @@ export class App {
 
   constructor() {
     this.store.dispatch(AuthActions.refreshToken());
+    inject(ViewportScroller).setOffset([0, 88]);
   }
 }

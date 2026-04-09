@@ -1,1 +1,119 @@
-<p>resources works!</p>
+<div class="page-background-wrapper">
+  <div class="hero-grid-pattern"></div>
+
+  <section class="resources-section">
+    <div class="resources-container">
+      <div
+        class="hero-card resources-card"
+        style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px)"
+      >
+        <!-- Header con el mismo formato de Home/About -->
+        <div class="resources-header">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            Centro de Ayuda
+          </div>
+          <h1 class="resources-title">Recursos</h1>
+          <p class="resources-subtitle">
+            Todo lo que necesitas para operar y evolucionar con Circula.
+          </p>
+        </div>
+
+        <!-- Contenedor Grid estructurado tipo About -->
+        <div class="resources-grid">
+          <!-- Módulo 1 -->
+          <a class="resource-item" routerLink="/resources/soporte">
+            <div class="resource-icon-wrap">
+              <i class="bi bi-headset"></i>
+            </div>
+            <h3 class="resource-item-title">Soporte tecnológico</h3>
+            <p class="resource-item-text">
+              Acompañamiento funcional y técnico para operación del sistema.
+            </p>
+          </a>
+
+          <!-- Módulo 2 -->
+          <a class="resource-item" routerLink="/resources/entrenamiento">
+            <div class="resource-icon-wrap">
+              <i class="bi bi-laptop"></i>
+            </div>
+            <h3 class="resource-item-title">Entrenamiento de la tecnología</h3>
+            <p class="resource-item-text">
+              Capacitación guiada para productores, planes y equipos operativos.
+            </p>
+          </a>
+
+          <!-- Módulo 3 -->
+          <a class="resource-item" routerLink="/resources/prensa">
+            <div class="resource-icon-wrap">
+              <i class="bi bi-newspaper"></i>
+            </div>
+            <h3 class="resource-item-title">Prensa</h3>
+            <p class="resource-item-text">Novedades, comunicados y evolución del producto.</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Nueva Sección de Formulario de Contacto/Demo ─── -->
+  <section class="demo-section" id="demo-section">
+    <div class="resources-container">
+      <div class="demo-grid">
+        <!-- Columna Izquierda: Información -->
+        <div class="hero-card demo-info-card">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            Solicitud de contacto
+          </div>
+
+          <h2 class="demo-title">Conoce cómo Circula integra la cadena de la economía circular.</h2>
+          <p class="demo-description">
+            Agenda un acercamiento con nuestro equipo para explorar cómo esta infraestructura basada
+            en blockchain conecta actores, evidencia y trazabilidad en una sola operación.
+          </p>
+
+          <div class="demo-message-box">
+            <h4 class="demo-message-title">MENSAJE DE EMPRESA</h4>
+            <p class="demo-message-text">
+              Escalamos negocios a la sostenibilidad con el equivalente operativo de trazabilidad.
+              Circula no digitaliza solo tareas: integra la cadena completa sobre una
+              infraestructura reusable.
+            </p>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Formulario -->
+        <div class="hero-card demo-form-card">
+          <h4 class="form-badge">FORMULARIO</h4>
+          <h3 class="form-title">Solicita atención</h3>
+          <p class="form-description">Completa este formulario y te contactaremos.</p>
+
+          <form class="demo-form">
+            <div class="form-group">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-control" placeholder="Tu nombre completo" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Compañía</label>
+              <input type="text" class="form-control" placeholder="Nombre de la compañía" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tipo de requerimiento</label>
+              <div class="select-wrapper">
+                <select class="form-control form-select">
+                  <option value="demo">Solicitud de demo</option>
+                  <option value="support">Soporte técnico</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-solid form-submit-btn">Enviar solicitud</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
