@@ -71,7 +71,7 @@ $c-black: #000000;
   height: 100%;
   object-fit: cover;
   z-index: 0;
-  opacity: 0.65; // Video más "opaco" (transparente) dejando ver el fondo de la página
+  opacity: 0.9; // Video más "opaco" (transparente) dejando ver el fondo de la página
   // Opcional: satura un poco el video para que el azul de marca destaque
   filter: saturate(1.1) brightness(0.95);
 }
