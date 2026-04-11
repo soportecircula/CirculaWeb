@@ -69,28 +69,31 @@ uv run alembic downgrade -1
 uv run python app/initial_data.py
 ```
 
-### Frontend (Angular, gestionado con npm)
+### Frontend (Angular, gestionado con Bun)
 
 ```bash
 cd frontend
 
 # Instalar dependencias
-npm install
+bun install
 
-# Servidor de desarrollo (http://localhost:4200)
-npm start
+# Servidor de desarrollo (http://localhost:4200, proxy /api → :8000)
+bun run start
 
-# Build de producción
-npm run build
+# Build de producción (incluye prebuild sync-version)
+bun run build
 
 # Lint (Angular ESLint)
-npm run lint
+bun run lint
 
 # Formato (Prettier)
-npm run format
+bun run format
 
 # Tests
-npm test
+bun run test
+
+# Solo regenerar el cliente (sin descargar swagger)
+bun run generate:client
 ```
 
 ### Generación del cliente HTTP (requiere backend corriendo en :8000)
@@ -99,7 +102,7 @@ npm test
 bash scripts/generate-client.sh
 ```
 
-Esto descarga el `swagger.json` del backend, ejecuta ng-openapi y formatea con Biome. Hacer esto después de cualquier cambio a endpoints o schemas.
+Esto descarga el `swagger.json` del backend, ejecuta ng-openapi y genera `frontend/src/client/`. Hacer esto después de cualquier cambio a endpoints o schemas. Si el build falla por modelos faltantes en el barrel: `bash scripts/fix-client-models-barrel.sh`.
 
 ### Docker Compose
 
@@ -113,6 +116,26 @@ docker compose -f compose.yml -f compose.traefik.yml up -d
 
 ---
 
+### Backend fuera de Docker (infraestructura en Docker, backend en host)
+
+```bash
+# Levantar solo infraestructura
+docker compose up -d db redis minio
+
+# Correr backend con hot-reload (DB en puerto 5433, Redis en 6380)
+cd backend
+POSTGRES_SERVER=localhost POSTGRES_PORT=5433 \
+REDIS_HOST=localhost REDIS_PORT=6380 \
+MINIO_ENDPOINT=http://localhost:9100 \
+uv run fastapi run --reload app/main.py
+
+# Migraciones contra DB en Docker
+POSTGRES_SERVER=localhost POSTGRES_PORT=5433 \
+uv run alembic upgrade head
+```
+
+---
+
 ## Arquitectura y patrones clave
 
 ### Flujo de trabajo obligatorio (Vertical Slice)
@@ -120,6 +143,15 @@ docker compose -f compose.yml -f compose.traefik.yml up -d
 **DB → API → OpenAPI → cliente ng-openapi → UI**
 
 Para cada feature: migración Alembic → endpoint FastAPI con schemas Pydantic → regenerar cliente → UI conectada → lint pasan → docs actualizados.
+
+### Dos layouts en el frontend
+
+| Layout | Ruta | Ubicación | Descripción |
+|---|---|---|---|
+| **Landing** | `/` | `features/landing/landing.ts` | Público, con navbar + footer propios. Sub-rutas: `/`, `/products`, `/resources`, `/about` |
+| **Dashboard** | `/dashboard` | `layouts/layout.component.ts` | Autenticado (`authGuard`), con sidebar + topbar de Velzon |
+
+La landing tiene su propio layout independiente (`layouts/navbar/`, `layouts/footer/`). Los bloques `layouts/esg/` y `layouts/rep/` son secciones de la landing, no del dashboard. Cada uno tiene su propio `.scss` a nivel de componente.
 
 ### Backend
 
@@ -172,6 +204,13 @@ store.dispatch(AuthActions.logout());
 - **Access token**: JWT en memoria del cliente, 15 min. Refresh automático vía interceptor HTTP.
 - **Refresh token**: httpOnly cookie SameSite=Lax, 7 días, rotación automática. Invalidado en Redis al hacer logout.
 - **Payload**: solo `sub=user_id`.
+
+### SCSS del tema
+
+- **Para personalizar colores/variables**: editar `frontend/src/assets/scss/_variables-custom.scss` (no `_variables.scss`)
+- Los componentes de la landing usan SCSS co-ubicado junto al `.ts` (e.g., `layouts/esg/esg.scss`)
+- Los estilos globales del tema Velzon están en `frontend/src/assets/scss/`
+- `velzon/` y `template/` son de solo lectura; copiar/adaptar de ahí hacia `frontend/src/`
 
 ### Convención de botones (Bootstrap/Velzon)
 

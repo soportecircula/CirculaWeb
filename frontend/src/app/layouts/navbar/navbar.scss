@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     height: 68px;
-    background-color: #fff;
+    background-color: var(--circula-white);
     border-bottom: 1px solid var(--circula-border-subtle);
     position: sticky;
     top: 0;
@@ -69,7 +69,7 @@
 
         .brand-subtitle {
         font-size: 10.5px;
-        color: #ced4da;
+        color: var(--circula-text-muted);
         letter-spacing: 0.3px;
         }
     }
@@ -210,7 +210,7 @@
         right: 0;
         width: 270px;
         height: 100vh;
-        background: #fff;
+        background: var(--circula-white);
         flex-direction: column;
         align-items: stretch;
         padding: 80px 16px 24px;

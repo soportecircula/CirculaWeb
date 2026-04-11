@@ -109,6 +109,10 @@
   @media (max-width: 1024px) {
     padding: 32px 24px;
   }
+
+  @media (max-width: 480px) {
+    padding: 24px 16px;
+  }
 }
 
 .hero-left-content {
@@ -207,6 +211,10 @@
 
   @media (max-width: 1024px) {
     padding: 32px 24px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 24px 16px;
   }
 
   .right-title {
@@ -515,6 +523,10 @@ $slider-duration: 36s;
     @media (max-width: 992px) {
       padding: 32px 24px;
     }
+
+    @media (max-width: 480px) {
+      padding: 24px 16px;
+    }
   }
 
   .ps-content {
@@ -662,6 +674,11 @@ $slider-duration: 36s;
     grid-template-columns: 1fr;
     gap: 40px;
     padding: 32px 24px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 24px 16px;
+    gap: 24px;
   }
 }
 

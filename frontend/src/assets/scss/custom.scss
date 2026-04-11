@@ -9,6 +9,12 @@ File: Custom Css File
 // ── Circula design tokens ────────────────────────────────────────────────────
 // Definidos en :root para que estén disponibles en TODA la app (landing +
 // dashboard) sin necesidad de @import en cada componente SCSS.
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 :root {
   --circula-primary:           #{$circula-primary};
   --circula-primary-rgb:       #{red($circula-primary)}, #{green($circula-primary)}, #{blue($circula-primary)};
@@ -20,11 +26,14 @@ File: Custom Css File
   --circula-brand-text-darker: #{darken($circula-brand-text, 14%)};
   --circula-brand-text-light:  #{lighten($circula-brand-text, 5%)};
   --circula-text-dark:         #{$circula-text-dark};
+  --circula-text-dark-rgb:     #{red($circula-text-dark)}, #{green($circula-text-dark)}, #{blue($circula-text-dark)};
   --circula-text-muted:        #{$circula-text-muted};
+  --circula-text-muted-rgb:    #{red($circula-text-muted)}, #{green($circula-text-muted)}, #{blue($circula-text-muted)};
   --circula-bg-subtle:         #{$circula-bg-subtle};
   --circula-bg-sky:            #{$circula-bg-sky};
   --circula-bg-sky-rgb:        #{red($circula-bg-sky)}, #{green($circula-bg-sky)}, #{blue($circula-bg-sky)};
   --circula-highlight-bg:      #{$circula-highlight-bg};
   --circula-border-subtle:     #{$circula-border-subtle};
   --circula-border-subtle-rgb: #{red($circula-border-subtle)}, #{green($circula-border-subtle)}, #{blue($circula-border-subtle)};
+  --circula-white:             #{$circula-white};
 }

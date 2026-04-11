@@ -6,7 +6,7 @@ import { BtnDemo } from '../../shared/components/btn-demo/btn-demo';
   imports: [BtnDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './rep.html',
-  styleUrl: '../../../assets/scss/structure/rep.scss',
+  styleUrl: './rep.scss',
 })
 export class REP {
   close = output<void>();

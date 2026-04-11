@@ -70,6 +70,10 @@
   @media (max-width: 768px) {
     padding: 40px 24px;
   }
+
+  @media (max-width: 480px) {
+    padding: 24px 16px;
+  }
 }
 
 .about-header {
@@ -89,6 +93,10 @@
 
   @media (max-width: 768px) {
     font-size: 32px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 26px;
   }
 }
 
@@ -115,6 +123,11 @@
   border: 1px solid rgba(var(--circula-border-subtle-rgb), 1);
   border-radius: 20px;
   padding: 40px;
+
+  @media (max-width: 480px) {
+    padding: 24px;
+    border-radius: 14px;
+  }
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
@@ -181,6 +194,10 @@
   align-items: center;
   text-align: center;
   margin-bottom: 56px;
+
+  @media (max-width: 480px) {
+    margin-bottom: 32px;
+  }
 }
 
 .team-grid {
@@ -257,7 +274,7 @@
 .partners-section {
   position: relative;
   z-index: 1;
-  padding: 24px 0 24px;
+  padding: 0 0 24px;
 }
 
 .partners-block {

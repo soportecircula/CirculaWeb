@@ -68,7 +68,7 @@
 
 .btn-solid {
   background: var(--circula-brand-text);
-  color: #fff;
+  color: var(--circula-white);
   box-shadow: 0 6px 16px rgba(var(--circula-primary-rgb), 0.35);
 
   &:hover {
@@ -100,6 +100,10 @@
   @media (max-width: 992px) {
     padding: 32px 24px;
   }
+
+  @media (max-width: 480px) {
+    padding: 24px 16px;
+  }
 }
 
 // ─── Cabecera de la tarjeta ────────────────────────────────────────────────
@@ -121,6 +125,10 @@
 
   @media (max-width: 768px) {
     font-size: 32px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 26px;
   }
 }
 
@@ -150,7 +158,7 @@
 .resource-item {
   display: block;
   text-decoration: none;
-  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  background: linear-gradient(145deg, var(--circula-white), var(--circula-bg-subtle));
   border: 1px solid rgba(var(--circula-border-subtle-rgb), 1);
   border-radius: 20px;
   padding: 40px;
@@ -166,7 +174,7 @@
 
     .resource-icon-wrap {
       background: linear-gradient(135deg, var(--circula-primary), var(--circula-brand-text));
-      color: #fff;
+      color: var(--circula-white);
       transform: scale(1.05);
     }
   }
@@ -221,13 +229,19 @@
 
 // Columna Izquierda
 .demo-info-card {
-  padding: 64px 56px;
-  background: linear-gradient(135deg, #eef8ff 0%, #ffffff 80%);
+  padding: 48px 56px;
+  background: linear-gradient(135deg, var(--circula-highlight-bg) 0%, var(--circula-white) 80%);
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: 0;
 
   @media (max-width: 768px) {
-    padding: 40px 24px;
+    padding: 32px 24px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 24px 16px;
   }
 
   .hero-badge {
@@ -236,28 +250,27 @@
 }
 
 .demo-title {
-  font-size: 42px;
+  font-size: 36px;
   font-weight: 800;
   color: var(--circula-text-dark);
-  line-height: 1.15;
-  letter-spacing: -1px;
-  margin: 0 0 24px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin: 0 0 16px;
 
   @media (max-width: 768px) {
-    font-size: 32px;
+    font-size: 28px;
   }
 }
 
 .demo-description {
-  font-size: 16px;
+  font-size: 15px;
   color: var(--circula-text-muted);
-  line-height: 1.7;
-  margin: 0 0 48px;
+  line-height: 1.65;
+  margin: 0 0 24px;
 }
 
 .demo-message-box {
-  margin-top: auto;
-  background: #fff;
+  background: var(--circula-white);
   border-radius: 16px;
   padding: 32px;
   border: 1px solid rgba(var(--circula-border-subtle-rgb), 0.6);
@@ -283,10 +296,14 @@
 // Columna Derecha
 .demo-form-card {
   padding: 64px 56px;
-  background: #fff;
+  background: var(--circula-white);
 
   @media (max-width: 768px) {
     padding: 40px 24px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 24px 16px;
   }
 }
 
@@ -305,6 +322,10 @@
   color: var(--circula-text-dark);
   letter-spacing: -0.5px;
   margin: 0 0 8px;
+
+  @media (max-width: 480px) {
+    font-size: 24px;
+  }
 }
 
 .form-description {
@@ -321,7 +342,7 @@
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #334155;
+  color: var(--circula-text-dark);
   margin-bottom: 8px;
 }
 
@@ -332,12 +353,12 @@
   border-radius: 12px;
   font-size: 15px;
   color: var(--circula-text-dark);
-  background: #fff;
+  background: var(--circula-white);
   font-family: inherit;
   transition: all 0.2s ease;
 
   &::placeholder {
-    color: #94a3b8;
+    color: var(--circula-text-muted);
   }
 
   &:focus {
@@ -373,15 +394,48 @@
 
   &:invalid,
   & option[value=""][disabled] {
-     color: #94a3b8;
+     color: var(--circula-text-muted);
   }
 
   option {
     color: var(--circula-text-dark);
-    background-color: #fff;
+    background-color: var(--circula-white);
     font-size: 15px;
     padding: 12px;
     font-weight: 500;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.btn-dark {
+  background: var(--circula-brand-text);
+  color: var(--circula-white);
+  width: 100%;
+  letter-spacing: 0.5px;
+
+  &:hover {
+    background: var(--circula-brand-text);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   }
 }
 

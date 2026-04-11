@@ -1,0 +1,345 @@
+.rep-hero-section {
+  position: relative;
+  width: 100%;
+  padding: 80px 0;
+  display: flex;
+  align-items: center;
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  background-color: var(--circula-white);
+  border-radius: 12px;
+
+  @media (max-width: 768px) { padding: 48px 0; }
+  @media (max-width: 480px) { padding: 32px 0; }
+}
+
+.rep-grid-pattern {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-size: 24px 24px;
+  background-image:
+    linear-gradient(to right, rgba(var(--circula-primary-rgb), 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(var(--circula-primary-rgb), 0.07) 1px, transparent 1px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.rep-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 16px;
+  align-items: center;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 20px;
+    gap: 24px;
+  }
+}
+
+.rep-content-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @media (max-width: 1024px) { align-items: center; }
+
+  .rep-badge {
+    color: var(--circula-brand-text);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .rep-title {
+    font-size: 3rem;
+    line-height: 1.15;
+    font-weight: 700;
+    color: var(--circula-text-dark);
+    margin: 0 0 32px 0;
+    letter-spacing: -1px;
+
+    .text-highlight { color: var(--circula-brand-text); }
+
+    @media (max-width: 768px) { font-size: 2.2rem; }
+    @media (max-width: 480px) { font-size: 1.8rem; margin-bottom: 24px; }
+  }
+}
+
+/* ── Right side: cycle chart ──────────────────────────────────────────── */
+.rep-content-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 480px;
+  transform: scale(0.92);
+  margin-left: -20px;
+  overflow: hidden;
+
+  @media (max-width: 1024px) { transform: scale(1); margin-left: 0; min-height: 500px; }
+  @media (max-width: 600px)  { min-height: 360px; margin-left: 0; transform: none; }
+  @media (max-width: 400px)  { min-height: 300px; }
+}
+
+.cycle-graphic {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 600px) {
+    transform: scale(0.68);
+    transform-origin: center center;
+    margin: -80px auto;
+  }
+  @media (max-width: 480px) {
+    transform: scale(0.58);
+    margin: -105px auto;
+  }
+  @media (max-width: 400px) {
+    transform: scale(0.50);
+    margin: -125px auto;
+  }
+}
+
+/* ── Concentric rings ─────────────────────────────────────────────────── */
+.inner-rings {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+
+  .ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+
+  // Opacidades aumentadas para visibilidad real sobre fondo blanco
+  .r1 { width: 140px; height: 140px; border: 1px dashed rgba(var(--circula-primary-rgb), 0.45); }
+  .r2 { width: 210px; height: 210px; border: 1px dashed rgba(var(--circula-primary-rgb), 0.55); }
+  .r3 {
+    width: 280px; height: 280px;
+    border: 2px solid rgba(var(--circula-primary-rgb), 0.3);
+    background-color: rgba(var(--circula-primary-rgb), 0.04);
+  }
+  .r4 { width: 340px; height: 340px; border: 1.5px dashed rgba(var(--circula-primary-rgb), 0.65); }
+}
+
+/* ── Center label ─────────────────────────────────────────────────────── */
+.cycle-center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  .center-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--circula-text-dark);
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+  }
+  .center-subtitle {
+    font-size: 13px;
+    color: rgba(var(--circula-text-muted-rgb), 0.85);
+    font-weight: 500;
+  }
+}
+
+/* ── Node wrapper ─────────────────────────────────────────────────────── */
+// pointer-events: none en el wrapper; los hijos interactivos tienen auto.
+// Usamos :has(:hover) para que el grupo entero reaccione.
+.cycle-node {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  transition: z-index 0s;
+}
+
+/* ── Node icon (círculo con ícono) ────────────────────────────────────── */
+.node-icon {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  background-color: var(--circula-white);
+  border-radius: 50%;
+  border: 2px solid var(--circula-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(var(--circula-primary-rgb), 0.18);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  z-index: 4;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+  i {
+    font-size: 18px;
+    color: var(--circula-primary);
+    transition: transform 0.25s ease;
+  }
+}
+
+/* ── Connector line (dashed, icon → tooltip) ──────────────────────────── */
+.node-line {
+  position: absolute;
+  height: 2px;
+  // Línea discontinua sólida: segmentos de 6px con huecos de 4px
+  background-image: linear-gradient(
+    to right,
+    rgba(var(--circula-primary-rgb), 0.6) 60%,
+    transparent 60%
+  );
+  background-size: 10px 2px;
+  background-repeat: repeat-x;
+  transform-origin: 0 50%;
+  pointer-events: none;
+  z-index: 2;
+  transition: background-image 0.25s ease, height 0.25s ease, opacity 0.25s ease;
+}
+
+/* ── Tooltip card ─────────────────────────────────────────────────────── */
+.node-tooltip {
+  position: absolute;
+  background: var(--circula-white);
+  border: 1.5px solid rgba(var(--circula-primary-rgb), 0.35);
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 16px rgba(var(--circula-text-dark-rgb), 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: auto;
+  z-index: 5;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+
+  .tt-title {
+    font-size: 11px;
+    color: var(--circula-brand-text);
+    font-weight: 700;
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+  }
+
+  .tt-value {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--circula-text-dark);
+    margin-bottom: 2px;
+  }
+
+  .tt-desc {
+    font-size: 10px;
+    color: rgba(var(--circula-text-muted-rgb), 0.75);
+    font-weight: 500;
+  }
+}
+
+/* ── Hover / active ───────────────────────────────────────────────────── */
+// :has(:hover) activa el grupo aunque el wrapper tenga pointer-events:none
+.cycle-node:has(:hover),
+.cycle-node.active-node {
+  z-index: 10;
+
+  .node-icon {
+    background-color: var(--circula-white);
+    border-color: var(--circula-primary);
+    box-shadow:
+      0 0 0 5px rgba(var(--circula-primary-rgb), 0.12),
+      0 4px 14px rgba(var(--circula-primary-rgb), 0.22);
+
+    i { transform: scale(1.15); }
+  }
+
+  .node-tooltip {
+    border-color: var(--circula-primary);
+    border-width: 2px;
+    box-shadow: 0 8px 28px rgba(var(--circula-primary-rgb), 0.2);
+  }
+
+  .node-line {
+    background-image: linear-gradient(
+      to right,
+      var(--circula-primary) 60%,
+      transparent 60%
+    );
+    height: 2.5px;
+    opacity: 1;
+  }
+}
+
+/* ── Posiciones (R_icon = 140px, R_tooltip = 210px, line = 70px) ──────── */
+
+.node-top {
+  .node-icon    { top: calc(50% - 140px); left: 50%; }
+  .node-line    { top: calc(50% - 140px); left: 50%; width: 70px;
+                  transform: translateY(-50%) rotate(-90deg); }
+  .node-tooltip { top: calc(50% - 210px); left: 50%;
+                  transform: translate(-50%, calc(-100% - 6px)); }
+}
+
+.node-top-right {
+  .node-icon    { top: calc(50% - 70px); left: calc(50% + 121.2px); }
+  .node-line    { top: calc(50% - 70px); left: calc(50% + 121.2px); width: 70px;
+                  transform: translateY(-50%) rotate(-30deg); }
+  .node-tooltip { top: calc(50% - 105px); left: calc(50% + 181.8px);
+                  transform: translateY(-50%) translateX(6px); }
+}
+
+.node-bottom-right {
+  .node-icon    { top: calc(50% + 70px); left: calc(50% + 121.2px); }
+  .node-line    { top: calc(50% + 70px); left: calc(50% + 121.2px); width: 70px;
+                  transform: translateY(-50%) rotate(30deg); }
+  .node-tooltip { top: calc(50% + 105px); left: calc(50% + 181.8px);
+                  transform: translateY(-50%) translateX(6px); }
+}
+
+.node-bottom {
+  .node-icon    { top: calc(50% + 140px); left: 50%; }
+  .node-line    { top: calc(50% + 140px); left: 50%; width: 70px;
+                  transform: translateY(-50%) rotate(90deg); }
+  .node-tooltip { top: calc(50% + 210px); left: 50%;
+                  transform: translate(-50%, 6px); }
+}
+
+.node-bottom-left {
+  .node-icon    { top: calc(50% + 70px); left: calc(50% - 121.2px); }
+  .node-line    { top: calc(50% + 70px); left: calc(50% - 121.2px); width: 70px;
+                  transform: translateY(-50%) rotate(150deg); }
+  .node-tooltip { top: calc(50% + 105px); left: calc(50% - 181.8px);
+                  transform: translate(calc(-100% - 6px), -50%); }
+}
+
+.node-top-left {
+  .node-icon    { top: calc(50% - 70px); left: calc(50% - 121.2px); }
+  .node-line    { top: calc(50% - 70px); left: calc(50% - 121.2px); width: 70px;
+                  transform: translateY(-50%) rotate(-150deg); }
+  .node-tooltip { top: calc(50% - 105px); left: calc(50% - 181.8px);
+                  transform: translate(calc(-100% - 6px), -50%); }
+}

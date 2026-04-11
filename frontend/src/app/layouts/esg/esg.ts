@@ -6,7 +6,7 @@ import { BtnDemo } from '../../shared/components/btn-demo/btn-demo';
   imports: [BtnDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './esg.html',
-  styleUrl: '../../../assets/scss/structure/esg.scss',
+  styleUrl: './esg.scss',
 })
 export class Esg {
   close = output<void>();
