@@ -68,5 +68,8 @@ Based on Velzon theme (adapted)
 @import "pages/authentication";
 @import "pages/dashboard";
 
+// Circula tokens (:root CSS custom properties)
+@import "custom";
+
 // Angular custom overrides
 @import "./angular-custom.scss";

@@ -1,17 +1,10 @@
-$c-primary: #2ab1f0;
-$c-brand-text: #007bb6;
-$c-highlight-bg: #f0f9ff;
-$c-border-subtle: #e2e8f0;
-$c-text-dark: #334155;
-$c-text-muted: #64748b;
-
 .navbar-circula {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 68px;
-    background-color: #ffffff;
-    border-bottom: 1px solid $c-border-subtle;
+    background-color: #fff;
+    border-bottom: 1px solid var(--circula-border-subtle);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -24,7 +17,7 @@ $c-text-muted: #64748b;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 1800px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 0 16px;
 }
@@ -70,13 +63,13 @@ $c-text-muted: #64748b;
         .brand-title {
         font-size: 14px;
         font-weight: 700;
-        color: $c-brand-text;
+        color: var(--circula-brand-text);
         letter-spacing: 1.5px;
         }
 
         .brand-subtitle {
         font-size: 10.5px;
-        color: #94a3b8;
+        color: #ced4da;
         letter-spacing: 0.3px;
         }
     }
@@ -100,7 +93,7 @@ $c-text-muted: #64748b;
 .nav-divider {
     width: 1px;
     height: 22px;
-    background-color: $c-border-subtle;
+    background-color: var(--circula-border-subtle);
     margin: 0 10px;
 }
 
@@ -119,7 +112,7 @@ $c-text-muted: #64748b;
     border-radius: 8px;
     font-size: 13.5px;
     font-weight: 500;
-    color: $c-text-muted;
+    color: var(--circula-text-muted);
     cursor: pointer;
     transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
     white-space: nowrap;
@@ -127,14 +120,14 @@ $c-text-muted: #64748b;
     line-height: 1;
 
     &:hover {
-        background: #f8fafc;
-        color: $c-text-dark;
+        background: var(--circula-highlight-bg);
+        color: var(--circula-text-dark);
     }
 
     &.active {
-        background: $c-highlight-bg;
-        border-color: rgba($c-primary, 0.4);
-        color: $c-brand-text;
+        background: var(--circula-bg-sky);
+        border-color: rgba(var(--circula-primary-rgb), 0.4);
+        color: var(--circula-brand-text);
         font-weight: 600;
     }
 }
@@ -154,7 +147,7 @@ $c-text-muted: #64748b;
     .bar {
         width: 22px;
         height: 2.5px;
-        background-color: $c-text-dark;
+        background-color: var(--circula-text-dark);
         border-radius: 2px;
         transition: 0.25s ease;
     }
@@ -194,7 +187,7 @@ $c-text-muted: #64748b;
     display: none;
     width: 100%;
     height: 1px;
-    background: $c-border-subtle;
+    background: var(--circula-border-subtle);
 
     @media (max-width: 992px) {
         display: block;
@@ -217,7 +210,7 @@ $c-text-muted: #64748b;
         right: 0;
         width: 270px;
         height: 100vh;
-        background: #ffffff;
+        background: #fff;
         flex-direction: column;
         align-items: stretch;
         padding: 80px 16px 24px;
@@ -246,7 +239,7 @@ $c-text-muted: #64748b;
         width: 100%;
         margin-top: 16px;
         padding-top: 16px;
-        border-top: 1px solid $c-border-subtle;
+        border-top: 1px solid var(--circula-border-subtle);
     }
 
     .nav-pill {

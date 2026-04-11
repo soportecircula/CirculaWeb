@@ -1,11 +1,3 @@
-$c-primary: #2ab1f0;
-$c-brand-text: #007bb6;
-$c-white: #ffffff;
-$c-border-subtle: #e2e8f0;
-$c-text-muted: #64748b;
-$c-text-dark: #334155;
-$c-highlight-bg: #f0f9ff;
-
 // ── Variante hero ──────────────────────────────────────────────
 .btn {
     padding: 12px 24px;
@@ -18,14 +10,14 @@ $c-highlight-bg: #f0f9ff;
 }
 
 .btn-outline {
-    background-color: $c-white;
-    border: 1px solid rgba($c-border-subtle, 0.8);
-    color: $c-brand-text;
+    background-color: #fff;
+    border: 1px solid rgba(var(--circula-border-subtle-rgb), 0.8);
+    color: var(--circula-brand-text);
 
     &:hover {
-        background-color: $c-highlight-bg;
-        border-color: rgba($c-primary, 0.3);
-        color: darken($c-brand-text, 5%);
+        background-color: var(--circula-bg-sky);
+        border-color: rgba(var(--circula-primary-rgb), 0.3);
+        color: var(--circula-brand-text-dark);
     }
 }
 
@@ -37,7 +29,7 @@ $c-highlight-bg: #f0f9ff;
     border-radius: 8px;
     font-size: 13.5px;
     font-weight: 500;
-    color: $c-text-muted;
+    color: var(--circula-text-muted);
     cursor: pointer;
     transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
     white-space: nowrap;
@@ -45,19 +37,20 @@ $c-highlight-bg: #f0f9ff;
     line-height: 1;
 
     &:hover {
-        background: #f8fafc;
-        color: $c-text-dark;
+        background: var(--circula-highlight-bg);
+        color: var(--circula-text-dark);
     }
 }
 
 .action-outline {
-    border-color: rgba($c-primary, 0.6);
-    color: $c-primary;
+    border-color: rgba(var(--circula-primary-rgb), 0.6);
+    color: var(--circula-primary);
     font-weight: 600;
+    padding: 8px 20px;
 
     &:hover {
-        background: rgba($c-primary, 0.06);
-        border-color: $c-primary;
-        color: $c-brand-text;
+        background: rgba(var(--circula-primary-rgb), 0.06);
+        border-color: var(--circula-primary);
+        color: var(--circula-brand-text);
     }
 }

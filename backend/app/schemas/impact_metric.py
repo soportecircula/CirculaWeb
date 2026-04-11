@@ -6,7 +6,7 @@ class ImpactMetricBase(BaseModel):
     label: str
     value: float
     unit: str | None = None
-    icon: str | None = None
+    description: str | None = None
 
 class ImpactMetricCreate(ImpactMetricBase):
     pass

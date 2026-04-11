@@ -6,6 +6,6 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './footer.html',
-  styleUrl: '../../../assets/scss/structure/_footer.scss',
+  styleUrl: './footer.scss',
 })
 export class Footer {}

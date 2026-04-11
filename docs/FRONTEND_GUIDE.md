@@ -121,6 +121,152 @@ store.select(AuthSelectors.selectIsAuthenticated)
 store.select(AuthSelectors.selectIsSuperAdmin)
 ```
 
+---
+
+## Sistema de estilos
+
+### Arquitectura SCSS
+
+La compilación de estilos sigue este orden en `app.scss`:
+
+```
+_variables.scss       → tokens Circula + Bootstrap
+_variables-custom.scss → medidas de layout
+bootstrap/...         → sistema Bootstrap
+theme/_default.scss   → CSS vars Velzon (--vz-*)
+components/, pages/   → componentes y páginas globales
+custom.scss           → :root con --circula-* (siempre al final)
+```
+
+---
+
+### Tokens de diseño Circula
+
+Definidos en `_variables.scss` y publicados en `:root` desde `custom.scss`.
+
+| Token SCSS | CSS custom property | Valor | Uso |
+|---|---|---|---|
+| `$circula-primary` | `--circula-primary` | `#2ab1f0` | Acento principal |
+| `$circula-brand-text` | `--circula-brand-text` | `#82C4FA` | Textos de marca, botones |
+| `$circula-text-dark` | `--circula-text-dark` | `#1e293b` | Textos principales |
+| `$circula-text-muted` | `--circula-text-muted` | `#475569` | Textos secundarios |
+| `$circula-bg-subtle` | `--circula-bg-subtle` | `#f0f6fa` | Fondo landing |
+| `$circula-highlight-bg` | `--circula-highlight-bg` | `#f8fafc` | Fondo tarjetas |
+| `$circula-bg-sky` | `--circula-bg-sky` | `#f0f9ff` | Badges y pills |
+| `$circula-border-subtle` | `--circula-border-subtle` | `#e2e8f0` | Bordes suaves |
+
+Variantes precomputadas (generadas en `custom.scss`, no editar directamente):
+
+| CSS custom property | Descripcion |
+|---|---|
+| `--circula-primary-rgb` | RGB para `rgba()` |
+| `--circula-primary-dark` | darken 5% |
+| `--circula-primary-darker` | darken 10% |
+| `--circula-brand-text-rgb` | RGB para `rgba()` |
+| `--circula-brand-text-dark` | darken 5% |
+| `--circula-brand-text-darker` | darken 14% |
+| `--circula-brand-text-light` | lighten 5% |
+| `--circula-border-subtle-rgb` | RGB para `rgba()` |
+| `--circula-bg-sky-rgb` | RGB para `rgba()` |
+
+---
+
+### Usar colores en un componente Angular
+
+Las CSS custom properties estan en `:root` — **no se necesita ningun `@import`**:
+
+```scss
+/* mi-componente.scss */
+
+.mi-titulo {
+  color: var(--circula-text-dark);
+}
+
+.mi-badge {
+  background-color: var(--circula-bg-sky);
+  border: 1px solid rgba(var(--circula-primary-rgb), 0.2);
+  color: var(--circula-brand-text);
+}
+
+.mi-boton {
+  background-color: var(--circula-brand-text);
+  color: #fff;
+
+  &:hover {
+    background-color: var(--circula-brand-text-dark);
+    box-shadow: 0 8px 24px rgba(var(--circula-brand-text-rgb), 0.3);
+  }
+}
+```
+
+Regla: nunca hardcodear colores de marca. Siempre usar `var(--circula-*)`.
+
+---
+
+### Agregar un nuevo token de color
+
+1. Declarar en `_variables.scss`:
+
+```scss
+$circula-success-custom: #0ab39c;
+```
+
+2. Publicar en `custom.scss`:
+
+```scss
+:root {
+  --circula-success-custom:     #{$circula-success-custom};
+  --circula-success-custom-rgb: #{red($circula-success-custom)}, #{green($circula-success-custom)}, #{blue($circula-success-custom)};
+}
+```
+
+3. Usar en cualquier componente sin import:
+
+```scss
+.estado-activo {
+  color: var(--circula-success-custom);
+  background: rgba(var(--circula-success-custom-rgb), 0.1);
+}
+```
+
+---
+
+### Modificar un token existente
+
+Solo cambiar el valor en `_variables.scss`. El cambio se propaga a toda la app:
+
+```scss
+$circula-primary: #1a9de0;
+```
+
+---
+
+### Estilos globales vs. estilos de componente
+
+| Tipo | Ubicacion | Cuando usarlo |
+|---|---|---|
+| Reset / base | `src/styles.scss` | `body`, `box-sizing`, tipografia global |
+| Tokens SCSS | `_variables.scss` | Colores y medidas de marca |
+| CSS custom properties | `custom.scss` | Publicar tokens para componentes |
+| Componentes UI Bootstrap | `scss/components/` | Botones, cards, badges extendidos |
+| Paginas sin `styleUrls` | `scss/pages/` | Login, dashboard layouts completos |
+| Componente con `styleUrls` | `src/app/**/mi.scss` | Estilos encapsulados del componente |
+
+Si el `@Component` no tiene `styleUrls` → clases CSS en `scss/pages/`.
+Si el `@Component` tiene `styleUrls` → estilos en el `.scss` del componente (encapsulados por Angular).
+
+---
+
+### Agregar estilos para una pagina global nueva
+
+Crear el archivo en `src/assets/scss/pages/` e importarlo en `app.scss`:
+
+```scss
+@import "pages/mi-nueva-seccion";
+```
+
+---
+
 ## Convención de botones
 
 | Acción | Clase CSS |

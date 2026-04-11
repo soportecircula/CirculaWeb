@@ -7,6 +7,6 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './resources.html',
-  styleUrl: '../../../../assets/scss/pages/resources.scss',
+  styleUrl: './resources.scss',
 })
 export class Resources {}

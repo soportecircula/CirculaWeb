@@ -342,8 +342,21 @@ $cyans: (
 );
 // fusv-enable
 
+// ── Circula brand tokens ──────────────────────────────────────────────────
+// Fuente de verdad para toda la app. Úsalos como `$circula-primary`,
+// `$circula-brand-text`, etc. en cualquier archivo SCSS del proyecto.
+$circula-primary:       #80cff4;   // Azul Circula — acento principal
+$circula-brand-text:    #82C4FA;   // Azul claro — textos de marca / badges
+$circula-text-dark:     #1e293b;   // Slate 800 — textos principales
+$circula-text-muted:    #475569;   // Slate 600 — textos secundarios
+$circula-bg-subtle:     #f0f6fa;   // Fondo de página landing
+$circula-highlight-bg:  #f8fafc;   // Fondo highlight (gris-azul muy sutil)
+$circula-bg-sky:        #f0f9ff;   // Azul cielo — badges, pills, hover suave
+$circula-border-subtle: #e2e8f0;   // Slate 200 — bordes suaves
+// ─────────────────────────────────────────────────────────────────────────
+
 // scss-docs-start theme-color-variables
-$primary:       $indigo;
+$primary:       $circula-primary;  // Reemplaza el indigo Velzon por el azul Circula
 $secondary:     $blue;
 $success:       $green;
 $info:          $cyan;

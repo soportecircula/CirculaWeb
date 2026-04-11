@@ -8,6 +8,6 @@ import { Footer } from '../../layouts/footer/footer';
   imports: [RouterOutlet, Navbar, Footer],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './landing.html',
-  styleUrl: '../../../assets/scss/features/landing.scss',
+  styleUrl: './landing.scss',
 })
 export class Landing {}

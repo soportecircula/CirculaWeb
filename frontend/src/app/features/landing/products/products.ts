@@ -7,7 +7,7 @@ import { Esg } from '../../../layouts/esg/esg';
   imports: [REP, Esg],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './products.html',
-  styleUrl: '../../../../assets/scss/pages/products.scss',
+  styleUrl: './products.scss',
 })
 export class Products {
   showRep = signal(false);

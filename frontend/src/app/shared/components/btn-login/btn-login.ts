@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './btn-login.html',
-  styleUrl: '../../../../assets/scss/components/btn-login.scss',
+  styleUrl: './btn-login.scss',
 })
 export class BtnLogin {
   @Input() variant: 'navbar' | 'hero' = 'hero';

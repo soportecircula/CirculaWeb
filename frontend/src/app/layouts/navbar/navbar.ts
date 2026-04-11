@@ -9,7 +9,7 @@ import { BtnDemo } from '../../shared/components/btn-demo/btn-demo';
   imports: [RouterModule, CommonModule, BtnLogin, BtnDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './navbar.html',
-  styleUrl: '../../../assets/scss/structure/navbar.scss',
+  styleUrl: './navbar.scss',
 })
 export class Navbar {
   isMenuOpen = signal(false);

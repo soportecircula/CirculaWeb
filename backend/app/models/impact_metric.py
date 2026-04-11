@@ -14,4 +14,4 @@ class ImpactMetric(TimestampMixin, Base):
     label: Mapped[str] = mapped_column(String(100))
     value: Mapped[float] = mapped_column(Float, default=0.0)
     unit: Mapped[str | None] = mapped_column(String(20), default=None)
-    icon: Mapped[str | None] = mapped_column(String(50), default=None)
+    description: Mapped[str | None] = mapped_column(String(255), default=None)

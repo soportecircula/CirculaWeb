@@ -1,27 +1,28 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImpactMetric, ImpactService } from '../../../core/services/impact_metrics';
 import { BtnDemo } from '../../../shared/components/btn-demo/btn-demo';
 import { BtnLogin } from '../../../shared/components/btn-login/btn-login';
+import { ImpactMetricRead, ImpactMetricsService } from '../../../../client';
 
 @Component({
   selector: 'app-home',
   imports: [CommonModule, BtnDemo, BtnLogin],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.html',
-  styleUrl: '../../../../assets/scss/pages/home.scss',
+  styleUrl: './home.scss',
 })
 export class Home implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('impactSection') impactSection!: ElementRef<HTMLElement>;
 
-  metrics = signal<ImpactMetric[]>([]);
+  metrics = signal<ImpactMetricRead[]>([]);
   displayValues = signal<Record<number, number | undefined>>({});
   loading = signal<boolean>(true);
   error = signal<boolean>(false);
   brandsReady = signal<boolean>(false);
 
-  private readonly impactMetricsService = inject(ImpactService);
+  // private readonly impactMetricsService = inject(ImpactService);
+  private impactMetricsService = inject(ImpactMetricsService);
   private observer: IntersectionObserver | null = null;
   private hasAnimated = false;
   private isSectionVisible = false;
@@ -38,7 +39,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.impactMetricsService.getMetrics().subscribe({
+    this.impactMetricsService.impactMetricsGetImpactMetrics().subscribe({
       next: (data) => {
         this.metrics.set(data);
         
@@ -107,7 +108,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private animateCounters(metrics: ImpactMetric[]): void {
+  private animateCounters(metrics: ImpactMetricRead[]): void {
     const initialValues: Record<number, number> = {};
     metrics.forEach(m => initialValues[m.id] = 0);
     this.displayValues.set(initialValues);
