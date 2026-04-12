@@ -10,104 +10,55 @@
           Nuestros Servicios
         </div>
         <h1 class="products-title">
-          Infraestructura circular para<br />
+          Arquitectura circular para<br />
           <span class="text-hero-primary">cumplimiento REP</span> y escalamiento hacia
           <span class="text-hero-primary">ESG</span>
         </h1>
         <p class="products-subtitle">
-          Circula no es un software aislado. Es una infraestructura circular basada en blockchain
-          que integra a todos los actores de la cadena, desde el productor hasta el consumidor
-          final.
+          Circula no es un software aislado. Es una arquitectura circular basada en blockchain que
+          integra a todos los actores de la cadena, desde el productor hasta el consumidor final.
         </p>
       </div>
 
-      <!-- Cards de productos -->
-      <div
-        class="hero-card products-card"
-        style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px)"
-      >
-        <div class="products-grid">
-          <!-- REP HOY -->
-          <div class="product-col">
-            <span class="ps-badge">REP HOY</span>
-            <h2 class="product-col-title">Infraestructura para cumplimiento REP</h2>
-            <p class="product-col-text">
-              REP resuelve el cumplimiento desde una arquitectura trazable, auditable y operativa.
+      <!-- soluciones Comercial -->
+      <div class="hero-card portfolio-card">
+        <div class="portfolio-grid">
+          <!-- Columna izquierda -->
+          <div class="portfolio-left">
+            <span class="ps-badge">Solución Comercial</span>
+            <h2 class="portfolio-title">
+              REP hoy,
+              <span class="text-hero-primary">ESG<br />mañana.</span>
+            </h2>
+            <p class="portfolio-description">
+              Convertimos el cumplimiento regulatorio en una arquitectura operativa, trazable y
+              escalable. Integramos consultoría REP, software, operación, certificación de
+              aprovechamiento y evolución hacia ESG en una sola propuesta de valor.
             </p>
-
-            <ul class="product-feature-list">
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Levantamiento de línea base
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Conciliación técnica
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Cálculo de metas
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Dashboard integral
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Trazabilidad documental
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Expediente técnico y cierre ANLA
-              </li>
-            </ul>
-
-            <div class="product-actions">
-              <button class="btn btn-outline" (click)="showRep.set(true)">Ver flujo REP</button>
+            <div class="portfolio-actions">
+              <a href="/products#soluciones" class="btn btn-solid">Ver soluciones</a>
             </div>
           </div>
 
-          <!-- Divisor vertical -->
-          <div class="products-divider"></div>
-
-          <!-- ESG MAÑANA -->
-          <div class="product-col">
-            <span class="ps-badge">ESG MAÑANA</span>
-            <h2 class="product-col-title">Infraestructura para sostenibilidad escalable</h2>
-            <p class="product-col-text">
-              La misma infraestructura que resuelve REP habilita ESG sin duplicar el esfuerzo de
-              captura.
-            </p>
-
-            <ul class="product-feature-list">
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Gobierno de datos
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Indicadores ESG
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Trazabilidad extendida
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Integración de cadena
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Visibilidad para sostenibilidad corporativa
-              </li>
-              <li class="product-feature-item">
-                <i class="bi bi-check-circle-fill feature-icon"></i>
-                Expansión natural del valor
-              </li>
-            </ul>
-
-            <div class="product-actions">
-              <button class="btn btn-outline" (click)="showEsg.set(true)">Ver expansión ESG</button>
+          <!-- Columna derecha -->
+          <div class="portfolio-right">
+            <div class="portfolio-service-card">
+              <h4 class="service-title">Consultoría REP</h4>
+              <p class="service-text">
+                Diagnóstico, línea base, metas, plan de cumplimiento y reporte técnico.
+              </p>
+            </div>
+            <div class="portfolio-service-card">
+              <h4 class="service-title">Software y membresías</h4>
+              <p class="service-text">
+                Plataforma SaaS para planes individuales y colectivos con trazabilidad auditable.
+              </p>
+            </div>
+            <div class="portfolio-service-card">
+              <h4 class="service-title">Operación y certificación</h4>
+              <p class="service-text">
+                Logística, evidencias, aprovechamiento, transformación y soporte verificable.
+              </p>
             </div>
           </div>
         </div>
@@ -115,21 +66,239 @@
     </div>
   </section>
 
-  <!-- ── Overlay REP ─────────────────────────────────────────────────── -->
-  @if (showRep()) {
-    <div class="rep-overlay" (click)="showRep.set(false)">
-      <div class="rep-drawer" (click)="$event.stopPropagation()">
-        <app-rep (close)="showRep.set(false)" />
+  <!-- ─── Planes y Comparativa ─── -->
+  <section class="plans-section">
+    <div class="plans-container">
+      <div class="plans-header">
+        <h2 class="plans-title">Compara nuestras soluciones</h2>
+        <p class="plans-subtitle">
+          Elige la modalidad que mejor se ajusta a tu operación. La conversación comercial se activa
+          desde demo guiada o cita estratégica.
+        </p>
       </div>
-    </div>
-  }
 
-  <!-- ── Overlay ESG ─────────────────────────────────────────────────── -->
-  @if (showEsg()) {
-    <div class="rep-overlay" (click)="showEsg.set(false)">
-      <div class="rep-drawer" (click)="$event.stopPropagation()">
-        <app-esg (close)="showEsg.set(false)" />
+      <div class="plans-cards-grid">
+        <div class="grid-spacer"></div>
+        <div class="plan-summary-card">
+          <h3 class="plan-summary-title">Diagnóstico REP</h3>
+          <p class="plan-summary-text">
+            Ideal para organizaciones que necesitan entender su obligación, brechas y ruta inicial.
+          </p>
+          <div class="plan-summary-action">
+            <app-btn-demo [variant]="'hero'"></app-btn-demo>
+          </div>
+        </div>
+
+        <div class="plan-summary-card">
+          <h3 class="plan-summary-title">Plan Individual</h3>
+          <p class="plan-summary-text">
+            Para productores que requieren cumplimiento dedicado, seguimiento técnico y operación
+            estructurada.
+          </p>
+          <div class="plan-summary-action">
+            <app-btn-demo [variant]="'hero'"></app-btn-demo>
+          </div>
+        </div>
+
+        <div class="plan-summary-card">
+          <h3 class="plan-summary-title">Plan Colectivo</h3>
+          <p class="plan-summary-text">
+            Diseñado para administradores multiempresa con lectura consolidada, control y
+            crecimiento.
+          </p>
+          <div class="plan-summary-action">
+            <app-btn-demo [variant]="'hero'"></app-btn-demo>
+          </div>
+        </div>
+
+        <div class="plan-summary-card">
+          <h3 class="plan-summary-title">Arquitectura ESG</h3>
+          <p class="plan-summary-text">
+            Para marcas y organizaciones que quieren convertir la trazabilidad REP en valor
+            corporativo.
+          </p>
+          <div class="plan-summary-action">
+            <app-btn-demo [variant]="'hero'"></app-btn-demo>
+          </div>
+        </div>
+      </div>
+
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Funciones principales</th>
+              <th>Diagnóstico REP</th>
+              <th>Plan Individual</th>
+              <th>Plan Colectivo</th>
+              <th>Arquitectura ESG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Diagnóstico regulatorio y línea base</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+            </tr>
+            <tr>
+              <td>Cálculo de metas e indicadores REP</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+            </tr>
+            <tr>
+              <td>Acceso a software y trazabilidad documental</td>
+              <td class="empty">—</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+            </tr>
+            <tr>
+              <td>Operación logística y control de evidencias</td>
+              <td class="empty">—</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+            </tr>
+            <tr>
+              <td>Transformación y certificación de aprovechamiento</td>
+              <td class="empty">—</td>
+              <td class="empty">—</td>
+              <td class="empty">—</td>
+              <td class="empty">Habilitado</td>
+            </tr>
+            <tr>
+              <td>Marketplace y escalamiento comercial</td>
+              <td class="empty">—</td>
+              <td class="empty">—</td>
+              <td class="empty">Habilitado</td>
+              <td class="empty">Habilitado</td>
+            </tr>
+            <tr>
+              <td>Evolución a sostenibilidad y narrativa ESG</td>
+              <td class="empty">—</td>
+              <td class="empty">Opcional</td>
+              <td class="empty">Opcional</td>
+              <td class="empty">Habilitado</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-footer-note">
+        Cada solución puede configurarse de acuerdo con el tipo de cliente, el volumen operativo y
+        el nivel de acompañamiento requerido.
+      </p>
+    </div>
+  </section>
+
+  <!-- =============================================
+      SECCIÓN DE soluciones DE SERVICIOS
+  ============================================= -->
+  <section id="soluciones" class="portfolio-services-section">
+    <div class="portfolio-services-container">
+      <div class="hero-card portfolio-services-card">
+        <div class="portfolio-services-header">
+          <span class="ps-badge">Nuestras soluciones</span>
+          <h2 class="portfolio-main-title">
+            Servicios diseñados para cumplimiento,<br />
+            operación y escalamiento
+          </h2>
+          <p class="portfolio-main-subtitle">
+            La arquitectura reúne las líneas de negocio clave del proyecto: asesoramiento REP,
+            software con membresías, acompañamiento logístico, transformación y certificación, y la
+            evolución estratégica hacia sostenibilidad y ESG.
+          </p>
+        </div>
+
+        <div class="services-cards-grid">
+          <div class="service-detail-card">
+            <div class="service-icon-wrap"><i class="bi bi-search"></i></div>
+            <h3 class="service-detail-title">Consultoría REP</h3>
+            <p class="service-detail-description">
+              Ordenamos la obligación, estructuramos la línea base y convertimos la norma en un plan
+              técnico ejecutable.
+            </p>
+            <ul class="service-items-list">
+              <li>Diagnóstico regulatorio y brechas de cumplimiento.</li>
+              <li>Cálculo de metas, indicadores y escenarios.</li>
+              <li>Plan de cumplimiento y expediente técnico.</li>
+            </ul>
+          </div>
+
+          <div class="service-detail-card">
+            <div class="service-icon-wrap"><i class="bi bi-laptop"></i></div>
+            <h3 class="service-detail-title">Software y membresías</h3>
+            <p class="service-detail-description">
+              Una plataforma SaaS para operar productores, planes individuales y colectivos con
+              evidencia centralizada.
+            </p>
+            <ul class="service-items-list">
+              <li>Onboarding, carga estructurada y trazabilidad documental.</li>
+              <li>Dashboards, alertas, reportes y exportables.</li>
+              <li>Membresías para operación recurrente y crecimiento.</li>
+            </ul>
+          </div>
+
+          <div class="service-detail-card">
+            <div class="service-icon-wrap"><i class="bi bi-arrow-repeat"></i></div>
+            <h3 class="service-detail-title">Operación y trazabilidad</h3>
+            <p class="service-detail-description">
+              Conectamos la estrategia con la ejecución en territorio para que el cumplimiento tenga
+              respaldo operativo real.
+            </p>
+            <ul class="service-items-list">
+              <li>Acompañamiento logístico REP y coordinación operativa.</li>
+              <li>Consolidación de evidencias, soportes y expedientes.</li>
+              <li>Lectura ejecutiva del estado de cumplimiento.</li>
+            </ul>
+          </div>
+
+          <div class="service-detail-card">
+            <div class="service-icon-wrap"><i class="bi bi-recycle"></i></div>
+            <h3 class="service-detail-title">Transformación y certificación</h3>
+            <p class="service-detail-description">
+              Unimos cumplimiento con aprovechamiento verificable y certificación técnica del
+              resultado.
+            </p>
+            <ul class="service-items-list">
+              <li>Transformación de residuos de envases y empaques.</li>
+              <li>Certificación de aprovechamiento y trazabilidad.</li>
+              <li>Soporte documental para auditoría y autoridad.</li>
+            </ul>
+          </div>
+
+          <div class="service-detail-card">
+            <div class="service-icon-wrap"><i class="bi bi-people"></i></div>
+            <h3 class="service-detail-title">Plan colectivo y marketplace</h3>
+            <p class="service-detail-description">
+              El modelo colectivo habilita operación multiempresa, lectura comparativa y crecimiento
+              comercial dentro del ecosistema.
+            </p>
+            <ul class="service-items-list">
+              <li>Administración de múltiples productores en una sola membresía.</li>
+              <li>Funciones masivas y comparativas por cliente.</li>
+              <li>Marketplace para originación y expansión comercial.</li>
+            </ul>
+          </div>
+
+          <div class="service-detail-card">
+            <div class="service-icon-wrap"><i class="bi bi-tree"></i></div>
+            <h3 class="service-detail-title">ESG y cultura ambiental</h3>
+            <p class="service-detail-description">
+              Usamos la data operativa y regulatoria para escalar a sostenibilidad corporativa,
+              reputación y valor ESG.
+            </p>
+            <ul class="service-items-list">
+              <li>Consultoría ambiental a marcas y multimarcas.</li>
+              <li>Educación ambiental y cultura ciudadana.</li>
+              <li>Narrativa ESG verificable desde datos reales.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
-  }
+  </section>
 </div>

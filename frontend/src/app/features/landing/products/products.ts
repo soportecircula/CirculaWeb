@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { REP } from '../../../layouts/rep/rep';
-import { Esg } from '../../../layouts/esg/esg';
+import { BtnDemo } from '../../../shared/components/btn-demo/btn-demo';
 
 @Component({
   selector: 'app-products',
-  imports: [REP, Esg],
+  imports: [BtnDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './products.html',
   styleUrl: './products.scss',
 })
 export class Products {
-  showRep = signal(false);
-  showEsg = signal(false);
 }

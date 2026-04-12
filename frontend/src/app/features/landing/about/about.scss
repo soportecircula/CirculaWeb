@@ -35,7 +35,7 @@
 // ─── Utility classes ─────────────────────────────────────────────────────────
 
 .text-hero-primary {
-  color: var(--circula-brand-text);
+  color: var(--circula-text-dark);
 }
 
 .about-badge {
@@ -193,7 +193,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: 0px;
 
   @media (max-width: 480px) {
     margin-bottom: 32px;
@@ -203,9 +203,7 @@
 .team-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  max-width: 1000px;
-  margin: 0 auto;
+  gap: 24px;
 
   @media (max-width: 900px) {
     grid-template-columns: repeat(2, 1fr);
@@ -213,135 +211,69 @@
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
-    gap: 48px;
   }
 }
 
 .team-member {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: transform 0.3s ease;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     transform: translateY(-4px);
-    
-    .team-member-image-wrap {
-      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
-      border-color: rgba(var(--circula-primary-rgb), 0.5);
-    }
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   }
 }
 
 .team-member-image-wrap {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  background: transparent;
-  margin: 0 auto 24px;
-  display: flex;
-  align-items: flex-end; /* Alineado abajo para fotos de retrato que cortan en los hombros */
-  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 400px;
+  border-radius: 20px;
   overflow: hidden;
-  border: 4px solid #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.2) 45%, transparent 70%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  @media (max-width: 600px) {
+    height: 340px;
+  }
 }
 
 .team-member-image {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
+}
+
+.team-member-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  padding: 28px;
 }
 
 .team-member-name {
   font-size: 20px;
-  font-weight: 800;
-  color: var(--circula-text-dark);
-  margin: 0 0 6px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
   letter-spacing: -0.3px;
 }
 
 .team-member-role {
-  font-size: 15px;
-  color: var(--circula-text-muted);
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.75);
   margin: 0;
-}
-
-// ─── Marcas Aliadas (Estático) ────────────────────────────────────────────
-
-.partners-section {
-  position: relative;
-  z-index: 1;
-  padding: 0 0 24px;
-}
-
-.partners-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.partners-header {
-  text-align: center;
-  margin-bottom: 64px;
-}
-
-.partners-badge {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--circula-brand-text); /* Verde similar al de la imagen de referencia */
-  margin-bottom: 16px;
-  display: block;
-}
-
-.partners-title {
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--circula-text-dark); /* Dark black/gray */
-  margin: 0 auto;
-  max-width: 600px;
-  line-height: 1.3;
-  letter-spacing: -0.5px;
-
-  @media (max-width: 768px) {
-    font-size: 28px;
-  }
-}
-
-.partners-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 48px 80px;
-  max-width: 1000px;
-  margin: 0 auto;
-
-  @media (max-width: 768px) {
-    gap: 40px 48px;
-  }
-}
-
-.partner-logo-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  img {
-    height: 56px;
-    max-width: 180px;
-    object-fit: contain;
-    filter: grayscale(100%) opacity(0.7);
-    transition: all 0.3s ease;
-
-    @media (max-width: 768px) {
-      height: 48px;
-    }
-
-    &:hover {
-      filter: grayscale(0%) opacity(1);
-    }
-  }
+  line-height: 1.4;
 }

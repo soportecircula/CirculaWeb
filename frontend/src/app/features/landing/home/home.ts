@@ -3,15 +3,16 @@ import { CommonModule } from '@angular/common';
 import { BtnDemo } from '../../../shared/components/btn-demo/btn-demo';
 import { BtnLogin } from '../../../shared/components/btn-login/btn-login';
 import { ImpactMetricRead, ImpactMetricsService } from '../../../../client';
+import { BrandsSlider } from '../../../layouts/brands-slider/brands-slider';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, BtnDemo, BtnLogin],
+  imports: [CommonModule, BtnDemo, BtnLogin, BrandsSlider],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home implements OnInit, AfterViewInit, OnDestroy {
+export class Home implements OnInit, OnDestroy {
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('impactSection') impactSection!: ElementRef<HTMLElement>;
 
@@ -19,7 +20,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   displayValues = signal<Record<number, number | undefined>>({});
   loading = signal<boolean>(true);
   error = signal<boolean>(false);
-  brandsReady = signal<boolean>(false);
 
   // private readonly impactMetricsService = inject(ImpactService);
   private impactMetricsService = inject(ImpactMetricsService);
@@ -66,15 +66,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // Esperar dos frames de animación antes de iniciar el slider.
-    // El doble rAF garantiza que el primer frame ya fue pintado y el
-    // compositor GPU tiene sus capas listas, evitando el arranque lento.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        this.brandsReady.set(true);
-      });
-    });
-
     if (this.heroVideo) {
       const video = this.heroVideo.nativeElement;
       video.muted = true;
