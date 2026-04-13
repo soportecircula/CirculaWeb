@@ -1,0 +1,56 @@
+// ── Variante hero ──────────────────────────────────────────────
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, filter 0.25s ease;
+    font-family: inherit;
+}
+
+.btn-outline {
+    background-color: #fff;
+    border: 1px solid rgba(var(--circula-border-subtle-rgb), 0.8);
+    color: var(--circula-brand-text);
+
+    &:hover {
+        background-color: var(--circula-bg-sky);
+        border-color: rgba(var(--circula-primary-rgb), 0.3);
+        color: var(--circula-brand-text-dark);
+    }
+}
+
+// ── Variante navbar ────────────────────────────────────────────
+.nav-pill {
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--circula-text-muted);
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    white-space: nowrap;
+    font-family: inherit;
+    line-height: 1;
+
+    &:hover {
+        background: var(--circula-highlight-bg);
+        color: var(--circula-text-dark);
+    }
+}
+
+.action-outline {
+    border-color: rgba(var(--circula-primary-rgb), 0.6);
+    color: var(--circula-primary);
+    font-weight: 600;
+    padding: 8px 20px;
+
+    &:hover {
+        background: rgba(var(--circula-primary-rgb), 0.06);
+        border-color: var(--circula-primary);
+        color: var(--circula-brand-text);
+    }
+}

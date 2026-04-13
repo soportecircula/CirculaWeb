@@ -1,0 +1,128 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AuthService } from '../../core/auth/auth.service';
+
+@Component({
+  selector: 'app-dashboard',
+  imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Dashboard</h4>
+            <div class="page-title-right">
+              <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item active">Dashboard</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                  <i class="mdi mdi-recycle display-4 text-success"></i>
+                </div>
+                <div class="flex-grow-1 ms-4">
+                  <h4 class="mb-1">
+                    Bienvenido{{ auth.user()?.full_name ? ', ' + auth.user()!.full_name : '' }}
+                  </h4>
+                  <p class="text-muted mb-0">
+                    Plataforma REP — Responsabilidad Extendida del Productor
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card card-animate">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <p class="fw-medium text-muted mb-0">Módulos REP</p>
+                  <h2 class="mt-4 ff-secondary fw-semibold">
+                    <span class="counter-value text-muted fs-16">Próximamente</span>
+                  </h2>
+                  <p class="mb-0 text-muted">
+                    <span class="text-info">
+                      <i class="mdi mdi-information-outline me-1"></i>En desarrollo
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <div class="avatar-sm flex-shrink-0">
+                    <span class="avatar-title bg-success-subtle rounded fs-3">
+                      <i class="mdi mdi-recycle text-success"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card card-animate">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <p class="fw-medium text-muted mb-0">Reportes</p>
+                  <h2 class="mt-4 ff-secondary fw-semibold">
+                    <span class="counter-value text-muted fs-16">Próximamente</span>
+                  </h2>
+                  <p class="mb-0 text-muted">
+                    <span class="text-info">
+                      <i class="mdi mdi-information-outline me-1"></i>En desarrollo
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <div class="avatar-sm flex-shrink-0">
+                    <span class="avatar-title bg-primary-subtle rounded fs-3">
+                      <i class="mdi mdi-chart-line text-primary"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card card-animate">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <p class="fw-medium text-muted mb-0">Cumplimiento</p>
+                  <h2 class="mt-4 ff-secondary fw-semibold">
+                    <span class="counter-value text-muted fs-16">Próximamente</span>
+                  </h2>
+                  <p class="mb-0 text-muted">
+                    <span class="text-info">
+                      <i class="mdi mdi-information-outline me-1"></i>En desarrollo
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <div class="avatar-sm flex-shrink-0">
+                    <span class="avatar-title bg-info-subtle rounded fs-3">
+                      <i class="mdi mdi-shield-check text-info"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+})
+export class DashboardComponent {
+  readonly auth = inject(AuthService);
+}

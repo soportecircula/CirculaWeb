@@ -1,0 +1,41 @@
+# Dependencias y builds
+**/.venv
+**/node_modules
+**/dist
+**/.angular
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/.pytest_cache
+**/htmlcov
+**/.coverage
+**/.coverage.*
+
+# Git
+.git
+.gitignore
+
+# Directorios que no forman parte del build
+velzon/
+template/
+docs/
+.agents/
+.cursor/
+.vscode/
+.claude/
+
+# Archivos de desarrollo/entorno
+.env
+.env.*
+!.env.example
+*.md
+*.log
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# IDE
+*.swp
+*.swo
+.idea/

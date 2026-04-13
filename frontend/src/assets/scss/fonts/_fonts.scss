@@ -1,0 +1,44 @@
+//
+// Google font - Poppins
+//
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+//
+// Premium Font : HKGrotesk (woff2 only for modern browsers)
+//
+
+@font-face {
+    font-family: "hkgrotesk";
+    src: url("../../fonts/hkgrotesk-light.woff2") format("woff2");
+    font-weight: 300;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "hkgrotesk";
+    src: url("../../fonts/hkgrotesk-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "hkgrotesk";
+    src: url("../../fonts/hkgrotesk-medium.woff2") format("woff2");
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "hkgrotesk";
+    src: url("../../fonts/hkgrotesk-semibold.woff2") format("woff2");
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "hkgrotesk";
+    src: url("../../fonts/hkgrotesk-bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+}
