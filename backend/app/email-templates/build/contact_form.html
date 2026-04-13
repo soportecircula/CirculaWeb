@@ -1,0 +1,154 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nuevo contacto - {{ project_name }}</title>
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #fafbfc;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      .wrapper {
+        background-color: #fafbfc;
+        padding: 40px 20px;
+      }
+      .card {
+        background: #ffffff;
+        border-radius: 8px;
+        max-width: 600px;
+        margin: 0 auto;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      .header {
+        background: linear-gradient(135deg, #82c4fa 0%, #4aa8f0 100%);
+        padding: 36px 40px;
+        text-align: center;
+        border-bottom: 3px solid #4aa8f0;
+      }
+      .header-title {
+        color: #ffffff;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 0;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.12);
+      }
+      .header-sub {
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 13px;
+        margin: 8px 0 0;
+      }
+      .body {
+        padding: 40px;
+      }
+      .section-title {
+        font-size: 11px;
+        font-weight: bold;
+        color: #2a8fd4;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin: 0 0 16px;
+      }
+      table.fields {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table.fields tr td {
+        padding: 12px 0;
+        border-bottom: 1px solid #e8f4fd;
+        font-size: 14px;
+        vertical-align: top;
+      }
+      table.fields tr:last-child td {
+        border-bottom: none;
+      }
+      table.fields .label {
+        color: #5b8fb5;
+        width: 36%;
+        font-weight: 600;
+      }
+      table.fields .value {
+        color: #1e293b;
+      }
+      .message-box {
+        background: #f0f8ff;
+        border-left: 3px solid #82c4fa;
+        border-radius: 4px;
+        padding: 16px 20px;
+        margin-top: 8px;
+        font-size: 14px;
+        color: #334155;
+        line-height: 1.6;
+      }
+      .footer {
+        background: #f0f8ff;
+        padding: 20px 40px;
+        text-align: center;
+        border-top: 2px solid #e8f4fd;
+      }
+      .footer p {
+        color: #82c4fa;
+        font-size: 12px;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="card">
+        <div class="header">
+          <p class="header-title">Nuevo mensaje de contacto</p>
+          <p class="header-sub">
+            {{ project_name }} &mdash; Formulario de solicitud
+          </p>
+        </div>
+        <div class="body">
+          <p class="section-title">Datos del solicitante</p>
+          <table class="fields">
+            <tr>
+              <td class="label">Nombre</td>
+              <td class="value">{{ name }}</td>
+            </tr>
+            <tr>
+              <td class="label">Compa&ntilde;&iacute;a</td>
+              <td class="value">{{ company }}</td>
+            </tr>
+            <tr>
+              <td class="label">Tipo de requerimiento</td>
+              <td class="value">{{ requirement_type }}</td>
+            </tr>
+            <tr>
+              <td class="label">Tel&eacute;fono</td>
+              <td class="value">{{ phone }}</td>
+            </tr>
+            <tr>
+              <td class="label">Email</td>
+              <td class="value">
+                <a href="mailto:{{ email }}" style="color: #2a8fd4"
+                  >{{ email }}</a
+                >
+              </td>
+            </tr>
+          </table>
+
+          {% if message and message != '—' %}
+          <p class="section-title" style="margin-top: 28px">Mensaje</p>
+          <div class="message-box">{{ message }}</div>
+          {% endif %}
+        </div>
+        <div class="footer">
+          <p>
+            Este mensaje fue enviado desde el formulario de contacto de {{
+            project_name }}.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -89,21 +89,39 @@
           <h3 class="form-title">Solicita atención</h3>
           <p class="form-description">Completa este formulario y te contactaremos.</p>
 
-          <form class="demo-form">
-            <div class="form-group">
+          <!-- ── Estado de éxito ── -->
+          <div *ngIf="success()" class="form-success">
+            <div class="form-success-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h4 class="form-success-title">¡Mensaje enviado!</h4>
+            <p class="form-success-text">
+              Nos pondremos en contacto contigo a la brevedad posible.
+            </p>
+          </div>
+
+          <!-- ── Formulario ── -->
+          <form *ngIf="!success()" class="demo-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+            <div class="form-group" [class.has-error]="hasError('name')">
               <label class="form-label">Nombre</label>
-              <input type="text" class="form-control" placeholder="Tu nombre completo" />
+              <input type="text" class="form-control" placeholder="Tu nombre completo"
+                     formControlName="name" />
+              <span *ngIf="hasError('name')" class="field-error">{{ getError('name') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" [class.has-error]="hasError('company')">
               <label class="form-label">Compañía</label>
-              <input type="text" class="form-control" placeholder="Nombre de la compañía" />
+              <input type="text" class="form-control" placeholder="Nombre de la compañía"
+                     formControlName="company" />
+              <span *ngIf="hasError('company')" class="field-error">{{ getError('company') }}</span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" [class.has-error]="hasError('requirement_type')">
               <label class="form-label">Tipo de requerimiento</label>
               <div class="select-wrapper">
-                <select class="form-control form-select">
+                <select class="form-control form-select" formControlName="requirement_type">
+                  <option value="" disabled selected>Selecciona una opción</option>
                   <option value="demo_rep">Demo diagnóstico REP</option>
                   <option value="demo_indv">Demo Individual</option>
                   <option value="demo_col">Demo Colectivo</option>
@@ -112,29 +130,52 @@
                   <option value="info">Quiero más información</option>
                 </select>
               </div>
+              <span *ngIf="hasError('requirement_type')" class="field-error">{{ getError('requirement_type') }}</span>
             </div>
 
             <div class="form-row">
-              <div class="form-group">
+              <div class="form-group" [class.has-error]="hasError('phone')">
                 <label class="form-label">Teléfono</label>
-                <input type="tel" class="form-control" placeholder="Teléfono" />
+                <input type="tel" class="form-control" placeholder="Ej: 3001234567"
+                       formControlName="phone" />
+                <span *ngIf="hasError('phone')" class="field-error">{{ getError('phone') }}</span>
               </div>
-              <div class="form-group">
+              <div class="form-group" [class.has-error]="hasError('email')">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-control" placeholder="Email" />
+                <input type="email" class="form-control" placeholder="correo&#64;empresa.com"
+                       formControlName="email" />
+                <span *ngIf="hasError('email')" class="field-error">{{ getError('email') }}</span>
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Mensaje</label>
+            <div class="form-group" [class.has-error]="hasError('message')">
+              <label class="form-label">
+                Mensaje <span class="label-optional">(opcional)</span>
+              </label>
               <textarea
                 class="form-control form-textarea"
-                placeholder="Mensaje"
+                placeholder="¿En qué podemos ayudarte?"
                 rows="4"
+                formControlName="message"
               ></textarea>
+              <div class="field-footer">
+                <span *ngIf="hasError('message')" class="field-error">{{ getError('message') }}</span>
+                <span class="char-count" [class.char-count--limit]="messageLength >= 450">
+                  {{ messageLength }}/500
+                </span>
+              </div>
             </div>
 
-            <button type="button" class="btn btn-dark form-submit-btn">Enviar mensaje</button>
+            <div *ngIf="errorMsg()" class="form-error-banner">
+              <i class="bi bi-exclamation-circle"></i> {{ errorMsg() }}
+            </div>
+
+            <button type="submit" class="btn btn-dark form-submit-btn" [disabled]="loading()">
+              <span *ngIf="!loading()">Enviar mensaje</span>
+              <span *ngIf="loading()" class="btn-loading">
+                <i class="bi bi-arrow-repeat spin"></i> Enviando...
+              </span>
+            </button>
           </form>
         </div>
       </div>

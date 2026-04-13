@@ -448,4 +448,119 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// ─── Validación de campos ────────────────────────────────────────────────────
+.has-error .form-control {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+
+  &:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+  }
+}
+
+.field-error {
+  display: block;
+  font-size: 12.5px;
+  color: #ef4444;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.label-optional {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--circula-text-muted);
+}
+
+.field-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  min-height: 20px;
+  margin-top: 6px;
+}
+
+.char-count {
+  font-size: 12px;
+  color: var(--circula-text-muted);
+  margin-left: auto;
+  flex-shrink: 0;
+
+  &--limit {
+    color: #f59e0b;
+    font-weight: 600;
+  }
+}
+
+// ─── Banner de error global ──────────────────────────────────────────────────
+.form-error-banner {
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  color: #dc2626;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// ─── Estado de spinner en botón ──────────────────────────────────────────────
+.btn-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spin {
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ─── Confirmación de envío ───────────────────────────────────────────────────
+.form-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  gap: 16px;
+}
+
+.form-success-icon {
+  font-size: 52px;
+  color: #22c55e;
+  line-height: 1;
+}
+
+.form-success-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--circula-text-dark);
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.form-success-text {
+  font-size: 15px;
+  color: var(--circula-text-muted);
+  margin: 0;
+  max-width: 320px;
+  line-height: 1.6;
 }
