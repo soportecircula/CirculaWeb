@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, OnDestroy, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, signal } from '@angular/core';
 
 @Component({
   selector: 'app-brands-slider',
   imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './brands-slider.html',
   styleUrl: './brands-slider.scss',
 })

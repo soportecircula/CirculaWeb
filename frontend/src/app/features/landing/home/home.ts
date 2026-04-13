@@ -105,33 +105,19 @@ export class Home implements OnInit, OnDestroy {
     this.displayValues.set(initialValues);
 
     const duration = 2000;
-    const frameRate = 16;
-    const totalFrames = Math.round(duration / frameRate);
+    const totalFrames = Math.round(duration / (1000 / 60));
+    let frame = 0;
+    const targets = metrics.map(m => ({ id: m.id, value: m.value }));
 
-    metrics.forEach(metric => {
-      let frame = 0;
-      const targetValue = metric.value;
-      const updateValue = () => {
-        frame++;
-        const progress = frame / totalFrames;
-        const currentVal = targetValue * this.easeOutQuad(progress);
-        
-        this.displayValues.update(vals => ({
-          ...vals,
-          [metric.id]: currentVal
-        }));
-
-        if (frame < totalFrames) {
-          requestAnimationFrame(updateValue);
-        } else {
-          this.displayValues.update(vals => ({
-            ...vals,
-            [metric.id]: targetValue
-          }));
-        }
-      };
-      requestAnimationFrame(updateValue);
-    });
+    const loop = () => {
+      frame++;
+      const eased = this.easeOutQuad(Math.min(frame / totalFrames, 1));
+      this.displayValues.set(
+        Object.fromEntries(targets.map(m => [m.id, m.value * eased]))
+      );
+      if (frame < totalFrames) requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
   }
 
   private easeOutQuad(t: number): number {
