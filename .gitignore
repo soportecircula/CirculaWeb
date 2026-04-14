@@ -8,6 +8,7 @@ htmlcov/
 
 # Node / Frontend
 node_modules/
+package-lock.json
 dist/
 .angular/
 frontend/src/client/
