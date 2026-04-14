@@ -28,6 +28,13 @@
 - [x] Docker Compose dev (compose.override.yml)
 - [x] Docker Compose prod (compose.yml + compose.traefik.yml)
 - [x] Scripts: generate-client.sh, init-db.sh
+- [x] Deploy backend en Railway (Docker + PostgreSQL + Redis managed)
+- [x] Deploy frontend en Vercel (bun build, SPA rewrite)
+- [x] Dominio `api.grupocircula.com` → Railway (CNAME + TXT verificado en Hostinger)
+- [x] Dominio `www.grupocircula.com` → Vercel
+- [x] Email transaccional vía Resend (`noreply@grupocircula.com`)
+- [x] Seed de `impact_metrics` en `initial_data.py`
+- [x] Formulario de contacto conectado a `ContactService` (ng-openapi)
 
 ---
 
