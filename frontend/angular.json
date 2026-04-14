@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -59,9 +60,15 @@
                 "glob": "**/*",
                 "input": "src/assets/fonts",
                 "output": "/assets/fonts"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/videos",
+                "output": "/assets/videos"
               }
             ],
             "stylePreprocessorOptions": {
+              "includePaths": ["src/assets/scss"],
               "sass": {
                 "silenceDeprecations": [
                   "import",

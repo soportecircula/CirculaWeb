@@ -1,0 +1,66 @@
+<nav class="navbar-circula">
+  <div class="navbar-container">
+    <div class="nav-brand-block" routerLink="/">
+      <div class="logo-circula">
+        <img src="../../../assets/images/LOGO AZUL.png" alt="Logo Circula" />
+      </div>
+      <div class="brand-text-wrapper">
+        <span class="brand-title">CIRCULA</span>
+        <span class="brand-subtitle">Colombia S.A.S</span>
+      </div>
+    </div>
+
+    <button class="menu-toggle" (click)="toggleMenu()" [class.open]="isMenuOpen()">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <div class="nav-overlay" [class.show]="isMenuOpen()" (click)="toggleMenu()"></div>
+
+    <div class="nav-menu-block" [class.open]="isMenuOpen()">
+      <div class="nav-links">
+        <button
+          class="nav-pill"
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="isMenuOpen.set(false)"
+        >
+          Inicio
+        </button>
+        <button
+          class="nav-pill"
+          routerLink="/products"
+          routerLinkActive="active"
+          (click)="isMenuOpen.set(false)"
+        >
+          Servicios
+        </button>
+        <button
+          class="nav-pill"
+          routerLink="/about"
+          routerLinkActive="active"
+          (click)="isMenuOpen.set(false)"
+        >
+          Nosotros
+        </button>
+        <button
+          class="nav-pill"
+          routerLink="/resources"
+          routerLinkActive="active"
+          (click)="isMenuOpen.set(false)"
+        >
+          Recursos
+        </button>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <div class="nav-actions">
+        <app-btn-login variant="navbar" (clicked)="isMenuOpen.set(false)" />
+        <app-btn-demo variant="navbar" (clicked)="isMenuOpen.set(false)" />
+      </div>
+    </div>
+  </div>
+</nav>

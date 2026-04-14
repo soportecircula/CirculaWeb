@@ -4,7 +4,8 @@ Based on Velzon theme (adapted)
 */
 
 // Fonts
-@import "fonts/fonts";
+// @import "fonts/fonts";
+@import "fonts/poppins";
 
 // Core files
 @import "bootstrap/scss/functions";
@@ -66,6 +67,9 @@ Based on Velzon theme (adapted)
 // Pages
 @import "pages/authentication";
 @import "pages/dashboard";
+
+// Circula tokens (:root CSS custom properties)
+@import "custom";
 
 // Angular custom overrides
 @import "./angular-custom.scss";

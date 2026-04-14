@@ -38,7 +38,6 @@ def _ensure_superuser(session: Session) -> User:
             logger.info("Superuser '%s' password synced", settings.FIRST_SUPERUSER)
     return user
 
-
 def init_db(session: Session) -> None:
     _ensure_superuser(session)
 

@@ -56,6 +56,8 @@ def send_email(
         smtp_options["password"] = settings.SMTP_PASSWORD
     response = message.send(to=email_to, smtp=smtp_options)
     logger.info(f"send email result: {response}")
+    if response.status_code not in (250, 221):
+        raise RuntimeError(f"Error al enviar correo a {email_to}: {response}")
 
 
 def generate_test_email(email_to: str) -> EmailData:
@@ -80,6 +82,32 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
             "email": email_to,
             "valid_hours": settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS,
             "link": link,
+        },
+    )
+    return EmailData(html_content=html_content, subject=subject)
+
+
+def generate_contact_form_email(form_data: Any) -> EmailData:
+    requirement_labels: dict[str, str] = {
+        "demo_rep": "Demo diagnóstico REP",
+        "demo_indv": "Demo Individual",
+        "demo_col": "Demo Colectivo",
+        "demo_esg": "Demo ESG",
+        "support": "Soporte técnico",
+        "info": "Quiero más información",
+    }
+    label = requirement_labels.get(form_data.requirement_type, form_data.requirement_type)
+    subject = f"[{settings.PROJECT_NAME}] Nuevo contacto: {label} — {form_data.name}"
+    html_content = render_email_template(
+        template_name="contact_form.html",
+        context={
+            "project_name": settings.PROJECT_NAME,
+            "name": form_data.name,
+            "company": form_data.company,
+            "requirement_type": label,
+            "phone": form_data.phone,
+            "email": form_data.email,
+            "message": form_data.message or "—",
         },
     )
     return EmailData(html_content=html_content, subject=subject)

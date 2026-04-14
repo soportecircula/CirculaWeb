@@ -1,6 +1,6 @@
 import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { LOCALE_ID } from '@angular/core';
-import { provideRouter, withRouterConfig } from '@angular/router';
+import { provideRouter, withRouterConfig, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
@@ -19,7 +19,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     { provide: LOCALE_ID, useValue: 'es-CO' },
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withRouterConfig({ paramsInheritanceStrategy: 'always' })),
+    provideRouter(
+      routes,
+      withRouterConfig({ paramsInheritanceStrategy: 'always' }),
+      withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'top' }),
+    ),
     provideHttpClient(withInterceptorsFromDi()),
     provideDefaultClient({
       basePath: environment.apiUrl,
