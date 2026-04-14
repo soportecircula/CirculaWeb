@@ -33,4 +33,4 @@ RUN uv sync --frozen --package app
 
 WORKDIR /app/backend/
 
-CMD ["fastapi", "run", "--workers", "4", "app/main.py"]
+CMD ["bash", "/app/backend/scripts/start.sh"]
