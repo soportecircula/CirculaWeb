@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { ContactService } from '../../../client/services/contact.service';
+import { ContactService } from '../../../../client/services/contact.service';
 
 @Component({
   selector: 'app-resources',
@@ -62,7 +62,7 @@ export class Resources {
         this.loading.set(false);
         this.success.set(true);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.loading.set(false);
         this.errorMsg.set(err?.error?.detail ?? 'Ocurrió un error. Por favor intenta de nuevo.');
       },
