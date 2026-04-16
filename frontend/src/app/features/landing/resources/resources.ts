@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { ContactService } from '../../../../client/services/contact.service';
 
 @Component({
   selector: 'app-resources',
@@ -14,7 +14,7 @@ import { NgIf } from '@angular/common';
 })
 export class Resources {
   private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
+  private contactService = inject(ContactService);
 
   readonly loading = signal(false);
   readonly submitted = signal(false);
@@ -57,12 +57,12 @@ export class Resources {
     this.loading.set(true);
     this.errorMsg.set(null);
 
-    this.http.post('/api/v1/contact/submit', this.form.value).subscribe({
+    this.contactService.contactSubmitContactForm(this.form.value as any).subscribe({
       next: () => {
         this.loading.set(false);
         this.success.set(true);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.loading.set(false);
         this.errorMsg.set(err?.error?.detail ?? 'Ocurrió un error. Por favor intenta de nuevo.');
       },

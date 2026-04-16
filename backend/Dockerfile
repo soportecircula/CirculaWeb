@@ -15,11 +15,11 @@ WORKDIR /app/
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Instalar dependencias primero (capa cacheable, se invalida solo si uv.lock/pyproject.toml cambian)
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-workspace --package app
+# Copiar archivos de workspace (necesarios para uv sync)
+COPY uv.lock pyproject.toml /app/
+
+# Instalar dependencias del workspace sin instalar el paquete app todavía
+RUN uv sync --frozen --no-install-workspace --package app
 
 COPY ./backend/scripts /app/backend/scripts
 
@@ -29,11 +29,8 @@ COPY ./backend/app /app/backend/app
 COPY ./backend/tests /app/backend/tests
 
 # Instalar el paquete app en el virtualenv
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --package app
+RUN uv sync --frozen --package app
 
 WORKDIR /app/backend/
 
-CMD ["fastapi", "run", "--workers", "4", "app/main.py"]
+CMD ["bash", "/app/backend/scripts/start.sh"]
