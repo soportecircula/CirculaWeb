@@ -10,7 +10,6 @@ import { ContactService } from '../../../../client/services/contact.service';
   imports: [RouterModule, ReactiveFormsModule, NgIf],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './resources.html',
-  styleUrl: './resources.scss',
 })
 export class Resources {
   private fb = inject(FormBuilder);

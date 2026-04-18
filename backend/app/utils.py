@@ -87,7 +87,7 @@ def generate_contact_form_email(form_data: Any) -> EmailData:
         "info": "Quiero más información",
     }
     label = requirement_labels.get(form_data.requirement_type, form_data.requirement_type)
-    subject = f"[{settings.PROJECT_NAME}] Nuevo contacto: {label} — {form_data.name}"
+    subject = f"[{label}] Nuevo contacto: {form_data.name}"
     html_content = render_email_template(
         template_name="contact_form.html",
         context={

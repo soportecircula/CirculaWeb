@@ -6,7 +6,6 @@ import { BtnDemo } from '../../../shared/components/btn-demo/btn-demo';
   imports: [BtnDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './products.html',
-  styleUrl: './products.scss',
 })
 export class Products {
 }

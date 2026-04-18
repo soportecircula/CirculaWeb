@@ -393,6 +393,21 @@
     background-color: rgba(var(--circula-primary-rgb), 0.08) !important;
     font-weight: 600;
   }
+
+  @media (max-width: 768px) {
+    tr:hover {
+      background-color: transparent;
+    }
+
+    tr:hover td:first-child {
+      background: var(--circula-white);
+    }
+
+    td:hover {
+      background-color: transparent !important;
+      font-weight: inherit;
+    }
+  }
 }
 
 // ─── Píldoras de Estado (Si, Completo, etc.) ─────────────────────────────
