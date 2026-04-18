@@ -11,7 +11,7 @@ import { LayoutState } from '../store/Layout/layout.models';
 
 @Component({
   selector: 'app-layout',
-  imports: [RouterOutlet, TopbarComponent, SidebarComponent, Footer],
+  imports: [RouterOutlet, TopbarComponent, SidebarComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(window:resize)': 'onResize()' },
   template: `
@@ -24,7 +24,6 @@ import { LayoutState } from '../store/Layout/layout.models';
             <router-outlet />
           </div>
         </div>
-        <app-footer />
       </div>
     </div>
   `,
