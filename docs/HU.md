@@ -91,7 +91,7 @@ Como visitante, quiero llenar un formulario de contacto en la sección Recursos,
 - [x] El formulario incluye: nombre, empresa, tipo de requerimiento, teléfono, correo y mensaje (opcional).
 - [x] Cada campo valida en tiempo real al perder el foco o al intentar enviar.
 - [x] Mensajes de error específicos por tipo de validación (requerido, formato, longitud).
-- [x] Si ya existe una solicitud pendiente o una cuenta activa con ese correo, el sistema lo informa sin enviar duplicados.
+- [ ] Si ya existe una solicitud pendiente o una cuenta activa con ese correo, el sistema lo informa sin enviar duplicados.
 - [x] Mientras se envía, el botón muestra estado de carga.
 - [x] Al enviar exitosamente, se muestra un mensaje de confirmación y el formulario desaparece.
 - [x] Si hay error de API, se muestra el mensaje de error recibido del servidor.
@@ -210,7 +210,7 @@ Actores: Usuario registrado/no registrado
 
 ## 🔐 Historias de Usuario
 
-### HU-A01: Registrarse en la plataforma
+### HU-A01: Ingresar a la plataforma
 
 Como usuario registrado, quiero ingresar a la plataforma con mi correo y contraseña, para acceder al dashboard y gestionar mis obligaciones REP.
 
@@ -218,12 +218,12 @@ Como usuario registrado, quiero ingresar a la plataforma con mi correo y contras
 
 #### Criterios de Aceptación
 
-- [x] El formulario tiene dos campos: correo electrónico y contraseña.
-- [x] Mientras se procesa el login, el botón muestra un spinner y queda deshabilitado.
-- [x] Si las credenciales son correctas, el usuario es redirigido al dashboard (/dashboard).
-- [x] Si las credenciales son incorrectas, se muestra una notificación de error con el mensaje recibido del servidor.
-- [x] Hay un enlace "← Volver" que regresa a la landing (/).
-- [x] La sesión persiste automáticamente mediante refresh token en cookie httpOnly (7 días), sin necesidad de volver a iniciar sesión en cada visita.
+- [ ] El formulario tiene dos campos: correo electrónico y contraseña.
+- [ ] Mientras se procesa el login, el botón muestra un spinner y queda deshabilitado.
+- [ ] Si las credenciales son correctas, el usuario es redirigido al dashboard (/dashboard).
+- [ ] Si las credenciales son incorrectas, se muestra una notificación de error con el mensaje recibido del servidor.
+- [ ] Hay un enlace "← Volver" que regresa a la landing (/).
+- [ ] La sesión persiste automáticamente mediante refresh token en cookie httpOnly (7 días), sin necesidad de volver a iniciar sesión en cada visita.
 
 ### HU-A02: Mostrar/ocultar contraseña
 
@@ -233,10 +233,10 @@ Como usuario, quiero poder ver o esconder el texto de mi contraseña mientras la
 
 #### Criterios de Aceptación
 
-- [x] El campo de contraseña tiene un botón icono a la derecha.
-- [x] Al hacer clic, el campo alterna entre type="password" y type="text".
-- [x] El ícono cambia visualmente según el estado (ojo abierto / ojo cerrado).
-- [x] El botón tiene tabindex="-1" para no interrumpir el flujo del teclado.
+- [ ] El campo de contraseña tiene un botón icono a la derecha.
+- [ ] Al hacer clic, el campo alterna entre type="password" y type="text".
+- [ ] El ícono cambia visualmente según el estado (ojo abierto / ojo cerrado).
+- [ ] El botón tiene tabindex="-1" para no interrumpir el flujo del teclado.
 
 ### HU-A03: Recordar sesión
 
@@ -246,35 +246,35 @@ Como usuario, quiero que mi sesión se mantenga activa al volver a la plataforma
 
 #### Criterios de Aceptación
 
-- [x] Al iniciar sesión exitosamente, el servidor emite un refresh token en cookie httpOnly con duración de 7 días.
-- [x] Si el usuario cierra y vuelve a abrir el navegador, la sesión se restaura automáticamente mediante el refresh token (sin pantalla de login).
-- [x] El access token en memoria se renueva automáticamente mediante el interceptor HTTP antes de expirar (15 minutos).
-- [x] Al hacer logout, el refresh token es invalidado en Redis y la cookie eliminada.
+- [ ] Al iniciar sesión exitosamente, el servidor emite un refresh token en cookie httpOnly con duración de 7 días.
+- [ ] Si el usuario cierra y vuelve a abrir el navegador, la sesión se restaura automáticamente mediante el refresh token (sin pantalla de login).
+- [ ] El access token en memoria se renueva automáticamente mediante el interceptor HTTP antes de expirar (15 minutos).
+- [ ] Al hacer logout, el refresh token es invalidado en Redis y la cookie eliminada.
 
 ### HU-A04: Recuperar contraseña
 
 Como usuario que olvidó su contraseña, quiero poder restablecerla mediante mi correo registrado, para recuperar el acceso a la plataforma sin contactar a soporte.
 
-**Story Points: 5**
+**Story Points: 2**
 
 #### Criterios de Aceptación
 
 #### Paso 1 - Solicitar enlace (/auth/forgot-password)
 
-- [x] El formulario solicita únicamente el correo electrónico.
-- [x] El botón está deshabilitado si el email es inválido o mientras se envía.
-- [x] Al enviar, siempre se muestra el mensaje de éxito (independientemente de si el correo existe), para no revelar si un email está registrado.
-- [x] El formulario desaparece y se muestra el mensaje de confirmación en su lugar.
-- [x] Hay un enlace "Clic aquí" para volver al login si el usuario recuerda su contraseña.
+- [ ] El formulario solicita únicamente el correo electrónico.
+- [ ] El botón está deshabilitado si el email es inválido o mientras se envía.
+- [ ] Al enviar, siempre se muestra el mensaje de éxito (independientemente de si el correo existe), para no revelar si un email está registrado.
+- [ ] El formulario desaparece y se muestra el mensaje de confirmación en su lugar.
+- [ ] Hay un enlace "Clic aquí" para volver al login si el usuario recuerda su contraseña.
 
 #### Paso 2 - Restablecer contraseña (/auth/reset-password?token=...)
 
-- [x] Si el token en la URL es inválido o está ausente, se muestra un mensaje de error con enlace para solicitar uno nuevo.
-- [x] El token se elimina de la URL al cargar (sin recarga, usando replaceUrl), para no exponerlo en el historial del navegador.
-- [x] El formulario tiene dos campos: nueva contraseña y confirmar contraseña, ambos con toggle de visibilidad.
-- [x] Se muestra un indicador visual en tiempo real que valida si la contraseña tiene al menos 8 caracteres.
-- [x] Si las contraseñas no coinciden y el campo de confirmación fue tocado, se muestra el error "Las contraseñas no coinciden".
-- [x] Al restablecer exitosamente, el formulario se reemplaza por un mensaje de éxito y un botón "Ir al Login".
+- [ ] Si el token en la URL es inválido o está ausente, se muestra un mensaje de error con enlace para solicitar uno nuevo.
+- [ ] El token se elimina de la URL al cargar (sin recarga, usando replaceUrl), para no exponerlo en el historial del navegador.
+- [ ] El formulario tiene dos campos: nueva contraseña y confirmar contraseña, ambos con toggle de visibilidad.
+- [ ] Se muestra un indicador visual en tiempo real que valida si la contraseña tiene al menos 8 caracteres.
+- [ ] Si las contraseñas no coinciden y el campo de confirmación fue tocado, se muestra el error "Las contraseñas no coinciden".
+- [ ] Al restablecer exitosamente, el formulario se reemplaza por un mensaje de éxito y un botón "Ir al Login".
 
 ### HU-A05: Bloqueo por intentos fallidos
 
@@ -284,11 +284,11 @@ Como sistema, quiero limitar los intentos de login fallidos consecutivos, para p
 
 #### Criterios de Aceptación
 
-- [x] El endpoint POST /api/v1/login/access-token está limitado a 5 intentos por minuto por IP.
-- [x] El endpoint POST /password-recovery/{email} está limitado a 3 solicitudes por minuto.
-- [x] Si se supera el límite, el servidor responde con HTTP 429 (Too Many Requests).
-- [x] El frontend muestra el mensaje de error recibido del servidor al superar el límite.
-- [x] El bloqueo se libera automáticamente al expirar la ventana de tiempo (1 minuto).
+- [ ] El endpoint POST /api/v1/login/access-token está limitado a 5 intentos por minuto por IP.
+- [ ] El endpoint POST /password-recovery/{email} está limitado a 3 solicitudes por minuto.
+- [ ] Si se supera el límite, el servidor responde con HTTP 429 (Too Many Requests).
+- [ ] El frontend muestra el mensaje de error recibido del servidor al superar el límite.
+- [ ] El bloqueo se libera automáticamente al expirar la ventana de tiempo (1 minuto).
 
 ### HU-A06: Recibir confirmación de la solicitud por correo
 
@@ -298,9 +298,9 @@ Como solicitante, quiero recibir un correo confirmando que mi solicitud fue reci
 
 #### Criterios de Aceptación
 
-- [x] Al enviar el formulario, el sistema envía automáticamente un correo al solicitante desde noreply@grupocircula.com.
-- [x] El correo indica que la solicitud fue recibida y que el equipo se comunicará pronto.
-- [x] El correo no se reenvía si la misma dirección ya tiene una solicitud activa
+- [ ] Al enviar el formulario, el sistema envía automáticamente un correo al solicitante desde noreply@grupocircula.com.
+- [ ] El correo indica que la solicitud fue recibida y que el equipo se comunicará pronto.
+- [ ] El correo no se reenvía si la misma dirección ya tiene una solicitud activa
 
 ### HU-A07: Completar registro desde el link de invitación
 
@@ -310,13 +310,13 @@ Como solicitante aprobado, quiero acceder al link que recibí por correo para cr
 
 #### Criterios de Aceptación
 
-- [x] El link lleva a /auth/register?token=....
-- [x] El nombre completo aparece pre-cargado con el valor ingresado en la solicitud (editable).
-- [x] El formulario solicita únicamente: contraseña y confirmar contraseña.
-- [x] La contraseña debe tener mínimo 8 caracteres; se muestra un indicador visual en tiempo real.
-- [x] Si las contraseñas no coinciden, se muestra el error "Las contraseñas no coinciden".
-- [x] Al completar el registro exitosamente, la cuenta queda activa y el usuario es redirigido al dashboard (/dashboard).
-- [x] La ruta /auth/register sin token válido redirige a /auth/login.
+- [ ] El link lleva a /auth/register?token=....
+- [ ] El nombre completo aparece pre-cargado con el valor ingresado en la solicitud (editable).
+- [ ] El formulario solicita únicamente: contraseña y confirmar contraseña.
+- [ ] La contraseña debe tener mínimo 8 caracteres; se muestra un indicador visual en tiempo real.
+- [ ] Si las contraseñas no coinciden, se muestra el error "Las contraseñas no coinciden".
+- [ ] Al completar el registro exitosamente, la cuenta queda activa y el usuario es redirigido al dashboard (/dashboard).
+- [ ] La ruta /auth/register sin token válido redirige a /auth/login.
 
 ### HU-A08: Manejar link de invitación inválido o expirado
 
@@ -326,10 +326,10 @@ Como solicitante, quiero recibir un mensaje claro cuando el link de registro ya 
 
 #### Criterios de Aceptación
 
-- [x] Si el token está ausente, se muestra el mensaje: "El link de registro no es válido. Contacta a soporte."
-- [x] Si el token ya expiró (más de 72 horas), se muestra: "Este link ha expirado. Contacta al equipo de Circula para solicitar uno nuevo."
-- [x] Si el token ya fue utilizado (cuenta ya creada), se muestra: "Esta invitación ya fue utilizada." con un enlace al login.
-- [x] En ningún caso se muestra el formulario de registro si el token no es válido.
+- [ ] Si el token está ausente, se muestra el mensaje: "El link de registro no es válido. Contacta a soporte."
+- [ ] Si el token ya expiró (más de 72 horas), se muestra: "Este link ha expirado. Contacta al equipo de Circula para solicitar uno nuevo."
+- [ ] Si el token ya fue utilizado (cuenta ya creada), se muestra: "Esta invitación ya fue utilizada." con un enlace al login.
+- [ ] En ningún caso se muestra el formulario de registro si el token no es válido.
 
 ### HU-A09: Recibir notificación de la solicitud aprobada por correo
 
@@ -339,11 +339,11 @@ Como solicitante aprobado, quiero acceder al link que recibí por correo para cr
 
 #### Criterios de Aceptación
 
-- [x] Al aprobar una solicitud, el sistema envía automáticamente un correo al usuario.
-- [x] El correo contiene un link único de registro (/auth/register?token=...).
-- [x] El correo indica que fue aprobado y puede completar su registro.
-- [x] El link tiene una vigencia de 72 horas.
-- [x] El correo se envía desde noreply@grupocircula.com.
+- [ ] Al aprobar una solicitud, el sistema envía automáticamente un correo al usuario.
+- [ ] El correo contiene un link único de registro (/auth/register?token=...).
+- [ ] El correo indica que fue aprobado y puede completar su registro.
+- [ ] El link tiene una vigencia de 72 horas.
+- [ ] El correo se envía desde noreply@grupocircula.com.
 
 # 🧾 Épica: Administración de Solicitudes
 
