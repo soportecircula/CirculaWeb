@@ -347,7 +347,6 @@ Como solicitante aprobado, quiero acceder al link que recibí por correo para cr
 
 # 🧾 Épica: Administración de Solicitudes
 
-> **BORRADOR — Pendiente de aprobación del PO tras reunión con interesados.**
 > Esta épica cubre la interfaz de administrador para gestionar las solicitudes de contacto/demo recibidas desde la landing. Actualmente el formulario de contacto envía el email pero **no persiste en BD**, por lo que esta épica también requiere un ajuste en el backend.
 
 Actor: Administrador (superusuario)
@@ -392,3 +391,46 @@ Como administrador, quiero rechazar una solicitud con una nota opcional, para in
 - [ ] El estado de la solicitud cambia a `REJECTED` y queda registrado quién rechazó y cuándo.
 - [ ] Se envía un correo de notificación al solicitante informando que su solicitud no fue aprobada.
 - [ ] No se puede rechazar una solicitud ya aprobada o rechazada.
+
+### HU-ADM04: Acceder al panel de administración
+
+Como administrador, quiero ver una sección exclusiva "Administración" en el sidebar y acceder a un panel resumen, para gestionar la plataforma desde un punto centralizado.
+
+**Story Points: 5**
+
+#### Criterios de Aceptación
+
+- [ ] El sidebar muestra el grupo "Administración" únicamente cuando `auth.user()?.is_superuser === true`.
+- [ ] La ruta `/dashboard/admin` está protegida por un guard `adminGuard` que redirige a `/dashboard` si el usuario no es superusuario.
+- [ ] El panel muestra tarjetas resumen: solicitudes pendientes, aprobadas hoy, total de usuarios registrados.
+- [ ] Los datos del resumen se obtienen del backend mediante endpoints existentes o nuevos de solo lectura.
+- [ ] Navegar a `/dashboard/admin` sin ser superusuario redirige a `/dashboard` sin mostrar error.
+
+### HU-ADM05: Ver usuarios registrados
+
+Como administrador, quiero ver la lista de usuarios registrados en la plataforma, para tener visibilidad de quién tiene acceso activo.
+
+**Story Points: 3**
+
+#### Criterios de Aceptación
+
+- [ ] La ruta `/dashboard/admin/usuarios` lista todos los usuarios en una tabla paginada.
+- [ ] Cada fila muestra: nombre completo, correo, fecha de registro, estado (Activo / Inactivo) e indicador de superusuario.
+- [ ] Se puede filtrar por estado (Todos / Activos / Inactivos).
+- [ ] La tabla usa el endpoint `GET /api/v1/users` protegido por superusuario.
+- [ ] La sección es accesible desde el sidebar bajo el grupo "Administración".
+
+### HU-ADM06: Activar o desactivar un usuario
+
+Como administrador, quiero activar o desactivar la cuenta de un usuario, para controlar el acceso a la plataforma sin eliminar su registro.
+
+**Story Points: 3**
+
+#### Criterios de Aceptación
+
+- [ ] Cada fila de la tabla de usuarios tiene un botón de alternar estado (Activar / Desactivar).
+- [ ] Al desactivar, aparece un modal de confirmación antes de ejecutar la acción.
+- [ ] La acción llama a `PATCH /api/v1/users/{user_id}` actualizando `is_active`.
+- [ ] Un usuario inactivo recibe HTTP 400 al intentar hacer login (comportamiento ya existente en backend).
+- [ ] El administrador no puede desactivar su propia cuenta (botón deshabilitado en su propia fila).
+- [ ] El estado se actualiza visualmente en la tabla sin recargar la página completa.
