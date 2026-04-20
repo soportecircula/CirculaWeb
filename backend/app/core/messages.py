@@ -38,3 +38,4 @@ INVALID_IMAGE_TYPE = "Tipo de archivo no válido. Permitidos: jpeg, png, webp"
 # Contact requests
 CONTACT_REQUEST_NOT_FOUND = "Solicitud no encontrada"
 CONTACT_ALREADY_REVIEWED = "Esta solicitud ya fue revisada"
+CONTACT_DUPLICATE_REQUEST = "Ya existe una solicitud activa con este correo. Te contactaremos pronto."

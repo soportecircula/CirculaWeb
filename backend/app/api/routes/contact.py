@@ -3,15 +3,16 @@ from __future__ import annotations
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Request, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from app.api.deps import SessionDep, get_current_active_superuser
 from app.core.config import settings
-from app.core.messages import CONTACT_ALREADY_REVIEWED, CONTACT_REQUEST_NOT_FOUND   
+from app.core.messages import CONTACT_ALREADY_REVIEWED, CONTACT_REQUEST_NOT_FOUND, CONTACT_DUPLICATE_REQUEST
 from app.core.rate_limit import limiter
 from app.crud.contact_request import (
     approve_contact_request,
     create_contact_request,
+    get_active_request_by_email,
     get_contact_request,
     list_contact_requests,
     reject_contact_request,
@@ -25,7 +26,7 @@ from app.schemas.contact import (
     ContactRequestRead,
     RejectPayload,
 )
-from app.utils import generate_contact_form_email, send_email  
+from app.utils import generate_contact_form_email, send_email
 
 router = APIRouter(prefix="/contact", tags=["contact"])
 SuperuserDep = Annotated[User, Depends(get_current_active_superuser)]
@@ -45,10 +46,17 @@ async def submit_contact_form(
     form_data: ContactFormRequest,
     session: SessionDep,
 ) -> Message:
-    # 1. Persistir siempre, independiente del correo
+    # 1. Verificar si ya existe una solicitud activa con este correo
+    existing = get_active_request_by_email(session=session, email=form_data.email)
+    if existing:
+        raise HTTPException(
+            status_code=409,
+            detail=CONTACT_DUPLICATE_REQUEST,
+        )
+    # 2. Persistir siempre, independiente del correo
     create_contact_request(session=session, form_data=form_data)
     
-    # 2. Solo enviar correo si está habilitado
+    # 3. Solo enviar correo si está habilitado
     if not settings.emails_enabled:
         return Message(message="Mensaje enviado correctamente.")
 
