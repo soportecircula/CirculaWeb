@@ -32,7 +32,7 @@ SuperuserDep = Annotated[User, Depends(get_current_active_superuser)]
 
 _DEMO_TYPES = {"demo_rep", "demo_indv", "demo_col", "demo_esg"}
 _RECIPIENT_MAP: dict[str, list[str]] = {
-    "support": ["soporte.circula@gmail.com"],
+    "support": ["lst@grupocircula.com"],
     "info": ["contacto@grupocircula.com"],
 }
 _DEMO_RECIPIENTS = ["diana.erazo@grupocircula.com", "david.salazar@grupocircula.com"]

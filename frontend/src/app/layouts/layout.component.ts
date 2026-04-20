@@ -4,7 +4,6 @@ import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TopbarComponent } from './topbar/topbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { Footer } from './footer/footer';
 import { selectLayoutState } from '../store/Layout/layout.selectors';
 import * as LayoutActions from '../store/Layout/layout.actions';
 import { LayoutState } from '../store/Layout/layout.models';
