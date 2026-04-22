@@ -11,8 +11,12 @@ from app.schemas.contact import ContactFormRequest
 
 
 def create_contact_request(
-    *, session: Session, form_data: ContactFormRequest
+    *, session: Session, form_data: ContactFormRequest, calendar_event_id: str | None = None
 ) -> ContactRequest:
+    scheduled_at: datetime | None = None
+    if form_data.scheduled_at:
+        scheduled_at = datetime.fromisoformat(form_data.scheduled_at)
+
     db_obj = ContactRequest(
         name=form_data.name,
         company=form_data.company,
@@ -21,6 +25,8 @@ def create_contact_request(
         email=form_data.email,
         message=form_data.message,
         status=ContactStatus.PENDING,
+        scheduled_at=scheduled_at,
+        calendar_event_id=calendar_event_id,
     )
     session.add(db_obj)
     session.commit()

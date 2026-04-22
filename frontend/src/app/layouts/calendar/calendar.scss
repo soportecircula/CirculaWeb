@@ -1,0 +1,213 @@
+// Overlay backdrop
+.cal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1040;
+  animation: fadeIn .2s ease;
+}
+
+// Panel flotante
+.cal-panel {
+  position: fixed;
+  z-index: 1050;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp .25s ease;
+
+  // Desktop: centrado
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(480px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
+
+  // Mobile: panel inferior full-width
+  @media (max-width: 480px) {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    max-height: 92dvh;
+  }
+}
+
+// Header
+.cal-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cal-panel__title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.cal-panel__close {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  cursor: pointer;
+  color: #888;
+  border-radius: 6px;
+  transition: background .15s;
+  &:hover { background: #f5f5f5; color: #333; }
+}
+
+// Body
+.cal-panel__body {
+  padding: 1rem 1.25rem;
+  flex: 1;
+}
+
+// Navegación mes
+.cal-month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .75rem;
+}
+
+.cal-month-label {
+  font-weight: 600;
+  font-size: .95rem;
+  text-transform: capitalize;
+}
+
+.cal-month-btn {
+  background: none;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  color: #555;
+  transition: background .15s;
+  &:hover { background: #f0f0f0; }
+}
+
+// Grid compartida
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  &--header { margin-bottom: 4px; }
+}
+
+.cal-day-name {
+  text-align: center;
+  font-size: .68rem;
+  color: #999;
+  font-weight: 500;
+  padding: 2px 0;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: #fff;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+  padding: 0;
+  width: 100%;
+
+  &--empty    { border: none; background: transparent; cursor: default; }
+  &--disabled { opacity: .3; cursor: not-allowed; }
+
+  &--active {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+    font-weight: 600;
+  }
+
+  &:not(&--disabled):not(&--empty):not(&--active):hover {
+    background: #f4f4f4;
+    border-color: #ccc;
+  }
+}
+
+// Slots
+.cal-slots {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.cal-slots__label {
+  font-size: .8rem;
+  color: #666;
+  margin-bottom: .6rem;
+  text-transform: capitalize;
+}
+
+.cal-slots__loading,
+.cal-slots__empty {
+  font-size: .82rem;
+  color: #999;
+}
+
+.cal-slots__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cal-slot-btn {
+  padding: 6px 14px;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  background: #fff;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: all .15s;
+
+  &:hover { background: #f4f4f4; border-color: #aaa; }
+
+  &--selected {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+    font-weight: 500;
+  }
+}
+
+// Footer
+.cal-panel__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .5rem;
+  padding: .75rem 1.25rem 1rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+// Animaciones
+@keyframes fadeIn  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes slideUp { from { opacity: 0; transform: translate(-50%, calc(-50% + 16px)) } to { opacity: 1; transform: translate(-50%, -50%) } }
+
+@media (max-width: 480px) {
+  @keyframes slideUp { from { opacity: 0; transform: translateY(24px) } to { opacity: 1; transform: translateY(0) } }
+}
+
+.spin {
+  display: inline-block;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg) } }

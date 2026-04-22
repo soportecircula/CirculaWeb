@@ -26,4 +26,6 @@ class ContactRequest(Base, TimestampMixin):
     status: Mapped[ContactStatus] = mapped_column(SAEnum(ContactStatus), nullable=False, default=ContactStatus.PENDING)
     rejection_note: Mapped[str | None] = mapped_column(String(300), nullable=True)
     reviewed_by_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True, default=None)
-    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, default=None) 
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    scheduled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    calendar_event_id: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)

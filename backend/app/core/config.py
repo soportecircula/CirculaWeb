@@ -108,6 +108,9 @@ class Settings(BaseSettings):
     MINIO_BUCKET: str = "circula"
     MINIO_PUBLIC_URL: str = "http://localhost:9000"
 
+    # Google Calendar — Domain-Wide Delegation
+    GOOGLE_SERVICE_ACCOUNT_JSON: str = ""
+
     # Redis — caché y sesiones
     REDIS_HOST: str = "redis"
     REDIS_PORT: int = 6379
