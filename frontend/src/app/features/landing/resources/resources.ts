@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
@@ -34,14 +34,31 @@ export class Resources implements OnInit {
     scheduled_at: [null as string | null],
   });
 
+  readonly selectedSlotLabel = computed(() => {
+    const slot = this.selectedSlot();
+    if (!slot) return '';
+    const [year, month, day] = slot.datetime_iso.split('T')[0].split('-').map(Number);
+    const d = new Date(year, month - 1, day);
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    return `${dayNames[d.getDay()]} ${d.getDate()} de ${monthNames[d.getMonth()]} · ${slot.label}`;
+  });
+
   get currentRequirementType(): string {
     return this.form.get('requirement_type')?.value ?? '';
   }
 
   ngOnInit(): void {
-    this.form.get('requirement_type')?.valueChanges.subscribe(() => {
+    this.form.get('requirement_type')?.valueChanges.subscribe((type) => {
       this.clearSlot();
       this.showCalendar.set(false);
+      const ctrl = this.form.get('scheduled_at');
+      if (type && type !== 'info') {
+        ctrl?.setValidators(Validators.required);
+      } else {
+        ctrl?.clearValidators();
+      }
+      ctrl?.updateValueAndValidity();
     });
   }
 

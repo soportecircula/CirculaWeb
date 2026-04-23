@@ -3,10 +3,7 @@
 
   <section class="resources-section">
     <div class="resources-container">
-      <div
-        class="hero-card resources-card"
-        style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px)"
-      >
+      <div class="hero-card resources-card">
         <!-- Header con el mismo formato de Home/About -->
         <div class="resources-header">
           <div class="hero-badge">
@@ -192,15 +189,13 @@
             </div>
 
             <!-- ── Selector de horario ── -->
-            <div class="form-group" *ngIf="form.get('requirement_type')?.value !== 'info'">
-              <label class="form-label">
-                Horario de reunión <span class="label-optional">(opcional)</span>
-              </label>
+            <div class="form-group" [class.has-error]="hasError('scheduled_at')" *ngIf="form.get('requirement_type')?.value !== 'info'">
+              <label class="form-label">Horario de reunión</label>
 
               <ng-container *ngIf="!selectedSlot()">
                 <button
                   type="button"
-                  class="btn btn-soft-primary w-100"
+                  class="btn btn-outline-calendar"
                   [disabled]="!form.get('requirement_type')?.value"
                   (click)="openCalendar()"
                 >
@@ -214,10 +209,12 @@
               <ng-container *ngIf="selectedSlot()">
                 <div class="slot-selected">
                   <i class="bi bi-calendar-check-fill"></i>
-                  <span>{{ selectedSlot()!.label }}</span>
+                  <span>{{ selectedSlotLabel() }}</span>
                   <button type="button" class="btn-link" (click)="clearSlot()">Cambiar</button>
                 </div>
               </ng-container>
+
+              <span *ngIf="hasError('scheduled_at')" class="field-error">Selecciona un horario de reunión.</span>
             </div>
 
             <div *ngIf="errorMsg()" class="form-error-banner">

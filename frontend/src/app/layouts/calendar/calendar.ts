@@ -45,20 +45,37 @@ export class Calendar implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.cdr.markForCheck();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const firstDay = new Date(today);
+    if (firstDay.getDay() === 0) firstDay.setDate(firstDay.getDate() + 1);
+    this.onDateSelect(this.toDateStr(firstDay));
   }
 
   prevMonth(): void {
     const d = new Date(this.currentMonth());
     d.setMonth(d.getMonth() - 1);
     const min = new Date(); min.setDate(1); min.setHours(0, 0, 0, 0);
-    if (d >= min) this.currentMonth.set(d);
+    if (d >= min) {
+      this.currentMonth.set(d);
+      this.selectedDate.set(null);
+      this.availableSlots.set([]);
+      this.selectedSlot.set(null);
+      this.cdr.markForCheck();
+    }
   }
 
   nextMonth(): void {
     const d = new Date(this.currentMonth());
     d.setMonth(d.getMonth() + 1);
     const max = new Date(); max.setMonth(max.getMonth() + 2);
-    if (d <= max) this.currentMonth.set(d);
+    if (d <= max) {
+      this.currentMonth.set(d);
+      this.selectedDate.set(null);
+      this.availableSlots.set([]);
+      this.selectedSlot.set(null);
+      this.cdr.markForCheck();
+    }
   }
 
   toDateStr(date: Date): string {

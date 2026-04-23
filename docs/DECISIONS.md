@@ -92,6 +92,20 @@ Formato:
   - Dominio `grupocircula.com` verificado en panel de Resend con registros DNS DKIM + SPF en Hostinger.
   - ⚠️ En dev local, sin `RESEND_API_KEY` en `.env`, el endpoint `/contact/submit` devuelve 503.
 
+## 2026-04-22 — Agendamiento Google Calendar con Domain-Wide Delegation
+
+- Decisión: integrar Google Calendar en el formulario de contacto usando **Service Account con DWD**, sin OAuth interactivo.
+- Alternativas consideradas: OAuth2 desktop (requiere login manual periódico), Google Calendar API con API Key (solo lectura pública).
+- Motivo: DWD permite impersonar usuarios `@grupocircula.com` desde el backend sin intervención humana; un solo JSON de credenciales en `.env` es suficiente.
+- Impacto:
+  - Nuevas dependencias: `google-auth>=2.29.0`, `google-api-python-client>=2.126.0`.
+  - `backend/app/core/google_calendar.py`: funciones `get_available_slots(date, requirement_type)` y `create_event(...)`.
+  - Migración `aff273902683`: columnas `scheduled_at` y `calendar_event_id` en `contact_requests`.
+  - Solo solicitudes de tipo **demo** se persisten en DB; `support` e `info` solo envían correo.
+  - `info` no tiene selector de horario en el frontend.
+  - Slots: lun-vie 8–17 continuo, sáb 8–12, timezone `America/Bogota`.
+  - Documentación completa en `docs/GOOGLE_CALENDAR.md`.
+
 ## 2026-04-14 — Formulario de contacto: migración a `ContactService` (ng-openapi)
 
 - Decisión: el componente `resources.ts` usa `ContactService` generado por ng-openapi en lugar de `HttpClient` con URL relativa.

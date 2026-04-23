@@ -95,6 +95,8 @@
 }
 
 .resources-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
   padding: 64px 80px;
 
   @media (max-width: 992px) {
@@ -428,6 +430,27 @@
   min-height: 120px;
 }
 
+.btn-outline-calendar {
+  background: transparent;
+  color: var(--circula-brand-text);
+  border: 1.5px solid var(--circula-brand-text);
+  width: 100%;
+
+  &:hover:not(:disabled) {
+    background: var(--circula-brand-text);
+    color: var(--circula-white);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--circula-text-muted);
+    color: var(--circula-text-muted);
+  }
+}
+
 .btn-dark {
   background: var(--circula-brand-text);
   color: var(--circula-white);
@@ -565,4 +588,38 @@
   margin: 0;
   max-width: 320px;
   line-height: 1.6;
+}
+
+// ─── Slot seleccionado y pista de campo ──────────────────────────────────────
+.slot-selected {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1a1a1a;
+
+  i { color: #198754; }
+
+  .btn-link {
+    margin-left: auto;
+    font-size: 13px;
+    color: #6c757d;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover { color: #343a40; }
+  }
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--circula-text-muted);
+  margin-top: 6px;
 }
