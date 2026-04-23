@@ -132,7 +132,7 @@
               <div class="select-wrapper">
                 <select class="form-control form-select" formControlName="requirement_type">
                   <option value="" disabled selected>Selecciona una opción</option>
-                  <option value="demo_rep">Demo diagnóstico REP</option>
+                  <option value="demo_rep">Demo Productores</option>
                   <option value="demo_indv">Demo Individual</option>
                   <option value="demo_col">Demo Colectivo</option>
                   <option value="demo_esg">Demo ESG</option>
@@ -189,7 +189,11 @@
             </div>
 
             <!-- ── Selector de horario ── -->
-            <div class="form-group" [class.has-error]="hasError('scheduled_at')" *ngIf="form.get('requirement_type')?.value !== 'info'">
+            <div
+              class="form-group"
+              [class.has-error]="hasError('scheduled_at')"
+              *ngIf="form.get('requirement_type')?.value !== 'info'"
+            >
               <label class="form-label">Horario de reunión</label>
 
               <ng-container *ngIf="!selectedSlot()">
@@ -214,7 +218,9 @@
                 </div>
               </ng-container>
 
-              <span *ngIf="hasError('scheduled_at')" class="field-error">Selecciona un horario de reunión.</span>
+              <span *ngIf="hasError('scheduled_at')" class="field-error"
+                >Selecciona un horario de reunión.</span
+              >
             </div>
 
             <div *ngIf="errorMsg()" class="form-error-banner">
