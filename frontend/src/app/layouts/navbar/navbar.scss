@@ -128,6 +128,46 @@
 }
 
 
+// --- BOTONES DE ACCIÓN NAVBAR ---
+.action-outline {
+    border-color: rgba(var(--circula-primary-rgb), 0.6);
+    color: var(--circula-primary);
+    font-weight: 600;
+    padding: 8px 20px;
+    transition: background 0.18s ease;
+
+    &:hover {
+        background: rgba(var(--circula-primary-rgb), 0.06);
+        border-color: var(--circula-primary);
+        color: var(--circula-brand-text);
+    }
+}
+
+.action-solid {
+    background-color: var(--circula-brand-text);
+    border-color: transparent;
+    color: #fff !important;
+    padding: 8px 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(var(--circula-primary-rgb), 0.35);
+    transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+                box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+                background-color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &:hover {
+        transform: translateY(-1.5px);
+        box-shadow: 0 6px 18px rgba(var(--circula-primary-rgb), 0.5);
+        background-color: var(--circula-brand-text-light);
+        color: #fff !important;
+    }
+
+    &:active {
+        transform: translateY(0.5px);
+        box-shadow: 0 2px 6px rgba(var(--circula-primary-rgb), 0.3);
+    }
+}
+
+
 // --- TOGGLE MÓVIL ---
 .menu-toggle {
     display: none;
