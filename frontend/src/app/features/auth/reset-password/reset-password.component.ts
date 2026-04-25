@@ -10,6 +10,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LoginService } from '../../../../client/services/login.service';
 import { NotificationService } from '../../../core/notifications/notification.service';
 import { getApiErrorDetail } from '../../../core/notifications/messages';
+import { passwordStrengthValidator } from '../../../core/validators/password-strength.validator';
 
 @Component({
   selector: 'app-reset-password',
@@ -33,7 +34,7 @@ export class ResetPasswordComponent implements OnInit {
 
   form = this.fb.group(
     {
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255), passwordStrengthValidator]],
       confirmPassword: ['', [Validators.required, Validators.maxLength(255)]],
     },
     { validators: [this.passwordMatchValidator] },
@@ -45,6 +46,14 @@ export class ResetPasswordComponent implements OnInit {
   hasMinLength(): boolean {
     const val = this.form.get('password')?.value ?? '';
     return val.length >= 8;
+  }
+
+  hasUpperCase(): boolean {
+    return /[A-Z]/.test(this.form.get('password')?.value ?? '');
+  }
+
+  hasSpecialChar(): boolean {
+    return /[!@#$%^&*()\-_=+\[\]{};:'",.<>?\/\\|`~]/.test(this.form.get('password')?.value ?? '');
   }
 
   ngOnInit(): void {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContactService } from '../../../../client';
 import { NotificationService } from '../../../core/notifications/notification.service';
@@ -29,6 +29,20 @@ export class PendingRequests implements OnInit {
   processing = signal<number | null>(null);
   expandedId = signal<number | null>(null);
   rejectNote = '';
+
+  activeFilter = signal<'all' | 'productores' | 'planes'>('all');
+
+  filteredRequests = computed(() => {
+    const filter = this.activeFilter();
+    const all = this.requests();
+    if (filter === 'productores') return all.filter(r => r.requirement_type === 'demo_rep');
+    if (filter === 'planes') return all.filter(r => r.requirement_type === 'demo_indv' || r.requirement_type === 'demo_col');
+    return all;
+  });
+
+  setFilter(filter: 'all' | 'productores' | 'planes'): void {
+    this.activeFilter.set(filter);
+  }
 
   ngOnInit(): void {
     this.load();
@@ -65,7 +79,7 @@ export class PendingRequests implements OnInit {
 
   openReject(id: number): void {
     this.expandedId.set(this.expandedId() === id ? null : id);
-    this.rejectNote = '';
+    this.rejectNote = 'Agradecemos su interés. Tras evaluar su solicitud, lamentamos informarle que en esta ocasión no ha sido aprobada.';
   }
 
   confirmReject(id: number): void {

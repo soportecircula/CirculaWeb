@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { UsersService } from '../../../../client/services/users.service';
 import { NotificationService } from '../../../core/notifications/notification.service';
 import { getApiErrorDetail } from '../../../core/notifications/messages';
+import { passwordStrengthValidator } from '../../../core/validators/password-strength.validator';
 
 @Component({
   selector: 'app-change-password',
@@ -35,10 +36,18 @@ export class ChangePasswordComponent {
     return val.length >= 8;
   }
 
+  hasUpperCase(): boolean {
+    return /[A-Z]/.test(this.form.get('newPassword')?.value ?? '');
+  }
+
+  hasSpecialChar(): boolean {
+    return /[!@#$%^&*()\-_=+\[\]{};:'",.<>?\/\\|`~]/.test(this.form.get('newPassword')?.value ?? '');
+  }
+
   form = this.fb.group(
     {
       currentPassword: ['', [Validators.required, Validators.maxLength(255)]],
-      newPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
+      newPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255), passwordStrengthValidator]],
       confirmPassword: ['', [Validators.required, Validators.maxLength(255)]],
     },
     { validators: [this.passwordMatchValidator] },

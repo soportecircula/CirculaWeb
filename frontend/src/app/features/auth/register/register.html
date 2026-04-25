@@ -12,8 +12,9 @@
         circular de Circula.
       </h1>
       <p class="auth-description">
-        Crea tu cuenta y forma parte del entorno donde convergen productores, planes, operadores, gestores y
-        transformadores sobre una misma infraestructura de trazabilidad basada en blockchain.
+        Crea tu cuenta y forma parte del entorno donde convergen productores, planes, operadores,
+        gestores y transformadores sobre una misma infraestructura de trazabilidad basada en
+        blockchain.
       </p>
 
       <div class="auth-msg-card">
@@ -28,14 +29,12 @@
   </div>
 
   <!-- Columna Derecha -->
-  <div class="auth-right" style="overflow-y: auto;">
+  <div class="auth-right" style="overflow-y: auto">
     <div class="auth-form-card my-auto">
       <div class="auth-form-header">
         <span class="auth-form-subtitle">CREAR CUENTA</span>
         <h2 class="auth-form-title">Registro</h2>
-        <p class="auth-form-desc">
-          Completa los datos para obtener tu cuenta.
-        </p>
+        <p class="auth-form-desc">Completa los datos para obtener tu cuenta.</p>
       </div>
 
       <div class="mt-4">
@@ -46,7 +45,11 @@
           </div>
         }
         @if (successMessage()) {
-          <div class="text-center text-primary mb-3">{{ successMessage() }}</div>
+          <div class="text-center py-4">
+            <i class="mdi mdi-check-all d-block fs-1 mb-3 text-primary"></i>
+            <p class="text-primary fw-semibold mb-4">{{ successMessage() }}</p>
+            <a routerLink="/auth/login" class="btn auth-submit-btn w-100">Ir al Login</a>
+          </div>
         }
         @if (!successMessage() && !tokenError()) {
           <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
@@ -72,7 +75,9 @@
             </div>
 
             <div class="form-group mb-4">
-              <label for="fullname" class="form-label">Nombre completo <span class="text-danger">*</span></label>
+              <label for="fullname" class="form-label"
+                >Nombre completo <span class="text-danger">*</span></label
+              >
               <input
                 type="text"
                 class="form-control auth-input"
@@ -86,18 +91,33 @@
             @if (isInvitedMode()) {
               <div class="form-group mb-4">
                 <label class="form-label">Empresa <span class="text-danger">*</span></label>
-                <input type="text" class="form-control auth-input" formControlName="company"
-                  placeholder="Razón social" maxlength="100" />
+                <input
+                  type="text"
+                  class="form-control auth-input"
+                  formControlName="company"
+                  placeholder="Razón social"
+                  maxlength="100"
+                />
               </div>
               <div class="form-group mb-4">
                 <label class="form-label">NIT <span class="text-danger">*</span></label>
-                <input type="text" class="form-control auth-input" formControlName="nit"
-                  placeholder="Ej: 900123456-1" maxlength="30" />
+                <input
+                  type="text"
+                  class="form-control auth-input"
+                  formControlName="nit"
+                  placeholder="Ej: 900123456-1"
+                  maxlength="30"
+                />
               </div>
               <div class="form-group mb-4">
                 <label class="form-label">Teléfono <span class="text-danger">*</span></label>
-                <input type="text" class="form-control auth-input" formControlName="phone"
-                  placeholder="Ej: 3001234567" maxlength="20" />
+                <input
+                  type="text"
+                  class="form-control auth-input"
+                  formControlName="phone"
+                  placeholder="Ej: 3001234567"
+                  maxlength="20"
+                />
               </div>
             }
 
@@ -127,6 +147,7 @@
                   }
                 </button>
               </div>
+              <div class="form-text">Usa mínimo 8 caracteres, una letra mayúscula y un carácter especial (!&#64;#$%...).</div>
             </div>
 
             <div class="form-group mb-4">
@@ -155,9 +176,7 @@
                   }
                 </button>
               </div>
-              @if (
-                form.get('confirmPassword')?.touched && form.hasError('passwordMismatch')
-              ) {
+              @if (form.get('confirmPassword')?.touched && form.hasError('passwordMismatch')) {
                 <div class="text-danger mt-1 fs-12">Las contraseñas no coinciden</div>
               }
             </div>
@@ -165,12 +184,44 @@
             <div id="password-contain" class="p-3 bg-light mb-4 rounded border">
               <h5 class="fs-13">La contraseña debe contener:</h5>
               <p
-                class="fs-12 mb-2"
+                class="fs-12 mb-1"
                 [class.text-primary]="hasMinLength()"
                 [class.text-danger]="!hasMinLength()"
               >
                 {{ hasMinLength() ? '✔' : '✖' }} Mínimo <b>8 caracteres</b>
               </p>
+              <p
+                class="fs-12 mb-1"
+                [class.text-primary]="hasUpperCase()"
+                [class.text-danger]="!hasUpperCase()"
+              >
+                {{ hasUpperCase() ? '✔' : '✖' }} Al menos una <b>letra mayúscula</b>
+              </p>
+              <p
+                class="fs-12 mb-0"
+                [class.text-primary]="hasSpecialChar()"
+                [class.text-danger]="!hasSpecialChar()"
+              >
+                {{ hasSpecialChar() ? '✔' : '✖' }} Al menos un
+                <b>carácter especial</b> (!&#64;#$%...)
+              </p>
+            </div>
+
+            <div class="form-check mb-4">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="dataConsent"
+                formControlName="dataConsent"
+              />
+              <label class="form-check-label fs-13" for="dataConsent">
+                Acepto el
+                <a target="_blank" class="text-primary text-decoration-underline">
+                  tratamiento de mis datos personales
+                </a>
+                conforme a la política de privacidad de Circula.
+                <span class="text-danger">*</span>
+              </label>
             </div>
 
             <button

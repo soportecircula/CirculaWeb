@@ -102,6 +102,27 @@ def generate_invite_email(email_to: str, name: str, plan_type: str, token: str)-
     )
     return EmailData(html_content=html_content, subject=subject)
 
+def generate_rejection_email(
+    name: str,
+    company: str,
+    plan_type: str,
+    rejection_note: str | None,
+) -> EmailData:
+    plan_label = PLAN_LABELS.get(plan_type, plan_type)
+    subject = f"{settings.PROJECT_NAME} — Resolución de tu solicitud de acceso"
+    html_content = render_email_template(
+        template_name="rejection.html",
+        context={
+            "project_name": settings.PROJECT_NAME,
+            "name": name,
+            "company": company,
+            "plan_label": plan_label,
+            "rejection_note": rejection_note,
+        },
+    )
+    return EmailData(html_content=html_content, subject=subject)
+
+
 def generate_contact_form_email(form_data: Any) -> EmailData:
     requirement_labels: dict[str, str] = {
         "demo_rep": "Demo Productores",

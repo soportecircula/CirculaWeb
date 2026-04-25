@@ -39,6 +39,7 @@ from app.utils import (
     generate_contact_form_email,
     generate_invite_email,
     generate_invite_token,
+    generate_rejection_email,
     send_email,
 )
 
@@ -184,6 +185,20 @@ def reject_request(
         reviewed_by_id=current_user.id,
         note=payload.note
     )
+
+    if settings.emails_enabled:
+        email_data = generate_rejection_email(
+            name=db_request.name,
+            company=db_request.company,
+            plan_type=db_request.requirement_type,
+            rejection_note=payload.note,
+        )
+        send_email(
+            email_to=db_request.email,
+            subject=email_data.subject,
+            html_content=email_data.html_content,
+        )
+
     return update
 
 @router.post("/requests/{request_id}/send-invite", response_model=ContactRequestRead)

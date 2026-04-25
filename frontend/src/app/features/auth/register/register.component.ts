@@ -11,6 +11,7 @@ import { UsersService } from '../../../../client/services/users.service';
 import { NotificationService } from '../../../core/notifications/notification.service';
 import { getApiErrorDetail } from '../../../core/notifications/messages';
 import { InviteTokenInfo } from '../../../../client/models';
+import { passwordStrengthValidator } from '../../../core/validators/password-strength.validator';
 
 @Component({
   selector: 'app-register',
@@ -42,8 +43,9 @@ export class RegisterComponent implements OnInit{
       company: ['', [Validators.maxLength(100)]],
       nit: ['', [Validators.maxLength(30)]],
       phone: ['', [Validators.maxLength(20)]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255), passwordStrengthValidator]],
       confirmPassword: ['', [Validators.required, Validators.maxLength(255)]],
+      dataConsent: [false, [Validators.requiredTrue]],
     },
     { validators: [this.passwordMatchValidator] },
   );
@@ -92,6 +94,14 @@ export class RegisterComponent implements OnInit{
     return val.length >= 8;
   }
 
+  hasUpperCase(): boolean {
+    return /[A-Z]/.test(this.form.get('password')?.value ?? '');
+  }
+
+  hasSpecialChar(): boolean {
+    return /[!@#$%^&*()\-_=+\[\]{};:'",.<>?\/\\|`~]/.test(this.form.get('password')?.value ?? '');
+  }
+
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password')?.value;
     const confirm = control.get('confirmPassword')?.value;
@@ -118,8 +128,7 @@ export class RegisterComponent implements OnInit{
       next: () => {
         this.submitting.set(false);
         this.notif.success('Cuenta creada exitosamente.');
-        this.successMessage.set('Cuenta creada. Redirigiendo al login...');
-        setTimeout(() => this.router.navigate(['/auth/login']), 3000);
+        this.successMessage.set('Cuenta creada exitosamente.');
       },
       error: (err) => {
         this.submitting.set(false);

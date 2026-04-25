@@ -5,7 +5,30 @@
         <h4 class="mb-sm-0">Solicitudes de Demo</h4>
         <p class="text-muted mb-0 mt-1">Gestiona las solicitudes de contacto entrantes.</p>
       </div>
-      <div class="page-title-right mt-sm-0 mt-2">
+      <div class="page-title-right mt-sm-0 mt-2 d-flex align-items-center gap-2">
+        <div class="btn-group btn-group-sm" role="group" aria-label="Filtrar solicitudes">
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="activeFilter() === 'all'"
+            [class.btn-outline-primary]="activeFilter() !== 'all'"
+            (click)="setFilter('all')"
+          >Todos</button>
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="activeFilter() === 'productores'"
+            [class.btn-outline-primary]="activeFilter() !== 'productores'"
+            (click)="setFilter('productores')"
+          >Productores</button>
+          <button
+            type="button"
+            class="btn"
+            [class.btn-primary]="activeFilter() === 'planes'"
+            [class.btn-outline-primary]="activeFilter() !== 'planes'"
+            (click)="setFilter('planes')"
+          >Planes</button>
+        </div>
         <button class="btn btn-soft-primary btn-sm" (click)="load()" [disabled]="loading()">
           <i class="mdi mdi-refresh me-1"></i> Actualizar
         </button>
@@ -23,10 +46,14 @@
         <span class="visually-hidden">Cargando...</span>
       </div>
     </div>
-  } @else if (requests().length === 0) {
+  } @else if (filteredRequests().length === 0) {
     <div class="text-center py-5 text-muted">
       <i class="mdi mdi-inbox-outline fs-1 d-block mb-2"></i>
-      No hay solicitudes registradas.
+      @if (activeFilter() === 'all') {
+        No hay solicitudes registradas.
+      } @else {
+        No hay solicitudes para este filtro.
+      }
     </div>
   } @else {
     <div class="card border-0 shadow-sm">
@@ -43,7 +70,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (req of requests(); track req.id) {
+              @for (req of filteredRequests(); track req.id) {
                 <tr>
                   <td>
                     <div class="fw-semibold">{{ req.company }}</div>
