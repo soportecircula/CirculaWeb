@@ -32,3 +32,8 @@ export const selectAuthInitialized = createSelector(
   selectAuthState,
   (state) => state.initialized,
 );
+
+export const selectPlanType = createSelector(
+  selectUser,
+  (user) => user?.plan_type ?? null,
+)

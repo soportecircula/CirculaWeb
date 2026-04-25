@@ -26,7 +26,12 @@
 
 ## Rate limiting
 
-- Login: 5 intentos / 15 min por IP (slowapi)
+- Login por IP: 5 requests / minuto (slowapi — `@limiter.limit("5/minute")`)
+- Login por email: **5 intentos fallidos → bloqueo de 5 minutos** (Redis, `app/core/login_limiter.py`)
+  - Contador en `circula:{env}:login_fails:{email}`; bloqueo en `circula:{env}:login_block:{email}`
+  - Reset automático tras login exitoso (`login_limiter.reset_fails`)
+  - Fail-open: si Redis no responde, el login continúa sin bloquear
+  - Para desbloquear manualmente: `DEL circula:local:login_block:{email}`
 - Endpoints públicos protegidos con límites conservadores
 
 ## Secrets y configuración

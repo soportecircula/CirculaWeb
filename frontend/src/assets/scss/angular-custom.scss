@@ -1122,9 +1122,9 @@ a.ck.ck-button.ck-on {
 
 // ── Topbar removido: sobreescribir paddings de Velzon que compensaban header-height ──
 // Velzon default: padding-top = calc(70px + 1.5rem), padding-bottom = 60px (footer)
-// Sin topbar ni footer, usamos padding mínimo
+// Restaurado el padding-top por defecto porque el topbar SÍ se usa en el dashboard
 .page-content {
-  padding-top: 1.5rem !important;
+  // padding-top: 1.5rem !important;
   padding-bottom: 1.5rem !important;
 }
 

@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import logging
-from datetime import date as Date, datetime
+from datetime import date as Date
+from datetime import datetime, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
@@ -9,7 +10,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from app.api.deps import SessionDep, get_current_active_superuser
 from app.core.config import settings
 from app.core.google_calendar import create_event, get_available_slots
-from app.core.messages import CONTACT_ALREADY_REVIEWED, CONTACT_REQUEST_NOT_FOUND, CONTACT_DUPLICATE_REQUEST
+from app.core.messages import (
+    CONTACT_ALREADY_REVIEWED,
+    CONTACT_DUPLICATE_REQUEST,
+    CONTACT_REQUEST_NOT_FOUND,
+)
 from app.core.rate_limit import limiter
 from app.crud.contact_request import (
     approve_contact_request,
@@ -30,7 +35,12 @@ from app.schemas.contact import (
     ContactSlotsResponse,
     RejectPayload,
 )
-from app.utils import generate_contact_form_email, send_email
+from app.utils import (
+    generate_contact_form_email,
+    generate_invite_email,
+    generate_invite_token,
+    send_email,
+)
 
 router = APIRouter(prefix="/contact", tags=["contact"])
 SuperuserDep = Annotated[User, Depends(get_current_active_superuser)]
@@ -70,7 +80,7 @@ def get_slots(
 @router.post("/submit", status_code=200)
 @limiter.limit("5/minute")
 async def submit_contact_form(
-    request: Request,
+    request: Request,  # noqa: ARG001 — requerido por slowapi
     form_data: ContactFormRequest,
     session: SessionDep,
 ) -> Message:
@@ -99,7 +109,7 @@ async def submit_contact_form(
     # 3. Persistir solo solicitudes de demo
     if form_data.requirement_type in _DEMO_TYPES:
         create_contact_request(session=session, form_data=form_data, calendar_event_id=calendar_event_id)
-    
+
     # 3. Solo enviar correo si está habilitado
     if not settings.emails_enabled:
         return Message(message="Mensaje enviado correctamente.")
@@ -147,7 +157,7 @@ def approve_request(
         raise HTTPException(status_code=404, detail=CONTACT_REQUEST_NOT_FOUND)
     if db_request.status != ContactStatus.PENDING:
         raise HTTPException(status_code=400, detail=CONTACT_ALREADY_REVIEWED)
-    
+
     update = approve_contact_request(
         session=session,
         db_request=db_request,
@@ -167,7 +177,7 @@ def reject_request(
         raise HTTPException(status_code=404, detail=CONTACT_REQUEST_NOT_FOUND)
     if db_request.status != ContactStatus.PENDING:
         raise HTTPException(status_code=400, detail=CONTACT_ALREADY_REVIEWED)
-    
+
     update = reject_contact_request(
         session=session,
         db_request=db_request,
@@ -175,3 +185,42 @@ def reject_request(
         note=payload.note
     )
     return update
+
+@router.post("/requests/{request_id}/send-invite", response_model=ContactRequestRead)
+def send_invite(
+    request_id: int,
+    session: SessionDep,
+    _: SuperuserDep,
+):
+    db_request = get_contact_request(session=session, request_id=request_id)
+    if not db_request:
+        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+    if db_request.status != ContactStatus.APPROVED:
+        raise HTTPException(status_code=400, detail="La solicitud debe estar aprobada para enviar invitación")
+
+    token = generate_invite_token(
+        email = db_request.email,
+        plan_type = db_request.requirement_type,
+        contact_request_id = db_request.id,
+        name = db_request.name,
+        company = db_request.company,
+    )
+
+    if settings.emails_enabled:
+        email_data = generate_invite_email(
+            email_to = db_request.email,
+            name = db_request.name,
+            plan_type = db_request.requirement_type,
+            token = token,
+        )
+        send_email(
+            email_to = db_request.email,
+            subject = email_data.subject,
+            html_content = email_data.html_content
+        )
+
+    db_request.invite_sent = datetime.now(timezone.utc)
+    session.add(db_request)
+    session.commit()
+    session.refresh(db_request)
+    return db_request

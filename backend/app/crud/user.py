@@ -13,6 +13,10 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
         full_name=user_create.full_name,
         is_active=user_create.is_active,
         is_superuser=user_create.is_superuser,
+        plan_type=user_create.plan_type,
+        company=user_create.company,
+        nit=user_create.nit,
+        phone=user_create.phone,
     )
     session.add(db_obj)
     session.commit()

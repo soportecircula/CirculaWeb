@@ -69,9 +69,21 @@ export class SidebarComponent implements OnInit {
   private readonly router = inject(Router);
   protected avatarUrl = avatarUrl;
 
-  menuItems: MenuItem[] = MENU.map((item) => ({ ...item, isCollapsed: true }));
+  menuItems: MenuItem[] = [];
 
   ngOnInit(): void {
+    const base = MENU.map((item)=> ({...item, isCollapsed: true}))
+    if(this.auth.isSuperAdmin()){
+      base.splice(2, 0,{
+        label: 'Solicitudes',
+        icon: 'mdi mdi-clipboard-list-outline',
+        link: '/dashboard/pending-requests',
+        isCollapsed: true
+      });
+    }
+    this.menuItems = base;
+
+
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         document.body.classList.remove('vertical-sidebar-enable');

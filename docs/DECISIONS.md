@@ -106,6 +106,36 @@ Formato:
   - Slots: lun-vie 8–17 continuo, sáb 8–12, timezone `America/Bogota`.
   - Documentación completa en `docs/GOOGLE_CALENDAR.md`.
 
+## 2026-04-24 — Recordarme: cookie de sesión vs persistente
+
+- Decisión: "Recordarme" controla el `max_age` del refresh token cookie. Sin marcar → session cookie (expira al cerrar el navegador). Marcado → persistent cookie (7 días).
+- Alternativas consideradas: guardar el access token en localStorage (rechazado por ser vulnerable a XSS); guardar el refresh token en localStorage (rechazado — solo httpOnly cookie).
+- Motivo: mantener la arquitectura de seguridad intacta (access token en memoria, refresh token en httpOnly cookie). Solo cambia la durabilidad del cookie.
+- Impacto:
+  - `_set_refresh_cookie(persistent: bool)` en `auth.py`.
+  - `remember_me: bool = Query(False)` en el endpoint `POST /login/access-token`.
+  - En localStorage solo se guarda el email del usuario (para pre-rellenar el campo). Nada sensible.
+  - El effect de login usa `HttpClient` directo (no `LoginService` generado) para poder agregar `?remember_me=` al URL sin editar el cliente ng-openapi.
+
+## 2026-04-24 — Bloqueo por intentos fallidos: Redis síncrono por email
+
+- Decisión: contador de intentos fallidos de login por email en Redis. 5 intentos → bloqueo de 5 minutos. Reset tras login exitoso.
+- Alternativas consideradas: slowapi por IP (ya existe pero es global, no por email); contador en base de datos (costoso, no es el propósito); en memoria del proceso (no funciona con múltiples workers).
+- Motivo: el bloqueo por IP en slowapi no distingue entre un usuario legítimo y un atacante con la misma IP (ej. redes corporativas). El bloqueo por email es más preciso y justo.
+- Impacto:
+  - Nuevo módulo `app/core/login_limiter.py` con cliente Redis **síncrono** (`redis.Redis`) para no romper el endpoint síncrono de FastAPI.
+  - Fail-open: si Redis no responde, el login continúa sin bloquear.
+  - Claves: `circula:{env}:login_fails:{email}` y `circula:{env}:login_block:{email}`.
+  - El endpoint devuelve 429 al bloquearse. El mensaje incluye los minutos de espera con `{minutes}` placeholder.
+
+## 2026-04-24 — Auto-redirección al dashboard con sesión activa
+
+- Decisión: `LoginComponent.ngOnInit()` verifica si la sesión está activa (token en memoria o refresh en curso) y redirige a `/dashboard` sin mostrar el formulario.
+- Motivo: con "Recordarme" activado, el cookie persistente permite renovar la sesión automáticamente al abrir el navegador. Sin la redirección, el usuario ve el formulario de login aunque ya esté autenticado.
+- Impacto:
+  - En `ngOnInit()`: primero revisa `getAccessToken()` (token ya en memoria). Si no, se suscribe a `selectAuthInitialized` y redirige cuando el refresh termina con éxito.
+  - Sin "Recordarme" (o cookie expirado): el refresh falla → `initialized=true` sin token → formulario se muestra normalmente.
+
 ## 2026-04-14 — Formulario de contacto: migración a `ContactService` (ng-openapi)
 
 - Decisión: el componente `resources.ts` usa `ContactService` generado por ng-openapi en lugar de `HttpClient` con URL relativa.

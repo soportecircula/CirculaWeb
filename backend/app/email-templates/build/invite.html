@@ -144,7 +144,7 @@
                             letter-spacing: -0.5px;
                           "
                         >
-                          Recuperación de Contraseña
+                          Tu acceso a {{ project_name }} está listo
                         </div>
                       </td>
                     </tr>
@@ -166,7 +166,7 @@
                             color: #475569;
                           "
                         >
-                          Hola {{ username }},
+                          Hola {{ name }},
                         </div>
                       </td>
                     </tr>
@@ -188,7 +188,9 @@
                             color: #475569;
                           "
                         >
-                          Hemos recibido una solicitud para restablecer tu acceso en <strong>{{ project_name }}</strong>. Puedes hacerlo haciendo clic en el siguiente botón:
+                          Has sido invitado con el plan
+                          <strong style="color: #82C4FA;">{{ plan_label }}</strong>. Completa tu
+                          registro haciendo clic en el siguiente botón:
                         </div>
                       </td>
                     </tr>
@@ -239,7 +241,7 @@
                                 "
                                 target="_blank"
                               >
-                                Restablecer contraseña
+                                Completar Registro
                               </a>
                             </td>
                           </tr>
@@ -282,7 +284,7 @@
                             color: #94a3b8;
                           "
                         >
-                          Este enlace expira en {{ valid_hours }} horas. Si no solicitaste este cambio, puedes ignorar este correo.
+                          Este enlace expira en {{ valid_hours }} horas.
                         </div>
                       </td>
                     </tr>

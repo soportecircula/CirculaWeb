@@ -29,3 +29,4 @@ class ContactRequest(Base, TimestampMixin):
     reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, default=None)
     scheduled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, default=None)
     calendar_event_id: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)
+    invite_sent: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, default=None)

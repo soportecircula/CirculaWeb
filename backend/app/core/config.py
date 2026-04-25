@@ -108,6 +108,10 @@ class Settings(BaseSettings):
     MINIO_BUCKET: str = "circula"
     MINIO_PUBLIC_URL: str = "http://localhost:9000"
 
+    # Login rate limiting
+    LOGIN_MAX_ATTEMPTS: int = 5
+    LOGIN_BLOCK_MINUTES: int = 5
+
     # Google Calendar — Domain-Wide Delegation
     GOOGLE_SERVICE_ACCOUNT_JSON: str = ""
 

@@ -4,7 +4,7 @@ import { UserMeResponse } from '../../../client/models';
 // Login
 export const login = createAction(
   '[Auth] Login',
-  props<{ email: string; password: string }>(),
+  props<{ email: string; password: string; rememberMe: boolean }>(),
 );
 export const loginSuccess = createAction('[Auth] Login Success');
 export const loginFailure = createAction(

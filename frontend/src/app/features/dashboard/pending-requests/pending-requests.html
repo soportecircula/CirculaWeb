@@ -1,0 +1,158 @@
+<div class="row">
+  <div class="col-12">
+    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+      <div>
+        <h4 class="mb-sm-0">Solicitudes de Demo</h4>
+        <p class="text-muted mb-0 mt-1">Gestiona las solicitudes de contacto entrantes.</p>
+      </div>
+      <div class="page-title-right mt-sm-0 mt-2">
+        <button class="btn btn-soft-primary btn-sm" (click)="load()" [disabled]="loading()">
+          <i class="mdi mdi-refresh me-1"></i> Actualizar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+  } @else if (requests().length === 0) {
+    <div class="text-center py-5 text-muted">
+      <i class="mdi mdi-inbox-outline fs-1 d-block mb-2"></i>
+      No hay solicitudes registradas.
+    </div>
+  } @else {
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Empresa / Contacto</th>
+                <th>Plan solicitado</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (req of requests(); track req.id) {
+                <tr>
+                  <td>
+                    <div class="fw-semibold">{{ req.company }}</div>
+                    <div class="text-muted fs-12">{{ req.name }} · {{ req.email }}</div>
+                    @if (req.phone) {
+                      <div class="text-muted fs-12">{{ req.phone }}</div>
+                    }
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark border">{{
+                      planLabel(req.requirement_type)
+                    }}</span>
+                  </td>
+                  <td>
+                    @if (req.status === 'PENDING') {
+                      <span class="badge bg-warning-subtle text-warning">Pendiente</span>
+                    } @else if (req.status === 'APPROVED') {
+                      <span class="badge bg-success-subtle text-success">Aprobada</span>
+                      @if (req.invite_sent) {
+                        <div class="fs-11 text-muted mt-1">Invitación enviada</div>
+                      }
+                    } @else {
+                      <span class="badge bg-danger-subtle text-danger">Rechazada</span>
+                      @if (req.rejection_note) {
+                        <div class="fs-11 text-muted mt-1">{{ req.rejection_note }}</div>
+                      }
+                    }
+                  </td>
+                  <td class="text-muted fs-13">{{ formatDate(req.created_at) }}</td>
+                  <td class="text-end">
+                    <div class="d-flex gap-2 justify-content-end flex-wrap">
+                      @if (req.status === 'PENDING') {
+                        <button
+                          class="btn btn-success btn-sm"
+                          [disabled]="processing() === req.id"
+                          (click)="approve(req.id)"
+                        >
+                          @if (processing() === req.id) {
+                            <span class="spinner-border spinner-border-sm"></span>
+                          } @else {
+                            Aprobar
+                          }
+                        </button>
+                        <button
+                          class="btn btn-soft-danger btn-sm"
+                          [disabled]="processing() === req.id"
+                          (click)="openReject(req.id)"
+                        >
+                          Rechazar
+                        </button>
+                      }
+                      @if (req.status === 'APPROVED') {
+                        <button
+                          class="btn btn-primary btn-sm"
+                          [disabled]="processing() === req.id"
+                          (click)="sendInvite(req.id)"
+                        >
+                          @if (processing() === req.id) {
+                            <span class="spinner-border spinner-border-sm"></span>
+                          } @else {
+                            {{ req.invite_sent ? 'Reenviar invitación' : 'Enviar invitación' }}
+                          }
+                        </button>
+                      }
+                    </div>
+                  </td>
+                </tr>
+
+                @if (expandedId() === req.id) {
+                  <tr class="bg-light">
+                    <td colspan="5" class="py-3 px-4">
+                      <div class="d-flex gap-2 align-items-end">
+                        <div class="flex-grow-1">
+                          <label class="form-label fs-13 mb-1">Motivo del rechazo (opcional)</label>
+                          <textarea
+                            class="form-control form-control-sm"
+                            rows="2"
+                            placeholder="Ej: No cumple con los requisitos
+ mínimos..."
+                            [ngModel]="rejectNote"
+                            (ngModelChange)="rejectNote = $event"
+                          ></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                          <button
+                            class="btn btn-soft-danger btn-sm"
+                            [disabled]="processing() === req.id"
+                            (click)="confirmReject(req.id)"
+                          >
+                            @if (processing() === req.id) {
+                              <span class="spinner-border spinner-border-sm"></span>
+                            } @else {
+                              Confirmar rechazo
+                            }
+                          </button>
+                          <button class="btn btn-light btn-sm" (click)="openReject(req.id)">
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+  </div>
+</div>

@@ -79,6 +79,10 @@ export const routes: Routes = [
             (m) => m.ChangePasswordComponent,
           ),
       },
+      {
+        path: 'pending-requests',
+        loadComponent: () => import('./features/dashboard/pending-requests/pending-requests').then((m) => m.PendingRequests),
+      },
     ],
   },
   { path: '**', redirectTo: 'auth/login' },

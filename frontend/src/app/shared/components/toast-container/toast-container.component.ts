@@ -28,7 +28,7 @@ export class ToastContainerComponent {
 
   bgClass(type: string): string {
     const map: Record<string, string> = {
-      success: 'text-bg-success border-0',
+      success: 'text-bg-primary border-0',
       error: 'text-bg-danger border-0',
       info: 'text-bg-info border-0',
       warning: 'text-bg-warning border-0',

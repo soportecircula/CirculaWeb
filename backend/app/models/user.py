@@ -1,13 +1,21 @@
 from __future__ import annotations
 
+import enum
 import uuid
 
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
 from app.models.base import TimestampMixin
 
+
+class PlanType(str, enum.Enum):
+    demo_rep = "demo_rep"
+    demo_indv = "demo_indv"
+    demo_col = "demo_col"
+    demo_esg = "demo_esg"
 
 class User(TimestampMixin, Base):
     __tablename__ = "users"
@@ -19,3 +27,7 @@ class User(TimestampMixin, Base):
     avatar_url: Mapped[str | None] = mapped_column(String(500), default=None)
     is_active: Mapped[bool] = mapped_column(default=True)
     is_superuser: Mapped[bool] = mapped_column(default=False)
+    plan_type: Mapped[PlanType | None] = mapped_column(SAEnum(PlanType), nullable=True, default=None)
+    company: Mapped[str | None] = mapped_column(String(100), nullable=True, default=None)
+    nit: Mapped[str | None] = mapped_column(String(30), nullable=True, default=None)
+    phone: Mapped[str | None] = mapped_column(String(20), nullable=True, default=None)

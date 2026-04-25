@@ -14,6 +14,16 @@ from app.core.config import settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+# Set invite token expiration time to 72 hours
+INVITE_TOKEN_EXPIRE_HOURS = 72
+
+#Email de invitacion
+PLAN_LABELS: dict[str, str] = {
+    "demo_rep":  "Diagnóstico REP / Productores",
+    "demo_indv": "Plan Individual",
+    "demo_col":  "Plan Colectivo",
+    "demo_esg":  "Infraestructura ESG",
+}
 
 
 @dataclass
@@ -76,10 +86,25 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
     )
     return EmailData(html_content=html_content, subject=subject)
 
+def generate_invite_email(email_to: str, name: str, plan_type: str, token: str)-> EmailData:
+    plan_label = PLAN_LABELS.get(plan_type, plan_type)
+    subject = f"{settings.PROJECT_NAME} - Tu acceso está listo: {plan_label}"
+    link = f"{settings.FRONTEND_HOST}/auth/register?token={token}"
+    html_content = render_email_template(
+        template_name="invite.html",
+        context={
+            "project_name": settings.PROJECT_NAME,
+            "name": name,
+            "plan_label": plan_label,
+            "link": link,
+            "valid_hours": INVITE_TOKEN_EXPIRE_HOURS,
+        }
+    )
+    return EmailData(html_content=html_content, subject=subject)
 
 def generate_contact_form_email(form_data: Any) -> EmailData:
     requirement_labels: dict[str, str] = {
-        "demo_rep": "Demo diagnóstico REP",
+        "demo_rep": "Demo Productores",
         "demo_indv": "Demo Individual",
         "demo_col": "Demo Colectivo",
         "demo_esg": "Demo ESG",
@@ -133,12 +158,44 @@ def generate_password_reset_token(email: str) -> str:
     )
     return encoded_jwt
 
-
 def verify_password_reset_token(token: str) -> str | None:
     try:
         decoded_token = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
         )
         return str(decoded_token["sub"])
+    except InvalidTokenError:
+        return None
+
+def generate_invite_token(
+    email: str,
+    plan_type: str,
+    contact_request_id: int,
+    name: str,
+    company: str,
+)-> str:
+    delta = timedelta(hours=INVITE_TOKEN_EXPIRE_HOURS)
+    now = datetime.now(timezone.utc)
+    expires= now + delta
+    payload= {
+        "exp": expires.timestamp(),
+        "nbf": now,
+        "type": "invite",
+        "sub": email,
+        "plan": plan_type,
+        "req": contact_request_id,
+        "name": name,
+        "company": company
+    }
+    return jwt.encode(
+        payload, settings.SECRET_KEY, algorithm=security.ALGORITHM
+    )
+
+def verify_invite_token(token: str) -> dict | None:
+    try:
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=[security.ALGORITHM])
+        if decoded.get("type") != "invite":
+            return None
+        return decoded
     except InvalidTokenError:
         return None
