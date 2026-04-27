@@ -58,8 +58,8 @@
 
     .footer-logo {
       display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
+      justify-content: center;
+      align-items: center;
       margin: -10px 0;
 
       @media (max-width: 768px) {
@@ -69,7 +69,7 @@
     }
 
     .footer-logo-img {
-      height: 85px;
+      height: 50px;
       width: auto;
       object-fit: contain;
     }
