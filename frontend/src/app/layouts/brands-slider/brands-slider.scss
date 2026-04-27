@@ -90,16 +90,10 @@ $slider-duration: 36s;
   padding: 0 64px;
   height: 90px;
   border-right: 1px solid rgba(var(--circula-border-subtle-rgb), 0.6);
-  opacity: 0.45;
-  transition: opacity 0.3s ease;
   cursor: default;
- 
+
   &:last-child {
     border-right: none;
-  }
- 
-  &:hover {
-    opacity: 1;
   }
 }
  
@@ -108,13 +102,6 @@ $slider-duration: 36s;
   display: flex;
   align-items: center;
   gap: 10px;
-  // Grises por defecto — color completo al hover
-  filter: grayscale(1) opacity(0.7);
-  transition: filter 0.3s ease;
- 
-  .brand-item:hover & {
-    filter: grayscale(0) opacity(1);
-  }
  
   // SVG inline
   svg {
@@ -137,7 +124,7 @@ $slider-duration: 36s;
     &[alt="Ekosolv"]  { height: 68px; }
 
     // Logos circulares: admiten un poco más de altura
-    &[alt="Recopack"] { height: 60px; }
+    &[alt="Recopack"] { height: 74px; }
     &[alt="TetraPak"] { height: 60px; }
 
     // Logos de texto muy anchos: se reducen para no ocupar demasiado espacio
@@ -175,7 +162,7 @@ $slider-duration: 36s;
 
       &[alt="CECCOL"]       { height: 58px; }
       &[alt="Ekosolv"]      { height: 46px; }
-      &[alt="Recopack"]     { height: 42px; }
+      &[alt="Recopack"]     { height: 52px; }
       &[alt="TetraPak"]     { height: 42px; }
       &[alt="Acoplasticos"] { height: 24px; }
       &[alt="Revo"]         { height: 30px; }
