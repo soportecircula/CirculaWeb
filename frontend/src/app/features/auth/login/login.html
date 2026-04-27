@@ -117,12 +117,17 @@
         <button
           class="btn btn-primary auth-submit-btn w-100"
           type="submit"
-          [disabled]="loginForm.invalid || submitting()"
+          [disabled]="loginForm.invalid || !isReady()"
         >
-          @if (submitting()) {
+          @if (!initDone()) {
             <span class="spinner-border spinner-border-sm me-1"></span>
+            Conectando...
+          } @else if (submitting()) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+            Ingresando...
+          } @else {
+            Ingresar
           }
-          Ingresar
         </button>
       </form>
     </div>
