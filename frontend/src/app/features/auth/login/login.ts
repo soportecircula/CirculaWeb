@@ -8,6 +8,7 @@ import { getAccessToken } from '../../../core/auth/auth-token';
 import { NotificationService } from '../../../core/notifications/notification.service';
 import { getApiErrorDetail } from '../../../core/notifications/messages';
 import { selectAuthInitialized } from '../../../store/Authentication/authentication.selectors';
+import { INACTIVITY_FLAG } from '../../../core/auth/inactivity.service';
 
 const REMEMBER_ME_KEY = 'circula_remember_email';
 
@@ -29,6 +30,7 @@ export class LoginComponent implements OnInit {
   rememberMe = signal(false);
   blocked = signal(false);
   blockMessage = signal('');
+  sessionExpired = signal(false);
   currentYear = new Date().getFullYear();
 
   loginForm = this.fb.group({
@@ -37,6 +39,11 @@ export class LoginComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    if (sessionStorage.getItem(INACTIVITY_FLAG)) {
+      sessionStorage.removeItem(INACTIVITY_FLAG);
+      this.sessionExpired.set(true);
+    }
+
     const saved = localStorage.getItem(REMEMBER_ME_KEY);
     if (saved) {
       this.rememberMe.set(true);
@@ -49,8 +56,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    // El refresh JWT está en curso al cargar la app (cookie persistente).
-    // Esperar a que termine y redirigir si resultó autenticado.
+    // Esperar a que el refresh JWT inicial complete y redirigir si resultó autenticado
     this.store
       .select(selectAuthInitialized)
       .pipe(
@@ -85,7 +91,7 @@ export class LoginComponent implements OnInit {
       localStorage.removeItem(REMEMBER_ME_KEY);
     }
 
-    this.auth.login(email!, password!, this.rememberMe()).subscribe({
+    this.auth.login(email!, password!, false).subscribe({
       next: () => {
         this.submitting.set(false);
         setTimeout(() => this.router.navigateByUrl(this.auth.getDefaultRedirectPath()), 300);

@@ -170,6 +170,7 @@ def get_invite_info(token: str = Query(...), session: SessionDep = None):
         plan_label=PLAN_LABELS.get(payload["plan"], payload["plan"]),
         company=payload["company"],
         name=payload["name"],
+        phone=payload.get("phone") or None,
     )
 
 

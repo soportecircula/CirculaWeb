@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15  # 15 minutes
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
     FRONTEND_HOST: str = "http://localhost:4200"
+    BACKEND_URL: str = "http://localhost:8000"
+    EMAIL_LOGO_URL: str = ""
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
     # Env: comma-separated string, e.g. "http://localhost,http://localhost:4200,*"

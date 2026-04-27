@@ -4,6 +4,7 @@ import { ViewportScroller } from '@angular/common';
 import { Store } from '@ngrx/store';
 import * as AuthActions from './store/Authentication/authentication.actions';
 import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
+import { InactivityService } from './core/auth/inactivity.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class App {
   private readonly store = inject(Store);
 
   constructor() {
+    inject(InactivityService);
     this.store.dispatch(AuthActions.refreshToken());
     inject(ViewportScroller).setOffset([0, 88]);
   }

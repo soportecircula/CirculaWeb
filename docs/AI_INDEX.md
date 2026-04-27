@@ -15,6 +15,8 @@ Gestión de ciclo de vida de productos, cumplimiento normativo y reportes REP.
 | `docs/BACKEND_GUIDE.md` | Patrones FastAPI + SQLAlchemy |
 | `docs/FRONTEND_GUIDE.md` | Patrones Angular + Velzon + ng-openapi |
 | `docs/SECURITY.md` | Seguridad y manejo de credenciales |
+| `docs/SESSION_2026_04_24.md` | Sesión 2026-04-24: flujo demo→invitación, emails, filtros |
+| `docs/SESSION_2026_04_25.md` | Sesión 2026-04-25: logo emails, teléfono en registro, inactividad |
 
 ## Reglas globales
 

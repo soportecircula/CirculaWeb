@@ -77,3 +77,9 @@ if settings.STORAGE_BACKEND == "local":
     _upload_dir = Path(settings.UPLOAD_DIR)
     _upload_dir.mkdir(parents=True, exist_ok=True)
     app.mount("/api/v1/uploads", StaticFiles(directory=str(_upload_dir)), name="uploads")
+
+# Assets estáticos del backend (logo para emails, etc.)
+from pathlib import Path as _Path
+_static_dir = _Path(__file__).parent / "static"
+_static_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")

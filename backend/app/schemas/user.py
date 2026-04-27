@@ -80,3 +80,4 @@ class InviteTokenInfo(BaseModel):
     plan_label: str
     company: str
     name: str
+    phone: str | None = None

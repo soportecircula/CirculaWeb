@@ -219,6 +219,7 @@ def send_invite(
         contact_request_id = db_request.id,
         name = db_request.name,
         company = db_request.company,
+        phone = db_request.phone,
     )
 
     if settings.emails_enabled:

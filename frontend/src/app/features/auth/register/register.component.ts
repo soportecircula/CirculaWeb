@@ -74,7 +74,7 @@ export class RegisterComponent implements OnInit{
     this.usersService.usersGetInviteInfo(token).subscribe({
       next: (info) => {
         this.inviteInfo.set(info);
-        this.form.patchValue({ email: info.email, company: info.company });
+        this.form.patchValue({ email: info.email, company: info.company, phone: info.phone ?? '' });
         this.form.get('email')!.disable();
       },
       error: (err) => this.tokenError.set(getApiErrorDetail(err) || 'El enlace de invitación es inválido o ha expirado.'),

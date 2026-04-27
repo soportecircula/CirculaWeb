@@ -72,7 +72,7 @@ def generate_test_email(email_to: str) -> EmailData:
 
 def generate_reset_password_email(email_to: str, email: str, token: str) -> EmailData:
     project_name = settings.PROJECT_NAME
-    subject = f"{project_name} - Password recovery for user {email}"
+    subject = f"{project_name} - Recuperación de contraseña"
     link = f"{settings.FRONTEND_HOST}/auth/reset-password?token={token}"
     html_content = render_email_template(
         template_name="reset_password.html",
@@ -82,13 +82,14 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
             "email": email_to,
             "valid_hours": settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS,
             "link": link,
+            "logo_url": settings.EMAIL_LOGO_URL or f"{settings.BACKEND_URL}/static/images/Cirkula_v2.png",
         },
     )
     return EmailData(html_content=html_content, subject=subject)
 
 def generate_invite_email(email_to: str, name: str, plan_type: str, token: str)-> EmailData:
     plan_label = PLAN_LABELS.get(plan_type, plan_type)
-    subject = f"{settings.PROJECT_NAME} - Tu acceso está listo: {plan_label}"
+    subject = f"Cirkula - [Invitación]: Registro en plataforma para {plan_label}"
     link = f"{settings.FRONTEND_HOST}/auth/register?token={token}"
     html_content = render_email_template(
         template_name="invite.html",
@@ -98,6 +99,7 @@ def generate_invite_email(email_to: str, name: str, plan_type: str, token: str)-
             "plan_label": plan_label,
             "link": link,
             "valid_hours": INVITE_TOKEN_EXPIRE_HOURS,
+            "logo_url": settings.EMAIL_LOGO_URL or f"{settings.BACKEND_URL}/static/images/Cirkula_v2.png",
         }
     )
     return EmailData(html_content=html_content, subject=subject)
@@ -194,6 +196,7 @@ def generate_invite_token(
     contact_request_id: int,
     name: str,
     company: str,
+    phone: str | None = None,
 )-> str:
     delta = timedelta(hours=INVITE_TOKEN_EXPIRE_HOURS)
     now = datetime.now(timezone.utc)
@@ -206,7 +209,8 @@ def generate_invite_token(
         "plan": plan_type,
         "req": contact_request_id,
         "name": name,
-        "company": company
+        "company": company,
+        "phone": phone or "",
     }
     return jwt.encode(
         payload, settings.SECRET_KEY, algorithm=security.ALGORITHM
