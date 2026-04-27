@@ -13,7 +13,7 @@ const defaultState: LayoutState = {
   LAYOUT_POSITION: 'fixed',
   TOPBAR: 'light',
   SIDEBAR_SIZE: 'lg',
-  SIDEBAR_COLOR: 'dark',
+  SIDEBAR_COLOR: 'light',
   SIDEBAR_VIEW: 'default',
   SIDEBAR_VISIBILITY: 'show',
   SIDEBAR_IMAGE: 'none',
@@ -24,7 +24,11 @@ const defaultState: LayoutState = {
 function loadFromStorage(): Partial<LayoutState> {
   try {
     const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : {};
+    if (!stored) return {};
+    const parsed: Partial<LayoutState> = JSON.parse(stored);
+    // Always use the default sidebar color; don't persist it
+    delete parsed.SIDEBAR_COLOR;
+    return parsed;
   } catch {
     return {};
   }

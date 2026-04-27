@@ -1122,9 +1122,9 @@ a.ck.ck-button.ck-on {
 
 // ── Topbar removido: sobreescribir paddings de Velzon que compensaban header-height ──
 // Velzon default: padding-top = calc(70px + 1.5rem), padding-bottom = 60px (footer)
-// Sin topbar ni footer, usamos padding mínimo
+// Restaurado el padding-top por defecto porque el topbar SÍ se usa en el dashboard
 .page-content {
-  padding-top: 1.5rem !important;
+  // padding-top: 1.5rem !important;
   padding-bottom: 1.5rem !important;
 }
 
@@ -1630,3 +1630,61 @@ a.ck.ck-button.ck-on {
     z-index: 2;
   }
 }
+
+// ── Sidebar scroll container ──────────────────────────────────────────────────
+.sidebar-menu-scroll {
+  max-height: calc(100vh - 70px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+// ── Sidebar navbar-brand-box ──────────────────────────────────────────────────
+.navbar-brand-box {
+  padding: 0.85rem 1.3rem;
+  text-align: left;
+}
+
+// ── Sidebar logo + brand text ─────────────────────────────────────────────────
+.logo-lg {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.navbar-brand-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--circula-text-dark, #{$circula-text-dark});
+}
+
+.navbar-brand-sub {
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--circula-text-muted, #{$circula-text-muted});
+  margin-top: 0.15rem;
+}
+
+// Sidebar oscuro o con gradiente: texto en blanco
+:is([data-sidebar="dark"], [data-sidebar="gradient"],
+    [data-sidebar="gradient-2"], [data-sidebar="gradient-3"],
+    [data-sidebar="gradient-4"]) {
+  .navbar-brand-name { color: $circula-white; }
+  .navbar-brand-sub  { color: rgba($circula-white, 0.6); }
+}
+
+// Dark theme global
+[data-bs-theme="dark"] {
+  .navbar-brand-name { color: var(--circula-brand-text, #{$circula-brand-text}); }
+  .navbar-brand-sub  { color: var(--circula-text-muted, #{$circula-text-muted}); }
+}
+
+// Sidebar colapsado (sm / sm-hover): logo-lg ya está oculto por _vertical.scss.
+// Mobile: sidebar se oculta completo; mobile-header no usa estas clases.

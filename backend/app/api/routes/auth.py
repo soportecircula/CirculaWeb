@@ -25,14 +25,14 @@ router = APIRouter(tags=["auth"])
 REFRESH_COOKIE_KEY = "refresh_token"
 
 
-def _set_refresh_cookie(response: Response, refresh_token: str) -> None:
+def _set_refresh_cookie(response: Response, refresh_token: str, persistent: bool = True) -> None:
     response.set_cookie(
         key=REFRESH_COOKIE_KEY,
         value=refresh_token,
         httponly=True,
         secure=settings.ENVIRONMENT != "local",
         samesite="lax",
-        max_age=settings.REFRESH_TOKEN_EXPIRE_MINUTES * 60,
+        max_age=settings.REFRESH_TOKEN_EXPIRE_MINUTES * 60 if persistent else None,
         path=f"{settings.API_V1_STR}/auth",
     )
 

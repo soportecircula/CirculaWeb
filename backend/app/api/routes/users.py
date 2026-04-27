@@ -9,13 +9,11 @@ from app.api.deps import (
     get_current_active_superuser,
 )
 from app.core.config import settings
-from app.core.security import get_password_hash, verify_password
-from app.crud import user as crud_user
-from app.models.user import User
 from app.core.messages import (
-    INSUFFICIENT_PRIVILEGES,
     CANNOT_DELETE_ACTIVE_USER,
     INCORRECT_PASSWORD,
+    INSUFFICIENT_PRIVILEGES,
+    INVALID_TOKEN,
     PASSWORD_UPDATED,
     SAME_PASSWORD,
     SUPERUSER_NO_DELETE_SELF,
@@ -25,18 +23,29 @@ from app.core.messages import (
     USER_WITH_EMAIL_EXISTS,
     USER_WITH_ID_NOT_EXISTS,
 )
+from app.core.security import get_password_hash, verify_password
+from app.crud import user as crud_user
+from app.crud.contact_request import get_contact_request
+from app.models.user import User
 from app.schemas.common import Message
 from app.schemas.user import (
+    InviteTokenInfo,
     UpdatePassword,
     UserCreate,
     UserMeResponse,
     UserPublic,
     UserRegister,
+    UserRegisterWithInvite,
     UsersPublic,
     UserUpdate,
     UserUpdateMe,
 )
-from app.utils import generate_new_account_email, send_email
+from app.utils import (
+    PLAN_LABELS,
+    generate_new_account_email,
+    send_email,
+    verify_invite_token,
+)
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -145,6 +154,55 @@ def register_user(session: SessionDep, user_in: UserRegister) -> UserPublic:
         )
     user_create = UserCreate.model_validate(user_in.model_dump())
     user = crud_user.create_user(session=session, user_create=user_create)
+    return user
+
+
+@router.get("/invite-info", response_model=InviteTokenInfo)
+def get_invite_info(token: str = Query(...), session: SessionDep = None):
+    payload = verify_invite_token(token)
+    if not payload:
+        raise HTTPException(status_code=400, detail=INVALID_TOKEN)
+    if crud_user.get_user_by_email(session=session, email=payload["sub"]):
+        raise HTTPException(status_code=409, detail="Esta invitación ya fue utilizada.")
+    return InviteTokenInfo(
+        email=payload["sub"],
+        plan_type=payload["plan"],
+        plan_label=PLAN_LABELS.get(payload["plan"], payload["plan"]),
+        company=payload["company"],
+        name=payload["name"],
+        phone=payload.get("phone") or None,
+    )
+
+
+@router.post("/register", response_model=UserPublic)
+def register_with_invite(session: SessionDep, user_in: UserRegisterWithInvite):
+    payload = verify_invite_token(user_in.invite_token)
+    if not payload:
+        raise HTTPException(400, detail=INVALID_TOKEN)
+    if payload["sub"].lower() != user_in.email.lower():
+        raise HTTPException(400, detail="El correo no coincide con la invitación")
+    existing = crud_user.get_user_by_email(session=session, email=user_in.email)
+    if existing:
+        raise HTTPException(400, detail=USER_WITH_EMAIL_EXISTS)
+
+    user_create = UserCreate(
+        email=user_in.email,
+        password=user_in.password,
+        full_name=user_in.full_name,
+        plan_type=payload["plan"],
+        company=user_in.company,
+        nit=user_in.nit,
+        phone=user_in.phone,
+    )
+    user = crud_user.create_user(session=session, user_create=user_create)
+
+    contact_req_id: int | None = payload.get("req")
+    if contact_req_id:
+        db_contact = get_contact_request(session=session, request_id=contact_req_id)
+        if db_contact:
+            session.delete(db_contact)
+            session.commit()
+
     return user
 
 

@@ -5,7 +5,6 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, signal } 
   imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './brands-slider.html',
-  styleUrl: './brands-slider.scss',
 })
 export class BrandsSlider implements AfterViewInit, OnDestroy {
   brandsReady = signal<boolean>(false);

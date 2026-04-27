@@ -1,13 +1,13 @@
 from datetime import timedelta
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.deps import CurrentUser, SessionDep, get_current_active_superuser
 from app.api.routes.auth import _set_refresh_cookie
-from app.core import security
+from app.core import login_limiter, security
 from app.core.config import settings
 from app.core.rate_limit import limiter
 from app.crud import user as crud_user
@@ -15,6 +15,7 @@ from app.schemas.common import Message
 from app.schemas.token import NewPassword, Token
 from app.schemas.user import UserPublic, UserUpdate
 from app.core.messages import (
+    ACCOUNT_LOCKED,
     INCORRECT_EMAIL_OR_PASSWORD,
     INACTIVE_USER,
     INVALID_TOKEN,
@@ -38,14 +39,35 @@ def login_access_token(
     session: SessionDep,
     response: Response,
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    remember_me: bool = Query(False),
 ) -> Token:
+    email = form_data.username
+
+    if login_limiter.is_blocked(email):
+        raise HTTPException(
+            status_code=429,
+            detail=ACCOUNT_LOCKED.format(minutes=settings.LOGIN_BLOCK_MINUTES),
+        )
+
     user = crud_user.authenticate(
-        session=session, email=form_data.username, password=form_data.password
+        session=session, email=email, password=form_data.password
     )
     if not user:
-        raise HTTPException(status_code=400, detail=INCORRECT_EMAIL_OR_PASSWORD)
+        count = login_limiter.increment_fail(email)
+        remaining = max(0, settings.LOGIN_MAX_ATTEMPTS - count)
+        if remaining == 0:
+            raise HTTPException(
+                status_code=429,
+                detail=ACCOUNT_LOCKED.format(minutes=settings.LOGIN_BLOCK_MINUTES),
+            )
+        raise HTTPException(
+            status_code=400,
+            detail=f"{INCORRECT_EMAIL_OR_PASSWORD}. Intentos restantes: {remaining}",
+        )
     elif not user.is_active:
         raise HTTPException(status_code=403, detail=INACTIVE_USER)
+
+    login_limiter.reset_fails(email)
 
     access_token = security.create_access_token(
         user.id, timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -54,7 +76,7 @@ def login_access_token(
         user.id, timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
     )
 
-    _set_refresh_cookie(response, refresh_token)
+    _set_refresh_cookie(response, refresh_token, persistent=remember_me)
     return Token(access_token=access_token)
 
 

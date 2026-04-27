@@ -1,0 +1,88 @@
+<!-- Backdrop -->
+<div class="cal-overlay" (click)="close()"></div>
+
+<!-- Panel -->
+<div class="cal-panel" role="dialog" aria-modal="true" aria-label="Agendar cita">
+
+  <!-- Header -->
+  <div class="cal-panel__header">
+    <h5 class="cal-panel__title">
+      <i class="bi bi-calendar-check me-2"></i>Agendar cita
+    </h5>
+    <button type="button" class="cal-panel__close" (click)="close()" aria-label="Cerrar">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- Body -->
+  <div class="cal-panel__body">
+
+    <!-- Navegación del mes -->
+    <div class="cal-month-nav">
+      <button type="button" class="cal-month-btn" (click)="prevMonth()">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <span class="cal-month-label">
+        {{ currentMonth() | date:'MMMM yyyy' : '' : 'es-CO' }}
+      </span>
+      <button type="button" class="cal-month-btn" (click)="nextMonth()">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Nombres de días -->
+    <div class="cal-grid cal-grid--header">
+      <span *ngFor="let d of ['Lu','Ma','Mi','Ju','Vi','Sá','Do']" class="cal-day-name">{{d}}</span>
+    </div>
+
+    <!-- Grid de días -->
+    <div class="cal-grid">
+      <ng-container *ngFor="let cell of calendarDays()">
+        <button *ngIf="cell.date; else emptyCell"
+          type="button"
+          class="cal-day"
+          [class.cal-day--active]="selectedDate() === toDateStr(cell.date)"
+          [class.cal-day--disabled]="!cell.enabled"
+          [disabled]="!cell.enabled"
+          (click)="cell.enabled && onDateSelect(toDateStr(cell.date))">
+          {{ cell.date.getDate() }}
+        </button>
+      </ng-container>
+      <ng-template #emptyCell><span class="cal-day cal-day--empty"></span></ng-template>
+    </div>
+
+    <!-- Slots -->
+    <div *ngIf="selectedDate()" class="cal-slots">
+      <p class="cal-slots__label">
+        Horarios disponibles — {{ selectedDate() | date:"EEEE d 'de' MMMM" : '' : 'es-CO' }}
+      </p>
+      <div *ngIf="loadingSlots()" class="cal-slots__loading">
+        <i class="bi bi-arrow-repeat spin me-1"></i> Cargando horarios...
+      </div>
+      <div *ngIf="!loadingSlots() && availableSlots().length === 0" class="cal-slots__empty">
+        No hay disponibilidad para este día.
+      </div>
+      <div *ngIf="!loadingSlots() && availableSlots().length > 0" class="cal-slots__grid">
+        <button *ngFor="let slot of availableSlots()"
+          type="button"
+          class="cal-slot-btn"
+          [class.cal-slot-btn--selected]="selectedSlot()?.datetime_iso === slot.datetime_iso"
+          (click)="onSlotSelect(slot)">
+          {{ slot.label }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="cal-panel__footer">
+    <button type="button" class="btn btn-light btn-sm" (click)="close()">Cancelar</button>
+    <button type="button" class="btn btn-dark btn-sm"
+      [disabled]="!selectedSlot()"
+      (click)="confirm()">
+      <i class="bi bi-check2 me-1"></i>Confirmar cita
+    </button>
+  </div>
+
+</div>

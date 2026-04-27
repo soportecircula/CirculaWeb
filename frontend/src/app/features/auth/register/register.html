@@ -1,0 +1,253 @@
+<div class="auth-split-layout">
+  <!-- Columna Izquierda -->
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <div class="auth-header-badges">
+        <a routerLink="/" class="btn-back"> &larr; Volver </a>
+        <div class="platform-badge"><span class="dot"></span> Acceso a la plataforma</div>
+      </div>
+
+      <h1 class="auth-title">
+        Únete a la infraestructura<br />
+        circular de Circula.
+      </h1>
+      <p class="auth-description">
+        Crea tu cuenta y forma parte del entorno donde convergen productores, planes, operadores,
+        gestores y transformadores sobre una misma infraestructura de trazabilidad basada en
+        blockchain.
+      </p>
+
+      <div class="auth-msg-card">
+        <h4 class="msg-title">MENSAJE DE EMPRESA</h4>
+        <p class="msg-text">
+          Circula convierte la economía circular en una red operativa integrada. Aquí la
+          trazabilidad deja de ser un discurso y se vuelve operación auditable, intuitiva y
+          escalable.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna Derecha -->
+  <div class="auth-right" style="overflow-y: auto">
+    <div class="auth-form-card my-auto">
+      <div class="auth-form-header">
+        <span class="auth-form-subtitle">CREAR CUENTA</span>
+        <h2 class="auth-form-title">Registro</h2>
+        <p class="auth-form-desc">Completa los datos para obtener tu cuenta.</p>
+      </div>
+
+      <div class="mt-4">
+        @if (tokenError()) {
+          <div class="alert alert-danger text-center" role="alert">
+            <i class="mdi mdi-alert-circle-outline d-block fs-24 mb-2"></i>
+            {{ tokenError() }}
+          </div>
+        }
+        @if (successMessage()) {
+          <div class="text-center py-4">
+            <i class="mdi mdi-check-all d-block fs-1 mb-3 text-primary"></i>
+            <p class="text-primary fw-semibold mb-4">{{ successMessage() }}</p>
+            <a routerLink="/auth/login" class="btn auth-submit-btn w-100">Ir al Login</a>
+          </div>
+        }
+        @if (!successMessage() && !tokenError()) {
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+            @if (isInvitedMode() && inviteInfo()) {
+              <div class="alert alert-info mb-3">
+                Tu plan: <strong>{{ inviteInfo()!.plan_label }}</strong>
+              </div>
+            }
+
+            <div class="form-group mb-4">
+              <label for="useremail" class="form-label"
+                >Correo electrónico <span class="text-danger">*</span></label
+              >
+              <input
+                type="email"
+                class="form-control auth-input"
+                id="useremail"
+                formControlName="email"
+                placeholder="nombre@empresa.com"
+                maxlength="255"
+                [attr.disabled]="isInvitedMode() ? true : null"
+              />
+            </div>
+
+            <div class="form-group mb-4">
+              <label for="fullname" class="form-label"
+                >Nombre completo <span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                class="form-control auth-input"
+                id="fullname"
+                formControlName="fullName"
+                placeholder="Ingresa tu nombre"
+                maxlength="50"
+              />
+            </div>
+
+            @if (isInvitedMode()) {
+              <div class="form-group mb-4">
+                <label class="form-label">Empresa <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control auth-input"
+                  formControlName="company"
+                  placeholder="Razón social"
+                  maxlength="100"
+                />
+              </div>
+              <div class="form-group mb-4">
+                <label class="form-label">NIT <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control auth-input"
+                  formControlName="nit"
+                  placeholder="Ej: 900123456-1"
+                  maxlength="30"
+                />
+              </div>
+              <div class="form-group mb-4">
+                <label class="form-label">Teléfono <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control auth-input"
+                  formControlName="phone"
+                  placeholder="Ej: 3001234567"
+                  maxlength="20"
+                />
+              </div>
+            }
+
+            <div class="form-group mb-4">
+              <label for="userpassword" class="form-label"
+                >Contraseña <span class="text-danger">*</span></label
+              >
+              <div class="position-relative auth-pass-inputgroup">
+                <input
+                  [type]="showPassword() ? 'text' : 'password'"
+                  class="form-control auth-input pe-5 password-input"
+                  id="userpassword"
+                  formControlName="password"
+                  placeholder="••••••••••••"
+                  maxlength="255"
+                />
+                <button
+                  class="btn btn-icon position-absolute end-0 top-0 password-toggle"
+                  type="button"
+                  tabindex="-1"
+                  (click)="togglePassword()"
+                >
+                  @if (showPassword()) {
+                    <i class="mdi mdi-eye-outline"></i>
+                  } @else {
+                    <i class="mdi mdi-eye-off-outline"></i>
+                  }
+                </button>
+              </div>
+              <div class="form-text">Usa mínimo 8 caracteres, una letra mayúscula y un carácter especial (!&#64;#$%...).</div>
+            </div>
+
+            <div class="form-group mb-4">
+              <label for="confirm-password" class="form-label"
+                >Confirmar contraseña <span class="text-danger">*</span></label
+              >
+              <div class="position-relative auth-pass-inputgroup">
+                <input
+                  [type]="showConfirmPassword() ? 'text' : 'password'"
+                  class="form-control auth-input pe-5 password-input"
+                  id="confirm-password"
+                  formControlName="confirmPassword"
+                  placeholder="••••••••••••"
+                  maxlength="255"
+                />
+                <button
+                  class="btn btn-icon position-absolute end-0 top-0 password-toggle"
+                  type="button"
+                  tabindex="-1"
+                  (click)="toggleConfirmPassword()"
+                >
+                  @if (showConfirmPassword()) {
+                    <i class="mdi mdi-eye-outline"></i>
+                  } @else {
+                    <i class="mdi mdi-eye-off-outline"></i>
+                  }
+                </button>
+              </div>
+              @if (form.get('confirmPassword')?.touched && form.hasError('passwordMismatch')) {
+                <div class="text-danger mt-1 fs-12">Las contraseñas no coinciden</div>
+              }
+            </div>
+
+            <div id="password-contain" class="p-3 bg-light mb-4 rounded border">
+              <h5 class="fs-13">La contraseña debe contener:</h5>
+              <p
+                class="fs-12 mb-1"
+                [class.text-primary]="hasMinLength()"
+                [class.text-danger]="!hasMinLength()"
+              >
+                {{ hasMinLength() ? '✔' : '✖' }} Mínimo <b>8 caracteres</b>
+              </p>
+              <p
+                class="fs-12 mb-1"
+                [class.text-primary]="hasUpperCase()"
+                [class.text-danger]="!hasUpperCase()"
+              >
+                {{ hasUpperCase() ? '✔' : '✖' }} Al menos una <b>letra mayúscula</b>
+              </p>
+              <p
+                class="fs-12 mb-0"
+                [class.text-primary]="hasSpecialChar()"
+                [class.text-danger]="!hasSpecialChar()"
+              >
+                {{ hasSpecialChar() ? '✔' : '✖' }} Al menos un
+                <b>carácter especial</b> (!&#64;#$%...)
+              </p>
+            </div>
+
+            <div class="form-check mb-4">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="dataConsent"
+                formControlName="dataConsent"
+              />
+              <label class="form-check-label fs-13" for="dataConsent">
+                Acepto el
+                <a target="_blank" class="text-primary text-decoration-underline">
+                  tratamiento de mis datos personales
+                </a>
+                conforme a la política de privacidad de Circula.
+                <span class="text-danger">*</span>
+              </label>
+            </div>
+
+            <button
+              class="btn btn-primary auth-submit-btn w-100"
+              type="submit"
+              [disabled]="form.invalid || submitting()"
+            >
+              @if (submitting()) {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+              }
+              {{ isInvitedMode() ? 'Completar Registro' : 'Crear Cuenta' }}
+            </button>
+          </form>
+        }
+      </div>
+
+      @if (!isInvitedMode()) {
+        <div class="mt-4 text-center">
+          <p class="mb-0 text-muted">
+            ¿Ya tienes cuenta?
+            <a routerLink="/auth/login" class="fw-semibold text-primary text-decoration-underline"
+              >Iniciar Sesión</a
+            >
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

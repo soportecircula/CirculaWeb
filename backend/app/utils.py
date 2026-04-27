@@ -14,6 +14,16 @@ from app.core.config import settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+# Set invite token expiration time to 72 hours
+INVITE_TOKEN_EXPIRE_HOURS = 72
+
+#Email de invitacion
+PLAN_LABELS: dict[str, str] = {
+    "demo_rep":  "Diagnóstico REP / Productores",
+    "demo_indv": "Plan Individual",
+    "demo_col":  "Plan Colectivo",
+    "demo_esg":  "Infraestructura ESG",
+}
 
 
 @dataclass
@@ -62,7 +72,7 @@ def generate_test_email(email_to: str) -> EmailData:
 
 def generate_reset_password_email(email_to: str, email: str, token: str) -> EmailData:
     project_name = settings.PROJECT_NAME
-    subject = f"{project_name} - Password recovery for user {email}"
+    subject = f"{project_name} - Recuperación de contraseña"
     link = f"{settings.FRONTEND_HOST}/auth/reset-password?token={token}"
     html_content = render_email_template(
         template_name="reset_password.html",
@@ -72,6 +82,44 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
             "email": email_to,
             "valid_hours": settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS,
             "link": link,
+            "logo_url": settings.EMAIL_LOGO_URL or f"{settings.BACKEND_URL}/static/images/Cirkula_v2.png",
+        },
+    )
+    return EmailData(html_content=html_content, subject=subject)
+
+def generate_invite_email(email_to: str, name: str, plan_type: str, token: str)-> EmailData:
+    plan_label = PLAN_LABELS.get(plan_type, plan_type)
+    subject = f"Cirkula - [Invitación]: Registro en plataforma para {plan_label}"
+    link = f"{settings.FRONTEND_HOST}/auth/register?token={token}"
+    html_content = render_email_template(
+        template_name="invite.html",
+        context={
+            "project_name": settings.PROJECT_NAME,
+            "name": name,
+            "plan_label": plan_label,
+            "link": link,
+            "valid_hours": INVITE_TOKEN_EXPIRE_HOURS,
+            "logo_url": settings.EMAIL_LOGO_URL or f"{settings.BACKEND_URL}/static/images/Cirkula_v2.png",
+        }
+    )
+    return EmailData(html_content=html_content, subject=subject)
+
+def generate_rejection_email(
+    name: str,
+    company: str,
+    plan_type: str,
+    rejection_note: str | None,
+) -> EmailData:
+    plan_label = PLAN_LABELS.get(plan_type, plan_type)
+    subject = f"{settings.PROJECT_NAME} — Resolución de tu solicitud de acceso"
+    html_content = render_email_template(
+        template_name="rejection.html",
+        context={
+            "project_name": settings.PROJECT_NAME,
+            "name": name,
+            "company": company,
+            "plan_label": plan_label,
+            "rejection_note": rejection_note,
         },
     )
     return EmailData(html_content=html_content, subject=subject)
@@ -79,7 +127,7 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
 
 def generate_contact_form_email(form_data: Any) -> EmailData:
     requirement_labels: dict[str, str] = {
-        "demo_rep": "Demo diagnóstico REP",
+        "demo_rep": "Demo Productores",
         "demo_indv": "Demo Individual",
         "demo_col": "Demo Colectivo",
         "demo_esg": "Demo ESG",
@@ -87,7 +135,7 @@ def generate_contact_form_email(form_data: Any) -> EmailData:
         "info": "Quiero más información",
     }
     label = requirement_labels.get(form_data.requirement_type, form_data.requirement_type)
-    subject = f"[{settings.PROJECT_NAME}] Nuevo contacto: {label} — {form_data.name}"
+    subject = f"[{label}] Nuevo contacto: {form_data.name}"
     html_content = render_email_template(
         template_name="contact_form.html",
         context={
@@ -133,12 +181,46 @@ def generate_password_reset_token(email: str) -> str:
     )
     return encoded_jwt
 
-
 def verify_password_reset_token(token: str) -> str | None:
     try:
         decoded_token = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
         )
         return str(decoded_token["sub"])
+    except InvalidTokenError:
+        return None
+
+def generate_invite_token(
+    email: str,
+    plan_type: str,
+    contact_request_id: int,
+    name: str,
+    company: str,
+    phone: str | None = None,
+)-> str:
+    delta = timedelta(hours=INVITE_TOKEN_EXPIRE_HOURS)
+    now = datetime.now(timezone.utc)
+    expires= now + delta
+    payload= {
+        "exp": expires.timestamp(),
+        "nbf": now,
+        "type": "invite",
+        "sub": email,
+        "plan": plan_type,
+        "req": contact_request_id,
+        "name": name,
+        "company": company,
+        "phone": phone or "",
+    }
+    return jwt.encode(
+        payload, settings.SECRET_KEY, algorithm=security.ALGORITHM
+    )
+
+def verify_invite_token(token: str) -> dict | None:
+    try:
+        decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=[security.ALGORITHM])
+        if decoded.get("type") != "invite":
+            return None
+        return decoded
     except InvalidTokenError:
         return None

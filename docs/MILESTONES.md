@@ -38,6 +38,51 @@
 
 ---
 
+## M0.5 — Flujo Demo → Aprobación → Invitación → Registro (COMPLETADO 2026-04-24)
+
+**Objetivo**: flujo completo para que empresas interesadas soliciten un demo, el superadmin lo gestione y el usuario reciba una invitación de registro.
+
+### Backend
+- [x] Modelo `ContactRequest` con estados `PENDING / APPROVED / REJECTED`
+- [x] Campo `invite_sent` (timestamp) en `contact_requests`
+- [x] Enum `PlanType`: `demo_rep`, `demo_indv`, `demo_col`, `demo_esg`
+- [x] Campos en `User`: `plan_type`, `company`, `nit`, `phone`
+- [x] Endpoint `POST /contact/requests/{id}/approve`
+- [x] Endpoint `POST /contact/requests/{id}/reject` (con nota opcional)
+- [x] Endpoint `POST /contact/requests/{id}/send-invite` (genera JWT de invitación, envía correo)
+- [x] Endpoint `GET /users/invite-info?token=` (valida token y retorna datos)
+- [x] Endpoint `POST /users/register` (registro con token de invitación; elimina `contact_request` tras registro exitoso)
+- [x] Token JWT de invitación con claims: `sub` (email), `plan`, `req` (contact_request id), `name`, `company`
+- [x] Validación de token único: 409 si el email ya tiene cuenta registrada
+
+### Frontend
+- [x] `register.component.ts` / `register.html`: modo normal + modo invitado (`isInvitedMode`)
+  - Modo invitado: campos empresa/NIT/teléfono requeridos, email pre-rellenado y deshabilitado
+  - Banner con el plan asignado
+  - Limpiar token de la URL tras cargarlo
+- [x] Panel `/dashboard/pending-requests` (solo superadmin):
+  - Tabla con Empresa, Contacto, Plan, Estado, Fecha, Acciones
+  - Badges de estado con colores semánticos
+  - Aprobar / Rechazar (con textarea inline de motivo) / Enviar invitación / Reenviar
+  - Spinner por fila durante operaciones
+- [x] Dashboard `/dashboard`: grid 4 tarjetas por módulo con acceso según plan
+  - Diagnóstico REP → todos los planes
+  - Software REP → `demo_indv`, `demo_col`, `demo_esg`
+  - Marketplace → `demo_col`, `demo_esg`
+  - Infraestructura ESG → solo `demo_esg`
+  - Tarjetas bloqueadas con `opacity-50` y botón deshabilitado
+- [x] Sidebar dinámico: ítem "Solicitudes" visible solo para superadmin
+- [x] `AuthService`: computed signals `canAccessDiagnostico/Software/Marketplace/Esg()`
+- [x] NgRx: `selectPlanType` selector
+
+### Seguridad del Login (2026-04-24)
+- [x] Checkbox "Recordarme": refresh token cookie persistente (7 días) vs sesión
+- [x] Bloqueo por 5 intentos fallidos por email (Redis, 5 min)
+- [x] Auto-redirección al dashboard si la sesión sigue activa al visitar `/auth/login`
+- [x] Email pre-rellenado en localStorage cuando "Recordarme" está marcado
+
+---
+
 ## M1 — Módulo REP inicial
 
 **Objetivo**: primer módulo de gestión REP funcional.

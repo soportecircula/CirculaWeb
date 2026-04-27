@@ -1,0 +1,19 @@
+// =============================================
+// LANDING — Estilos globales
+// Importados desde sus ubicaciones en /app/
+// Ruta relativa desde src/assets/scss/pages/
+// =============================================
+
+// Layout principal (wrapper + content-area)
+@import "../../../app/features/landing/landing";
+
+// Páginas del landing
+@import "../../../app/features/landing/home/home";
+@import "../../../app/features/landing/about/about";
+@import "../../../app/features/landing/products/products";
+@import "../../../app/features/landing/resources/resources";
+
+// Layouts compartidos (navbar, footer, slider)
+@import "../../../app/layouts/navbar/navbar";
+@import "../../../app/layouts/footer/footer";
+@import "../../../app/layouts/brands-slider/brands-slider";

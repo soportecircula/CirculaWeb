@@ -34,3 +34,11 @@ USER_WITH_ID_NOT_EXISTS = "No existe un usuario con este id en el sistema"
 # Upload
 FILE_TOO_LARGE = "Archivo demasiado grande"
 INVALID_IMAGE_TYPE = "Tipo de archivo no válido. Permitidos: jpeg, png, webp"
+
+# Login limiter
+ACCOUNT_LOCKED = "Cuenta bloqueada temporalmente por demasiados intentos fallidos. Inténtalo de nuevo en {minutes} minutos."
+
+# Contact requests
+CONTACT_REQUEST_NOT_FOUND = "Solicitud no encontrada"
+CONTACT_ALREADY_REVIEWED = "Esta solicitud ya fue revisada"
+CONTACT_DUPLICATE_REQUEST = "Ya existe una solicitud activa con este correo. Te contactaremos pronto."

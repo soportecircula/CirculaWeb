@@ -4,14 +4,13 @@ import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TopbarComponent } from './topbar/topbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { Footer } from './footer/footer';
 import { selectLayoutState } from '../store/Layout/layout.selectors';
 import * as LayoutActions from '../store/Layout/layout.actions';
 import { LayoutState } from '../store/Layout/layout.models';
 
 @Component({
   selector: 'app-layout',
-  imports: [RouterOutlet, TopbarComponent, SidebarComponent, Footer],
+  imports: [RouterOutlet, TopbarComponent, SidebarComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(window:resize)': 'onResize()' },
   template: `
@@ -24,7 +23,6 @@ import { LayoutState } from '../store/Layout/layout.models';
             <router-outlet />
           </div>
         </div>
-        <app-footer />
       </div>
     </div>
   `,

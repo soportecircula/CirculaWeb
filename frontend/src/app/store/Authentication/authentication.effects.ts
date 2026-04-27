@@ -1,16 +1,18 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
-import { LoginService, UsersService } from '../../../client/services';
+import { UsersService } from '../../../client/services';
 import { AuthService as GeneratedAuthService } from '../../../client/services';
+import { environment } from '../../../environments/environment';
 import { setAccessToken } from '../../core/auth/auth-token';
 import * as AuthActions from './authentication.actions';
 
 @Injectable()
 export class AuthenticationEffects {
   private readonly actions$ = inject(Actions);
-  private readonly loginService = inject(LoginService);
+  private readonly http = inject(HttpClient);
   private readonly authClientService = inject(GeneratedAuthService);
   private readonly usersService = inject(UsersService);
   private readonly router = inject(Router);
@@ -18,11 +20,19 @@ export class AuthenticationEffects {
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
-      exhaustMap(({ email, password }) =>
-        this.loginService
-          .loginLoginAccessToken(email, password, undefined, undefined, undefined, undefined, 'body', {
-            withCredentials: true,
-          })
+      exhaustMap(({ email, password, rememberMe }) => {
+        const body = new URLSearchParams();
+        body.set('username', email);
+        body.set('password', password);
+        return this.http
+          .post<{ access_token: string }>(
+            `${environment.apiUrl}/api/v1/login/access-token?remember_me=${rememberMe}`,
+            body.toString(),
+            {
+              headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+              withCredentials: true,
+            },
+          )
           .pipe(
             tap((res) => setAccessToken(res.access_token)),
             map(() => AuthActions.loginSuccess()),
@@ -33,8 +43,8 @@ export class AuthenticationEffects {
                 }),
               ),
             ),
-          ),
-      ),
+          );
+      }),
     ),
   );
 

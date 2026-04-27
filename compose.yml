@@ -130,6 +130,8 @@ services:
     networks:
       - traefik-public
       - default
+    volumes:
+      - ./backend:/app/backend
     depends_on:
       db:
         condition: service_healthy

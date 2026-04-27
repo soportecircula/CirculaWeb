@@ -10,7 +10,6 @@ import { BrandsSlider } from '../../../layouts/brands-slider/brands-slider';
   imports: [CommonModule, BtnDemo, BtnLogin, BrandsSlider],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.html',
-  styleUrl: './home.scss',
 })
 export class Home implements OnInit, OnDestroy {
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;

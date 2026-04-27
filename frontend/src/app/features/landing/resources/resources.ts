@@ -1,18 +1,19 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { ContactService } from '../../../../client/services/contact.service';
+import { AvailableSlot } from '../../../../client/models';
+import { Calendar } from '../../../layouts/calendar/calendar';
 
 @Component({
   selector: 'app-resources',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, NgIf],
+  imports: [RouterModule, ReactiveFormsModule, NgIf, Calendar],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './resources.html',
-  styleUrl: './resources.scss',
 })
-export class Resources {
+export class Resources implements OnInit {
   private fb = inject(FormBuilder);
   private contactService = inject(ContactService);
 
@@ -20,6 +21,8 @@ export class Resources {
   readonly submitted = signal(false);
   readonly success = signal(false);
   readonly errorMsg = signal<string | null>(null);
+  readonly showCalendar = signal(false);
+  readonly selectedSlot = signal<AvailableSlot | null>(null);
 
   readonly form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -28,7 +31,36 @@ export class Resources {
     phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
     email: ['', [Validators.required, Validators.email]],
     message: ['', Validators.maxLength(500)],
+    scheduled_at: [null as string | null],
   });
+
+  readonly selectedSlotLabel = computed(() => {
+    const slot = this.selectedSlot();
+    if (!slot) return '';
+    const [year, month, day] = slot.datetime_iso.split('T')[0].split('-').map(Number);
+    const d = new Date(year, month - 1, day);
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    return `${dayNames[d.getDay()]} ${d.getDate()} de ${monthNames[d.getMonth()]} · ${slot.label}`;
+  });
+
+  get currentRequirementType(): string {
+    return this.form.get('requirement_type')?.value ?? '';
+  }
+
+  ngOnInit(): void {
+    this.form.get('requirement_type')?.valueChanges.subscribe((type) => {
+      this.clearSlot();
+      this.showCalendar.set(false);
+      const ctrl = this.form.get('scheduled_at');
+      if (type && type !== 'info') {
+        ctrl?.setValidators(Validators.required);
+      } else {
+        ctrl?.clearValidators();
+      }
+      ctrl?.updateValueAndValidity();
+    });
+  }
 
   get messageLength(): number {
     return this.form.get('message')?.value?.length ?? 0;
@@ -48,6 +80,21 @@ export class Resources {
     if (errors['email']) return 'Ingresa un correo electrónico válido.';
     if (errors['pattern']) return 'Solo se permiten dígitos (7–15 números).';
     return '';
+  }
+
+  openCalendar(): void { this.showCalendar.set(true); }
+
+  onSlotConfirmed(slot: AvailableSlot): void {
+    this.selectedSlot.set(slot);
+    this.form.get('scheduled_at')?.setValue(slot.datetime_iso);
+    this.showCalendar.set(false);
+  }
+
+  onCalendarClose(): void { this.showCalendar.set(false); }
+
+  clearSlot(): void {
+    this.selectedSlot.set(null);
+    this.form.get('scheduled_at')?.setValue(null);
   }
 
   onSubmit(): void {
