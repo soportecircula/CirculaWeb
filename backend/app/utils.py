@@ -82,7 +82,7 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
             "email": email_to,
             "valid_hours": settings.EMAIL_RESET_TOKEN_EXPIRE_HOURS,
             "link": link,
-            "logo_url": settings.EMAIL_LOGO_URL or f"{settings.BACKEND_URL}/static/images/Cirkula_v2.png",
+            "logo_url": settings.EMAIL_LOGO_URL or f"{settings.BACKEND_URL}/static/images/Cirkula_logo.png",
         },
     )
     return EmailData(html_content=html_content, subject=subject)
@@ -99,7 +99,7 @@ def generate_invite_email(email_to: str, name: str, plan_type: str, token: str)-
             "plan_label": plan_label,
             "link": link,
             "valid_hours": INVITE_TOKEN_EXPIRE_HOURS,
-            "logo_url": settings.EMAIL_LOGO_URL or f"{settings.BACKEND_URL}/static/images/Cirkula_v2.png",
+            "logo_url": settings.EMAIL_LOGO_URL or f"{settings.BACKEND_URL}/static/images/Cirkula_logo.png",
         }
     )
     return EmailData(html_content=html_content, subject=subject)
