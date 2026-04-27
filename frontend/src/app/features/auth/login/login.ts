@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -31,6 +31,8 @@ export class LoginComponent implements OnInit {
   blocked = signal(false);
   blockMessage = signal('');
   sessionExpired = signal(false);
+  initDone = signal(false);
+  isReady = computed(() => this.initDone() && !this.submitting());
   currentYear = new Date().getFullYear();
 
   loginForm = this.fb.group({
@@ -52,11 +54,12 @@ export class LoginComponent implements OnInit {
 
     // Si hay token en memoria (sesión activa en la misma pestaña), redirigir de inmediato
     if (getAccessToken()) {
+      this.initDone.set(true);
       void this.router.navigateByUrl(this.auth.getDefaultRedirectPath());
       return;
     }
 
-    // Esperar a que el refresh JWT inicial complete y redirigir si resultó autenticado
+    // Esperar a que el refresh JWT inicial complete: habilita el botón y redirige si ya hay sesión
     this.store
       .select(selectAuthInitialized)
       .pipe(
@@ -64,6 +67,7 @@ export class LoginComponent implements OnInit {
         take(1),
       )
       .subscribe(() => {
+        this.initDone.set(true);
         if (getAccessToken()) {
           void this.router.navigateByUrl(this.auth.getDefaultRedirectPath());
         }
