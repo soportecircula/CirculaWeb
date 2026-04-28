@@ -7,8 +7,8 @@
 $slider-duration: 36s;
  
 @keyframes brands-scroll {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
  
 .brands-section {
@@ -36,6 +36,7 @@ $slider-duration: 36s;
 .brands-track-wrapper {
   position: relative;
   overflow: hidden;
+  transform: translateZ(0); // Safari: fuerza capa de compositing para que overflow: hidden recorte correctamente
 }
  
 // Máscaras de fade izquierda/derecha
@@ -65,6 +66,7 @@ $slider-duration: 36s;
   animation: brands-scroll $slider-duration linear infinite;
   animation-play-state: paused; // arranca detenido hasta que el GPU esté listo
   will-change: transform;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 
   &--running {
@@ -102,6 +104,8 @@ $slider-duration: 36s;
   display: flex;
   align-items: center;
   gap: 10px;
+  -webkit-filter: none;
+  filter: none;
  
   // SVG inline
   svg {
@@ -124,7 +128,7 @@ $slider-duration: 36s;
     &[alt="Ekosolv"]  { height: 68px; }
 
     // Logos circulares: admiten un poco más de altura
-    &[alt="Recopack"] { height: 74px; }
+    &[alt="Recopack"] { height: 72px; }
     &[alt="TetraPak"] { height: 60px; }
 
     // Logos de texto muy anchos: se reducen para no ocupar demasiado espacio
@@ -171,5 +175,16 @@ $slider-duration: 36s;
     span {
       font-size: 13px;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brands-track,
+  .brands-track--running {
+    animation-play-state: paused;
+  }
+
+  .brands-track--running:hover {
+    animation-play-state: paused;
   }
 }
