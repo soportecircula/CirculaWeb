@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
   rememberMe = signal(false);
   blocked = signal(false);
   blockMessage = signal('');
+  userNotFound = signal(false);
   sessionExpired = signal(false);
   initDone = signal(false);
   isReady = computed(() => this.initDone() && !this.submitting());
@@ -86,6 +87,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) return;
     this.submitting.set(true);
     this.blocked.set(false);
+    this.userNotFound.set(false);
 
     const { email, password } = this.loginForm.value;
 
@@ -103,7 +105,9 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         this.submitting.set(false);
         const detail = getApiErrorDetail(err);
-        if (err?.status === 429 || detail?.toLowerCase().includes('bloqueada')) {
+        if (err?.status === 404) {
+          this.userNotFound.set(true);
+        } else if (err?.status === 429 || detail?.toLowerCase().includes('bloqueada')) {
           this.blocked.set(true);
           this.blockMessage.set(detail || 'Cuenta bloqueada temporalmente. Inténtalo más tarde.');
         } else {

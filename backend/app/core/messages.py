@@ -37,6 +37,7 @@ INVALID_IMAGE_TYPE = "Tipo de archivo no válido. Permitidos: jpeg, png, webp"
 
 # Login limiter
 ACCOUNT_LOCKED = "Cuenta bloqueada temporalmente por demasiados intentos fallidos. Inténtalo de nuevo en {minutes} minutos."
+USER_NOT_REGISTERED = "Este correo no está registrado en la plataforma"
 
 # Contact requests
 CONTACT_REQUEST_NOT_FOUND = "Solicitud no encontrada"
