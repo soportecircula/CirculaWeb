@@ -104,6 +104,15 @@
           </a>
         </div>
 
+        @if (userNotFound()) {
+          <div class="alert alert-warning d-flex align-items-start gap-2 mb-3" role="alert">
+            <i class="mdi mdi-email-alert-outline fs-5 mt-1 flex-shrink-0"></i>
+            <div class="fs-13">
+              Este correo no está registrado en la plataforma.
+            </div>
+          </div>
+        }
+
         @if (blocked()) {
           <div class="alert alert-danger d-flex align-items-start gap-2 mb-3" role="alert">
             <i class="mdi mdi-lock-alert-outline fs-5 mt-1 flex-shrink-0"></i>
