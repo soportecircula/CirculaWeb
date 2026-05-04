@@ -55,7 +55,9 @@ export class TopbarComponent {
 
     toggleMode(): void {
         this.isDark = !this.isDark;
-        document.documentElement.setAttribute('data-bs-theme', this.isDark ? 'dark' : 'light');
+        const mode = this.isDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-bs-theme', mode);
+        document.documentElement.setAttribute('data-sidebar', mode);
     }
 
     logout(): void {

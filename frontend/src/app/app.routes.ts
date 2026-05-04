@@ -68,6 +68,10 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
+        path: 'producers',
+        loadComponent: () => import('./features/dashboard/producers/producers').then((m) => m.Producers)
+      },
+      {
         path: 'profile',
         loadComponent: () =>
           import('./features/auth/profile/profile.component').then((m) => m.ProfileComponent),

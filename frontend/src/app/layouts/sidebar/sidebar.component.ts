@@ -21,13 +21,38 @@ interface MenuItem {
 }
 
 const MENU: MenuItem[] = [
-  { label: 'Menu', isTitle: true, icon: '' },
+  { label: 'Principal', isTitle: true, icon: '' },
   {
-    label: 'Servicios',
+    label: 'Dashboard REP',
     icon: 'mdi mdi-view-dashboard',
     link: '/dashboard',
   },
-  { label: 'Perfil', icon: '', isTitle: true },
+  {
+    label: 'Datos Maestros', isTitle: true, icon:''
+  },
+  {
+    label: 'Productores',
+    icon: 'mdi mdi-account-group',
+    link: '/dashboard/producers',
+  },
+  {
+    label: 'Portafolio de productos',
+    icon: 'mdi mdi-package',
+    link: '/dashboard/products',
+  },
+  {
+    label: 'Estructura de empaques',
+    icon: 'mdi mdi-package-variant-closed',
+    link: '/dashboard/packaging-structures',
+  },
+  {
+    label: 'Linea Base',
+    icon: 'mdi mdi-chart-line',
+    link: '/dashboard/line-base',
+  },
+  {
+    label: 'Perfil', isTitle: true, icon:''
+  },
   {
     label: 'Mi Perfil',
     icon: 'mdi mdi-account-circle-outline',
@@ -74,7 +99,7 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     const base = MENU.map((item)=> ({...item, isCollapsed: true}))
     if(this.auth.isSuperAdmin()){
-      base.splice(2, 0,{
+      base.splice(1, 0,{
         label: 'Solicitudes',
         icon: 'mdi mdi-clipboard-list-outline',
         link: '/dashboard/pending-requests',
