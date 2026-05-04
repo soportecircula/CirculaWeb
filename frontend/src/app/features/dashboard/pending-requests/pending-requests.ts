@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ContactService } from '../../../../client';
-import { NotificationService } from '../../../core/notifications/notification.service';
-import { getApiErrorDetail } from '../../../core/notifications/messages';
-import { ContactRequestRead } from '../../../../client';
+import { Store } from '@ngrx/store';
+import * as ContactActions from '../../../store/Contact/contact.actions';
+import { selectProcessingId, selectRequestItems, selectRequestsLoading } from '../../../store/Contact/contact.selectors';
 
 const PLAN_LABELS: Record<string, string> = {
   demo_rep: 'Diagnóstico REP / Productores',
@@ -12,7 +11,7 @@ const PLAN_LABELS: Record<string, string> = {
   demo_esg: 'Infraestructura ESG',
   support: 'Soporte',
   info: 'Información',
-}
+};
 
 @Component({
   selector: 'app-pending-requests',
@@ -21,12 +20,12 @@ const PLAN_LABELS: Record<string, string> = {
   templateUrl: './pending-requests.html',
 })
 export class PendingRequests implements OnInit {
-  private readonly contactService = inject(ContactService);
-  private readonly notif = inject(NotificationService);
+  private readonly store = inject(Store);
 
-  requests = signal<ContactRequestRead[]>([]);
-  loading = signal(false);
-  processing = signal<number | null>(null);
+  readonly requests = this.store.selectSignal(selectRequestItems);
+  readonly loading = this.store.selectSignal(selectRequestsLoading);
+  readonly processing = this.store.selectSignal(selectProcessingId);
+
   expandedId = signal<number | null>(null);
   rejectNote = '';
 
@@ -35,8 +34,11 @@ export class PendingRequests implements OnInit {
   filteredRequests = computed(() => {
     const filter = this.activeFilter();
     const all = this.requests();
-    if (filter === 'productores') return all.filter(r => r.requirement_type === 'demo_rep');
-    if (filter === 'planes') return all.filter(r => r.requirement_type === 'demo_indv' || r.requirement_type === 'demo_col');
+    if (filter === 'productores') return all.filter((r) => r.requirement_type === 'demo_rep');
+    if (filter === 'planes')
+      return all.filter(
+        (r) => r.requirement_type === 'demo_indv' || r.requirement_type === 'demo_col',
+      );
     return all;
   });
 
@@ -48,69 +50,27 @@ export class PendingRequests implements OnInit {
     this.load();
   }
 
-  load(): void{
-    this.loading.set(true);
-    this.contactService.contactListRequest().subscribe({
-      next: (res) => {
-        this.requests.set(res.items);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.notif.error(getApiErrorDetail(err));
-        this.loading.set(false);
-      },
-    });
+  load(): void {
+    this.store.dispatch(ContactActions.loadRequests());
   }
 
-  approve(id: number): void{
-    this.processing.set(id);
-    this.contactService.contactApproveRequest(id).subscribe({
-      next: (updated) => {
-        this.requests.update((list) => list.map((r) => (r.id === id ? updated : r)));
-        this.processing.set(null);
-        this.notif.success('Solicitud aprobada correctamente');
-      },
-      error: (err) => {
-        this.notif.error(getApiErrorDetail(err));
-        this.processing.set(null);
-      },
-    });
+  approve(id: number): void {
+    this.store.dispatch(ContactActions.approveRequest({ id }));
   }
 
   openReject(id: number): void {
     this.expandedId.set(this.expandedId() === id ? null : id);
-    this.rejectNote = 'Agradecemos su interés. Tras evaluar su solicitud, lamentamos informarle que en esta ocasión no ha sido aprobada.';
+    this.rejectNote =
+      'Agradecemos su interés. Tras evaluar su solicitud, lamentamos informarle que en esta ocasión no ha sido aprobada.';
   }
 
   confirmReject(id: number): void {
-    this.processing.set(id);
-    this.contactService.contactRejectRequest(id, {note: this.rejectNote || null}).subscribe({
-      next: (updated) => {
-        this.requests.update((list) =>  list.map((r) => (r.id === id ? updated : r)));
-        this.expandedId.set(null);
-        this.processing.set(null);
-        this.notif.success('Solicitud rechazada');
-      },
-      error: (err) => {
-        this.notif.error(getApiErrorDetail(err));
-        this.processing.set(null);
-      },
-    });
+    this.store.dispatch(ContactActions.rejectRequest({ id, note: this.rejectNote || null }));
+    this.expandedId.set(null);
   }
 
   sendInvite(id: number): void {
-    this.processing.set(id);
-    this.contactService.contactSendInvite(id).subscribe({
-      next: (updated) => {
-        this.requests.update((list) => list.map((r) => (r.id === id ? updated : r)));
-        this.processing.set(null);
-        this.notif.success('Invitación enviada');
-      },
-      error: (err) => {
-        this.notif.error(getApiErrorDetail(err));
-        this.processing.set(null);
-      },
-    });
+    this.store.dispatch(ContactActions.sendInvite({ id }));
   }
 
   planLabel(type: string): string {
