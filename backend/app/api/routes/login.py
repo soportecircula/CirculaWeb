@@ -21,6 +21,7 @@ from app.core.messages import (
     INVALID_TOKEN,
     PASSWORD_RESET_SENT,
     PASSWORD_UPDATED,
+    USER_NOT_REGISTERED,
 )
 from app.utils import (
     generate_password_reset_token,
@@ -42,6 +43,9 @@ def login_access_token(
     remember_me: bool = Query(False),
 ) -> Token:
     email = form_data.username
+
+    if not crud_user.get_user_by_email(session=session, email=email):
+        raise HTTPException(status_code=404, detail=USER_NOT_REGISTERED)
 
     if login_limiter.is_blocked(email):
         raise HTTPException(
