@@ -46,9 +46,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Redis desconectado")
 
 
+_is_local = settings.ENVIRONMENT == "local"
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    openapi_url=f"{settings.API_V1_STR}/openapi.json" if _is_local else None,
+    docs_url="/docs" if _is_local else None,
+    redoc_url="/redoc" if _is_local else None,
     generate_unique_id_function=custom_generate_unique_id,
     lifespan=lifespan,
 )
