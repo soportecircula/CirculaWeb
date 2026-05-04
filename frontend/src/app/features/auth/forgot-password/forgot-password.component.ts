@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { LoginService } from '../../../../client/services/login.service';
@@ -15,6 +16,7 @@ export class ForgotPasswordComponent {
   private readonly fb = inject(FormBuilder);
   private readonly loginService = inject(LoginService);
   private notif = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
 
   submitting = signal(false);
   successMessage = signal('');
@@ -28,7 +30,7 @@ export class ForgotPasswordComponent {
     if (this.form.invalid) return;
     this.submitting.set(true);
     const email = this.form.value.email!;
-    this.loginService.loginRecoverPassword(email).subscribe({
+    this.loginService.loginRecoverPassword(email).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.submitting.set(false);
         this.notif.success('Se ha enviado un enlace de recuperación a tu email.');

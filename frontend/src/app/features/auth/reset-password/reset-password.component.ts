@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -24,6 +25,7 @@ export class ResetPasswordComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly loginService = inject(LoginService);
   private notif = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
 
   token = signal<string | null>(null);
   showPassword = signal(false);
@@ -83,6 +85,7 @@ export class ResetPasswordComponent implements OnInit {
         token: this.token()!,
         new_password: this.form.value.password!,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.submitting.set(false);

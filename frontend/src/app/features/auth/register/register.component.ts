@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -25,6 +26,7 @@ export class RegisterComponent implements OnInit{
   private readonly usersService = inject(UsersService);
   private readonly route = inject(ActivatedRoute);
   private notif = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
 
   showPassword = signal(false);
   showConfirmPassword = signal(false);
@@ -71,7 +73,7 @@ export class RegisterComponent implements OnInit{
     this.form.get('phone')!.setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(20)]);
     this.form.get('phone')!.updateValueAndValidity();
 
-    this.usersService.usersGetInviteInfo(token).subscribe({
+    this.usersService.usersGetInviteInfo(token).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (info) => {
         this.inviteInfo.set(info);
         this.form.patchValue({ email: info.email, company: info.company, phone: info.phone ?? '' });
@@ -124,7 +126,7 @@ export class RegisterComponent implements OnInit{
       email: v.email!, password: v.password!, full_name: v.fullName || undefined,
     });
 
-    obs.subscribe({
+    obs.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.submitting.set(false);
         this.notif.success('Cuenta creada exitosamente.');

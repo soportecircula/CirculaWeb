@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -22,6 +23,7 @@ export class ChangePasswordComponent {
   private readonly fb = inject(FormBuilder);
   private readonly usersService = inject(UsersService);
   private notif = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
 
   showCurrentPassword = signal(false);
   showNewPassword = signal(false);
@@ -67,6 +69,7 @@ export class ChangePasswordComponent {
         current_password: this.form.value.currentPassword!,
         new_password: this.form.value.newPassword!,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.submitting.set(false);

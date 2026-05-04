@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -21,6 +22,7 @@ export class ProfileComponent implements OnInit {
   private store = inject(Store);
   private notif = inject(NotificationService);
   private fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   submitting = signal(false);
   protected avatarUrl = avatarUrl;
@@ -47,7 +49,7 @@ export class ProfileComponent implements OnInit {
     this.usersService.usersUpdateUserMe({
       email: data.email!,
       full_name: data.full_name || null,
-    }).subscribe({
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (updatedUser) => {
         this.submitting.set(false);
         this.notif.success('Perfil actualizado');

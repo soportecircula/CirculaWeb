@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -24,6 +25,7 @@ export class LoginComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly notif = inject(NotificationService);
   private readonly store = inject(Store);
+  private readonly destroyRef = inject(DestroyRef);
 
   showPassword = signal(false);
   submitting = signal(false);
@@ -66,6 +68,7 @@ export class LoginComponent implements OnInit {
       .pipe(
         filter((init) => init),
         take(1),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => {
         this.initDone.set(true);
@@ -97,10 +100,10 @@ export class LoginComponent implements OnInit {
       localStorage.removeItem(REMEMBER_ME_KEY);
     }
 
-    this.auth.login(email!, password!, false).subscribe({
+    this.auth.login(email!, password!, false).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.submitting.set(false);
-        setTimeout(() => this.router.navigateByUrl(this.auth.getDefaultRedirectPath()), 300);
+        void this.router.navigateByUrl('/dashboard');
       },
       error: (err) => {
         this.submitting.set(false);

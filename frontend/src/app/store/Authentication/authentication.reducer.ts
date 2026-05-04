@@ -16,7 +16,6 @@ export const authReducer = createReducer(
     ...state,
     loading: true,
     error: null,
-    initialized: false,
   })),
   on(AuthActions.loginSuccess, (state) => ({
     ...state,
@@ -32,7 +31,6 @@ export const authReducer = createReducer(
   on(AuthActions.loadCurrentUser, (state) => ({
     ...state,
     loading: true,
-    initialized: false,
   })),
   on(AuthActions.loadCurrentUserSuccess, (state, { user }) => ({
     ...state,
