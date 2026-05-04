@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, AfterViewInit, computed, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, AfterViewInit, computed, inject, input, output, signal } from '@angular/core';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
-import { ContactService } from '../../../client/services/contact.service';
+import { Store } from '@ngrx/store';
 import { AvailableSlot } from '../../../client/models';
+import * as ContactActions from '../../store/Contact/contact.actions';
+import { selectAvailableSlots, selectSlotsLoading } from '../../store/Contact/contact.selectors';
 
 @Component({
   selector: 'app-calendar',
@@ -12,16 +14,16 @@ import { AvailableSlot } from '../../../client/models';
   styleUrl: './calendar.scss',
 })
 export class Calendar implements AfterViewInit {
-  private contactService = inject(ContactService);
-  private cdr            = inject(ChangeDetectorRef);
+  private readonly store = inject(Store);
 
   readonly requirementType = input.required<string>();
   readonly slotConfirmed   = output<AvailableSlot>();
   readonly closed          = output<void>();
 
+  readonly availableSlots = this.store.selectSignal(selectAvailableSlots);
+  readonly loadingSlots   = this.store.selectSignal(selectSlotsLoading);
+
   readonly selectedDate   = signal<string | null>(null);
-  readonly availableSlots = signal<AvailableSlot[]>([]);
-  readonly loadingSlots   = signal(false);
   readonly selectedSlot   = signal<AvailableSlot | null>(null);
   readonly currentMonth   = signal(new Date());
 
@@ -44,7 +46,6 @@ export class Calendar implements AfterViewInit {
   });
 
   ngAfterViewInit(): void {
-    this.cdr.markForCheck();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const firstDay = new Date(today);
@@ -59,9 +60,8 @@ export class Calendar implements AfterViewInit {
     if (d >= min) {
       this.currentMonth.set(d);
       this.selectedDate.set(null);
-      this.availableSlots.set([]);
       this.selectedSlot.set(null);
-      this.cdr.markForCheck();
+      this.store.dispatch(ContactActions.clearSlots());
     }
   }
 
@@ -72,9 +72,8 @@ export class Calendar implements AfterViewInit {
     if (d <= max) {
       this.currentMonth.set(d);
       this.selectedDate.set(null);
-      this.availableSlots.set([]);
       this.selectedSlot.set(null);
-      this.cdr.markForCheck();
+      this.store.dispatch(ContactActions.clearSlots());
     }
   }
 
@@ -88,20 +87,7 @@ export class Calendar implements AfterViewInit {
   onDateSelect(dateStr: string): void {
     this.selectedDate.set(dateStr);
     this.selectedSlot.set(null);
-    this.loadingSlots.set(true);
-    this.cdr.markForCheck();
-    this.contactService.contactGetSlots(dateStr, this.requirementType()).subscribe({
-      next: (res) => {
-        this.availableSlots.set(res.slots ?? []);
-        this.loadingSlots.set(false);
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.availableSlots.set([]);
-        this.loadingSlots.set(false);
-        this.cdr.markForCheck();
-      },
-    });
+    this.store.dispatch(ContactActions.loadSlots({ date: dateStr, requirementType: this.requirementType() }));
   }
 
   onSlotSelect(slot: AvailableSlot): void {

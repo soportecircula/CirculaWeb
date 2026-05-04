@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { ContactService } from '../../../../client/services/contact.service';
+import { Store } from '@ngrx/store';
 import { AvailableSlot } from '../../../../client/models';
 import { Calendar } from '../../../layouts/calendar/calendar';
+import * as ContactActions from '../../../store/Contact/contact.actions';
+import { selectSubmissionErrorMsg, selectSubmissionLoading, selectSubmissionSuccess } from '../../../store/Contact/contact.selectors';
 
 @Component({
   selector: 'app-resources',
@@ -13,14 +15,15 @@ import { Calendar } from '../../../layouts/calendar/calendar';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './resources.html',
 })
-export class Resources implements OnInit {
-  private fb = inject(FormBuilder);
-  private contactService = inject(ContactService);
+export class Resources implements OnInit, OnDestroy {
+  private readonly fb = inject(FormBuilder);
+  private readonly store = inject(Store);
 
-  readonly loading = signal(false);
+  readonly loading = this.store.selectSignal(selectSubmissionLoading);
+  readonly success = this.store.selectSignal(selectSubmissionSuccess);
+  readonly errorMsg = this.store.selectSignal(selectSubmissionErrorMsg);
+
   readonly submitted = signal(false);
-  readonly success = signal(false);
-  readonly errorMsg = signal<string | null>(null);
   readonly showCalendar = signal(false);
   readonly selectedSlot = signal<AvailableSlot | null>(null);
 
@@ -62,6 +65,10 @@ export class Resources implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.store.dispatch(ContactActions.resetSubmission());
+  }
+
   get messageLength(): number {
     return this.form.get('message')?.value?.length ?? 0;
   }
@@ -100,19 +107,6 @@ export class Resources implements OnInit {
   onSubmit(): void {
     this.submitted.set(true);
     if (this.form.invalid) return;
-
-    this.loading.set(true);
-    this.errorMsg.set(null);
-
-    this.contactService.contactSubmitContactForm(this.form.value as any).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.success.set(true);
-      },
-      error: (err: any) => {
-        this.loading.set(false);
-        this.errorMsg.set(err?.error?.detail ?? 'Ocurrió un error. Por favor intenta de nuevo.');
-      },
-    });
+    this.store.dispatch(ContactActions.submitForm({ payload: this.form.value as any }));
   }
 }

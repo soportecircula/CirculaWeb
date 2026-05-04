@@ -1,9 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
 import { BtnDemo } from '../../../shared/components/btn-demo/btn-demo';
 import { BtnLogin } from '../../../shared/components/btn-login/btn-login';
-import { ImpactMetricRead, ImpactMetricsService } from '../../../../client';
+import { ImpactMetricRead } from '../../../../client';
 import { BrandsSlider } from '../../../layouts/brands-slider/brands-slider';
+import * as ImpactMetricsActions from '../../../store/ImpactMetrics/impact-metrics.actions';
+import { selectMetrics, selectMetricsError, selectMetricsLoading } from '../../../store/ImpactMetrics/impact-metrics.selectors';
 
 @Component({
   selector: 'app-home',
@@ -15,16 +18,33 @@ export class Home implements OnInit, OnDestroy {
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('impactSection') impactSection!: ElementRef<HTMLElement>;
 
-  metrics = signal<ImpactMetricRead[]>([]);
-  displayValues = signal<Record<number, number | undefined>>({});
-  loading = signal<boolean>(true);
-  error = signal<boolean>(false);
+  private readonly store = inject(Store);
 
-  // private readonly impactMetricsService = inject(ImpactService);
-  private impactMetricsService = inject(ImpactMetricsService);
+  readonly metrics = this.store.selectSignal(selectMetrics);
+  readonly loading = this.store.selectSignal(selectMetricsLoading);
+  readonly error = this.store.selectSignal(selectMetricsError);
+
+  displayValues = signal<Record<number, number | undefined>>({});
+
   private observer: IntersectionObserver | null = null;
   private hasAnimated = false;
   private isSectionVisible = false;
+
+  constructor() {
+    // Cuando las métricas llegan del store, inicializar displayValues y animar si la sección ya es visible
+    effect(() => {
+      const metrics = this.metrics();
+      if (metrics.length === 0) return;
+      const initial: Record<number, number> = {};
+      metrics.forEach((m) => (initial[m.id] = 0));
+      this.displayValues.set(initial);
+      if (this.isSectionVisible && !this.hasAnimated) {
+        this.animateCounters(metrics);
+        this.hasAnimated = true;
+        this.observer?.disconnect();
+      }
+    });
+  }
 
   // Mapear nombres de iconos de Material (DB) a Bootstrap Icons (Frontend)
   getBootstrapIcon(materialIcon: string | undefined): string {
@@ -38,30 +58,7 @@ export class Home implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.impactMetricsService.impactMetricsGetImpactMetrics().subscribe({
-      next: (data) => {
-        this.metrics.set(data);
-        
-        // Inicializar a 0 para que no salgan vacíos antes del scroll
-        const initialValues: Record<number, number> = {};
-        data.forEach(m => initialValues[m.id] = 0);
-        this.displayValues.set(initialValues);
-
-        this.loading.set(false);
-        
-        // Si el usuario bajó rápido y la sección ya era visible antes de cargar los datos
-        if (this.isSectionVisible && !this.hasAnimated) {
-          this.animateCounters(data);
-          this.hasAnimated = true;
-          this.observer?.disconnect();
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching metrics', err);
-        this.error.set(true);
-        this.loading.set(false);
-      }
-    });
+    this.store.dispatch(ImpactMetricsActions.loadMetrics());
   }
 
   ngAfterViewInit(): void {
