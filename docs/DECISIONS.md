@@ -136,8 +136,48 @@ Formato:
   - En `ngOnInit()`: primero revisa `getAccessToken()` (token ya en memoria). Si no, se suscribe a `selectAuthInitialized` y redirige cuando el refresh termina con éxito.
   - Sin "Recordarme" (o cookie expirado): el refresh falla → `initialized=true` sin token → formulario se muestra normalmente.
 
+## 2026-05-04 — NgRx Store como fuente de verdad para todos los datos del backend
+
+- Decisión: todo dato que provenga del backend **debe residir en el NgRx Store**, no en señales locales del componente. Los componentes solo leen del store vía `store.selectSignal()` y despachan actions; nunca inyectan servicios del cliente para hacer llamadas HTTP directamente.
+- Alternativas consideradas: mantener datos en señales locales por componente (patrón anterior); usar un servicio intermedio con BehaviorSubject.
+- Motivo: coherencia de estado entre componentes que comparten datos, soporte para Redux DevTools (time-travel debugging, inspección de actions), actualización automática de la UI sin suscripciones manuales, y separación clara entre lógica de negocio (effects) y presentación (componentes).
+- Impacto:
+  - Regla permanente del proyecto: componente con datos del backend → store obligatorio.
+  - Creados stores `store/ImpactMetrics/` y `store/Contact/` (con sub-dominios: requests, slots, submission).
+  - Componentes migrados: `home.ts`, `pending-requests.ts`, `calendar.ts`, `resources.ts`.
+  - **Lo que SÍ puede quedar local en el componente**: estado puro de UI (toggles de visibilidad, navegación de calendarios, estado de validación de formularios, modales abiertos/cerrados).
+  - Guía de implementación: ver sección "Store NgRx" en `docs/FRONTEND_GUIDE.md`.
+
+## 2026-05-04 — Un store Contact con sub-slices (no tres stores separados)
+
+- Decisión: los tres sub-dominios de contacto (requests del dashboard, slots del calendario, envío del formulario) viven en **un solo store `contact`** con tres sub-estados: `requests`, `slots`, `submission`.
+- Alternativas consideradas: tres stores separados (`ContactRequests`, `ContactSlots`, `ContactSubmission`).
+- Motivo: los tres dominios comparten `ContactService`; el estado de cada uno es independiente (no se leen entre sí); unificarlos evita 10 archivos extra y 3 entradas en `RootReducerState` para un scope de datos pequeño.
+- Impacto: `store/Contact/` con 5 archivos (models, actions, reducer, selectors, effects). Si el módulo Contact crece hacia un feature separado, se puede dividir en ese momento.
+
 ## 2026-04-14 — Formulario de contacto: migración a `ContactService` (ng-openapi)
 
 - Decisión: el componente `resources.ts` usa `ContactService` generado por ng-openapi en lugar de `HttpClient` con URL relativa.
 - Motivo: `HttpClient` con URL relativa (`/api/v1/contact/submit`) enviaba la petición al mismo dominio del frontend (`www.grupocircula.com`), que no tiene ese endpoint → 405 Method Not Allowed. `ContactService` usa `basePath = environment.apiUrl` configurado en `app.config.ts`.
 - Impacto: `frontend/src/app/features/landing/resources/resources.ts` importa y usa `ContactService.contactSubmitContactForm()`.
+
+## 2026-05-04 — REP: datos geográficos como constante frontend, obligaciones en DB
+
+- Decisión: departamentos y municipios de Colombia → **constante estática en frontend** (`colombia-geo.ts`). Obligaciones normativas → **tabla en DB** (`normative_obligations`).
+- Alternativas consideradas: ambos en DB; ambos en frontend.
+- Motivo: la geografía colombiana no cambia y no requiere administración — un archivo estático es más simple y sin latencia. Las obligaciones normativas sí pueden crecer o cambiar por regulación, por lo que la DB permite administrarlas sin deploy.
+- Impacto: `frontend/src/app/core/data/colombia-geo.ts` con 33 departamentos. `backend/app/models/obligation.py` + seed en `initial_data.py`.
+
+## 2026-05-04 — REP: múltiples productores por usuario, mismo owner_id
+
+- Decisión: permitir N productores por usuario eliminando `UniqueConstraint("owner_id")` del modelo `Producer`. Los productores siguen siendo del mismo usuario (`owner_id` permanece).
+- Alternativas consideradas: productores "huérfanos" sin owner para los adicionales; un productor principal + tabla de productores asociados.
+- Motivo: la relación es simple (un usuario tiene varios productores propios). No hay compartición entre usuarios. Eliminar el constraint es el cambio mínimo.
+- Impacto: migración `287911cc58ce`. `POST /rep/producers` restringido a `demo_col` y superuser. `demo_rep`/`demo_indv` siguen con máximo 1 productor (validado en frontend con `canAddProducer`).
+
+## 2026-05-04 — REP: cada usuario ve solo sus propios productores (sin vista "todos" para admin)
+
+- Decisión: el superadmin ve únicamente sus propios productores en la tabla REP, igual que cualquier otro usuario. No existe una vista de "todos los productores del sistema".
+- Alternativas consideradas: tabla especial para superadmin con todos los productores.
+- Motivo: el módulo REP es de autogestión — cada empresa (usuario) gestiona sus propios productores. El superadmin también puede ser una empresa con sus propios productores. No hay requerimiento de auditoría global.
+- Impacto: `GET /rep/producers` siempre filtra por `owner_id = current_user.id`. El store `allProducers` permanece en el modelo de estado pero no se usa en la vista actual.

@@ -8,12 +8,15 @@ import { ImpactMetricsState } from './ImpactMetrics/impact-metrics.models';
 import { impactMetricsReducer } from './ImpactMetrics/impact-metrics.reducer';
 import { ContactState } from './Contact/contact.models';
 import { contactReducer } from './Contact/contact.reducer';
+import { RepState } from './rep/rep.models';
+import { repReducer } from './rep/rep.reducer';
 
 export interface RootReducerState {
   auth: AuthState;
   layout: LayoutState;
   impactMetrics: ImpactMetricsState;
   contact: ContactState;
+  rep: RepState;
 }
 
 export const rootReducer: ActionReducerMap<RootReducerState> = {
@@ -21,4 +24,5 @@ export const rootReducer: ActionReducerMap<RootReducerState> = {
   layout: layoutReducer,
   impactMetrics: impactMetricsReducer,
   contact: contactReducer,
+  rep: repReducer,
 };

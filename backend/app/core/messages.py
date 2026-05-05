@@ -43,3 +43,9 @@ USER_NOT_REGISTERED = "Este correo no está registrado en la plataforma"
 CONTACT_REQUEST_NOT_FOUND = "Solicitud no encontrada"
 CONTACT_ALREADY_REVIEWED = "Esta solicitud ya fue revisada"
 CONTACT_DUPLICATE_REQUEST = "Ya existe una solicitud activa con este correo. Te contactaremos pronto."
+
+# REP
+PRODUCER_NOT_FOUND = "Productor no encontrado"
+SECTOR_NOT_FOUND = "Sector no encontrado"
+REP_ACCESS_REQUIRED = "Acceso REP requerido (plan demo_rep o superusuario)"
+NIT_ALREADY_EXISTS = "Ya existe un productor con este NIT"

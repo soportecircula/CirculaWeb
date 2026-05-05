@@ -1,10 +1,386 @@
+<div class="producers-page">
 <div class="row">
   <div class="col-12">
     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
       <div>
-        <h4 class="mb-sm-0">Plataforma REP</h4>
-        <p class="text-muted mb-0 mt-1">Productores</p>
+        <h4 class="mb-sm-0">Ficha del productor</h4>
+        <p class="text-muted mb-0 mt-1">
+          @if (producer()) {
+            {{ producer()?.razon_social }} - {{ producer()?.cuenta_con_plan || 'Plan No Asignado' }}
+          } @else {
+            No hay productor registrado
+          }
+        </p>
+      </div>
+      <div class="page-title-right mt-sm-0 mt-2 d-flex align-items-center gap-2 flex-wrap justify-content-sm-end">
+        <button type="button" class="btn btn-outline-primary btn-sm fw-medium" [disabled]="!producer()">
+          <i class="mdi mdi-download align-middle me-1"></i> Exportar PDF
+        </button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Info Cards -->
+<div class="row g-3">
+  <div class="col-xl-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body p-4">
+        <h5 class="card-title mb-4 fs-15">Información Básica</h5>
+        <div class="row g-4">
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Razón social</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ producer()?.razon_social || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">NIT</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0 font-monospace">{{ producer()?.nit || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Ciudad</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ producer()?.ciudad || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Departamento</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ producer()?.departamento || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Dirección</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ producer()?.direccion || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Correo</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ producer()?.correo || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Contacto</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ producer()?.contacto || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Responsable</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ producer()?.nombre_responsable || '-' }}</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body p-4">
+        <h5 class="card-title mb-4 fs-15">Información de Plataforma REP</h5>
+        <div class="row g-4">
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Estado plan</p>
+            @if (producer()?.estado) {
+              <span class="badge bg-success-subtle text-success border border-success-subtle">{{ producer()?.estado }}</span>
+            } @else {
+              <h6 class="fs-14 fw-bold text-dark mb-0">-</h6>
+            }
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Sector</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ sectorNombre() || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Tipo</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ producer()?.tipo || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Cuenta con plan</p>
+            <h6 class="fs-14 fw-bold text-dark mb-0">{{ producer()?.cuenta_con_plan || '-' }}</h6>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Incumplimiento REP</p>
+            @if (producer()?.en_incumplimiento_rep === true) {
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Sí</span>
+            } @else if (producer()?.en_incumplimiento_rep === false) {
+              <span class="badge bg-success-subtle text-success border border-success-subtle">No</span>
+            } @else {
+              <h6 class="fs-14 fw-bold text-dark mb-0">-</h6>
+            }
+          </div>
+          @if (producer()?.obligaciones_normativas?.length) {
+            <div class="col-12">
+              <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Obligaciones normativas</p>
+              <div class="d-flex flex-wrap gap-1 mt-1">
+                @for (o of producer()!.obligaciones_normativas!; track o) {
+                  <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-11">{{ o }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabla productores (BD) -->
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="d-sm-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+      <div>
+        <h5 class="fs-15 mb-0">Productores registrados</h5>
+      </div>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <div class="input-group input-group-sm" style="width: 250px;">
+          <span class="input-group-text bg-light border-end-0"><i class="mdi mdi-magnify text-muted"></i></span>
+          <input type="text" class="form-control border-start-0 ps-0" placeholder="Buscar productor..." />
+        </div>
+        <select class="form-select form-select-sm" style="width: 180px;">
+          <option value="">Todos los sectores</option>
+          @for (s of sectors(); track s.id) {
+            <option [value]="s.id">{{ s.nombre }}</option>
+          }
+        </select>
+        <button type="button" class="btn btn-outline-primary btn-sm fw-medium" (click)="refreshTable()" [disabled]="tableLoading()">
+          <i class="mdi mdi-refresh me-1"></i> Actualizar
+        </button>
+        <button type="button" class="btn btn-success btn-sm fw-medium"
+                (click)="openModal(producerModal, 'add')"
+                [disabled]="!canAddProducer()">
+          <i class="mdi mdi-plus me-1"></i> Agregar
+        </button>
+      </div>
+    </div>
+
+    @if (tableLoading()) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    } @else if (tableRows().length === 0) {
+      <div class="text-center py-5 text-muted">
+        <i class="mdi mdi-inbox-outline fs-1 d-block mb-2"></i>
+        No hay productores para mostrar.
+      </div>
+    } @else {
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Razón social / NIT</th>
+                  <th>Ciudad</th>
+                  <th>Departamento</th>
+                  <th>Correo</th>
+                  <th>Sector</th>
+                  <th>Estado</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of tableRows(); track row.id) {
+                  <tr>
+                    <td>
+                      <div class="fw-semibold">{{ row.razon_social }}</div>
+                      <div class="text-muted fs-12 font-monospace">{{ row.nit }}</div>
+                    </td>
+                    <td class="text-muted fs-13">{{ row.ciudad || '—' }}</td>
+                    <td class="text-muted fs-13">{{ row.departamento || '—' }}</td>
+                    <td class="text-muted fs-13">{{ row.correo || '—' }}</td>
+                    <td>
+                      <span class="badge bg-light text-dark border">{{ sectorNombreForRow(row) }}</span>
+                    </td>
+                    <td>
+                      @if (row.estado === 'activo') {
+                        <span class="badge bg-success-subtle text-success">Activo</span>
+                      } @else {
+                        <span class="badge bg-secondary-subtle text-secondary">Inactivo</span>
+                      }
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn-soft-secondary btn-sm"
+                              (click)="openModal(producerModal, 'edit', row)"
+                              title="Editar">
+                        <i class="mdi mdi-pencil-outline"></i>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+</div>
+
+<!-- Modal Agregar/Actualizar Productor -->
+<ng-template #producerModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title fs-15">{{ editingProducer() ? 'Editar productor' : 'Agregar productor' }}</h5>
+    <button type="button" class="btn-close btn-close-sm" aria-label="Cerrar" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body p-4">
+    <p class="text-muted fs-13 mb-3">
+      Completa el formulario y guarda. Se crea o actualiza el registro asociado a tu usuario.
+    </p>
+
+    @if (producerError()) {
+      <div class="alert alert-danger alert-dismissible fade show py-2 fs-13" role="alert">
+        {{ producerError() }}
+        <button type="button" class="btn-close btn-close-sm" aria-label="Cerrar" (click)="clearError()"></button>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submitProducer()">
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">Sector <span class="text-danger">*</span></label>
+          <select class="form-select" formControlName="sector_id"
+                  [class.is-invalid]="form.controls.sector_id.touched && form.controls.sector_id.invalid">
+            <option value="">— Seleccione —</option>
+            @for (s of sectors(); track s.id) {
+              <option [value]="s.id">{{ s.nombre }}</option>
+            }
+          </select>
+          @if (form.controls.sector_id.touched && form.controls.sector_id.invalid) {
+            <div class="invalid-feedback">Seleccione un sector.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">Razón social <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="razon_social"
+                 [class.is-invalid]="form.controls.razon_social.touched && form.controls.razon_social.invalid" />
+          @if (form.controls.razon_social.touched && form.controls.razon_social.invalid) {
+            <div class="invalid-feedback">Mínimo 2 caracteres.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">NIT <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="nit"
+                 [class.is-invalid]="form.controls.nit.touched && form.controls.nit.invalid" />
+          @if (form.controls.nit.touched && form.controls.nit.invalid) {
+            <div class="invalid-feedback">Mínimo 3 caracteres.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">Departamento <span class="text-danger">*</span></label>
+          <select class="form-select" formControlName="departamento"
+                  [class.is-invalid]="form.controls.departamento.touched && form.controls.departamento.invalid">
+            <option value="">— Seleccione —</option>
+            @for (d of COLOMBIA_DEPTOS; track d) {
+              <option [value]="d">{{ d }}</option>
+            }
+          </select>
+          @if (form.controls.departamento.touched && form.controls.departamento.invalid) {
+            <div class="invalid-feedback">Seleccione un departamento.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">Ciudad / Municipio <span class="text-danger">*</span></label>
+          <select class="form-select" formControlName="ciudad"
+                  [class.is-invalid]="form.controls.ciudad.touched && form.controls.ciudad.invalid">
+            <option value="">— Seleccione —</option>
+            @for (c of availableCities(); track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+          @if (form.controls.ciudad.touched && form.controls.ciudad.invalid) {
+            <div class="invalid-feedback">Seleccione una ciudad.</div>
+          }
+        </div>
+        <div class="col-md-12 col-lg-8">
+          <label class="form-label fs-13 mb-1">Dirección <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="direccion"
+                 [class.is-invalid]="form.controls.direccion.touched && form.controls.direccion.invalid" />
+          @if (form.controls.direccion.touched && form.controls.direccion.invalid) {
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">Correo <span class="text-danger">*</span></label>
+          <input type="email" class="form-control" formControlName="correo"
+                 [class.is-invalid]="form.controls.correo.touched && form.controls.correo.invalid" />
+          @if (form.controls.correo.touched && form.controls.correo.invalid) {
+            <div class="invalid-feedback">Ingrese un correo electrónico válido.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">Contacto <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="contacto"
+                 [class.is-invalid]="form.controls.contacto.touched && form.controls.contacto.invalid" />
+          @if (form.controls.contacto.touched && form.controls.contacto.invalid) {
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">Responsable <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" formControlName="nombre_responsable"
+                 [class.is-invalid]="form.controls.nombre_responsable.touched && form.controls.nombre_responsable.invalid" />
+          @if (form.controls.nombre_responsable.touched && form.controls.nombre_responsable.invalid) {
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">Tipo <span class="text-danger">*</span></label>
+          <select class="form-select" formControlName="tipo"
+                  [class.is-invalid]="form.controls.tipo.touched && form.controls.tipo.invalid">
+            <option value="">— Seleccione —</option>
+            <option [value]="TipoProductor.Fabricante">Fabricante</option>
+            <option [value]="TipoProductor.Importador">Importador</option>
+          </select>
+          @if (form.controls.tipo.touched && form.controls.tipo.invalid) {
+            <div class="invalid-feedback">Seleccione un tipo.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">Cuenta con plan <span class="text-danger">*</span></label>
+          <select class="form-select" formControlName="cuenta_con_plan"
+                  [class.is-invalid]="form.controls.cuenta_con_plan.touched && form.controls.cuenta_con_plan.invalid">
+            <option value="">— Seleccione —</option>
+            <option [value]="CuentaConPlan.Individual">Individual</option>
+            <option [value]="CuentaConPlan.Colectivo">Colectivo</option>
+            <option [value]="CuentaConPlan.No">No</option>
+          </select>
+          @if (form.controls.cuenta_con_plan.touched && form.controls.cuenta_con_plan.invalid) {
+            <div class="invalid-feedback">Seleccione una opción.</div>
+          }
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label class="form-label fs-13 mb-1">En incumplimiento REP</label>
+          <select class="form-select" formControlName="en_incumplimiento_rep">
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Sí</option>
+          </select>
+        </div>
+        @if (obligations().length > 0) {
+          <div class="col-12">
+            <label class="form-label fs-13 mb-1 fw-semibold">Obligaciones normativas aplicables</label>
+            <div class="row g-2 mt-1">
+              @for (o of obligations(); track o.id; let i = $index) {
+                <div class="col-md-6">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [id]="'oblig-' + i"
+                      [checked]="selectedObligations().has(o.name)"
+                      (change)="toggleObligation(o.name)"
+                    />
+                    <label class="form-check-label fs-13" [for]="'oblig-' + i">{{ o.name }}</label>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+      <div class="mt-4 d-flex flex-wrap gap-2 justify-content-end">
+        <button type="button" class="btn btn-light btn-sm" (click)="modal.dismiss('Cancel click')">Cancelar</button>
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+          }
+          Guardar productor
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

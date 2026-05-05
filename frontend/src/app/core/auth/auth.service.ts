@@ -38,6 +38,11 @@ export class AuthService {
   readonly canAccessSoftware = computed(() => this.isSuperAdmin() || ['demo_indv', 'demo_col', 'demo_esg'].includes(this.planTypeSignal() ?? ''));
   readonly canAccessMarketplace = computed(() => this.isSuperAdmin() || ['demo_col', 'demo_esg'].includes(this.planTypeSignal() ?? ''));
   readonly canAccessEsg = computed(() => this.isSuperAdmin() || this.planTypeSignal() === 'demo_esg');
+  readonly canAccessRep = computed(
+    () => this.user()?.is_superuser === true
+      || this.user()?.plan_type === 'demo_rep'
+      || this.user()?.plan_type === 'demo_col'
+  );
 
   login(email: string, password: string, rememberMe = false): Observable<TokenResponse> {
     this.store.dispatch(AuthActions.login({ email, password, rememberMe }));

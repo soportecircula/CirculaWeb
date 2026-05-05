@@ -9,6 +9,8 @@ from app.db.session import engine
 from app.models.impact_metric import ImpactMetric
 from app.models.user import User
 from app.schemas.user import UserCreate
+from app.models.sector import Sector
+from app.models.obligation import NormativeObligation
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -82,9 +84,55 @@ def _ensure_impact_metrics(session: Session) -> None:
     session.commit()
 
 
+_SECTORS_SEED = [
+    "Alimentos y bebidas",
+    "Cosméticos y cuidado personal",
+    "Farmacéutico",
+    "Limpieza del hogar",
+    "Electrónica y tecnología",
+    "Textil y confección",
+    "Agroindustrial",
+    "Construcción",
+    "Automotriz",
+    "Bebidas alcohólicas",
+    "Retail y distribución",
+]
+
+def _ensure_sectors(session: Session) -> None:
+    for nombre in _SECTORS_SEED:
+        existing = session.scalars(
+            select(Sector).where(Sector.nombre == nombre)
+        ).first()
+        if not existing:
+            session.add(Sector(nombre=nombre, es_predefinido=True))
+            logger.info("Sector '%s' created", nombre)
+    session.commit()
+
+
+_OBLIGATIONS_SEED = [
+    "Envases y empaques (Res. 1407)",
+    "Plásticos de un solo uso (Ley 2232)",
+    "Botellas PET agua/bebidas",
+    "PEAD frascos higiene personal",
+]
+
+
+def _ensure_obligations(session: Session) -> None:
+    for name in _OBLIGATIONS_SEED:
+        existing = session.scalars(
+            select(NormativeObligation).where(NormativeObligation.name == name)
+        ).first()
+        if not existing:
+            session.add(NormativeObligation(name=name, is_predefined=True))
+            logger.info("Obligation '%s' created", name)
+    session.commit()
+
+
 def init_db(session: Session) -> None:
     _ensure_superuser(session)
     _ensure_impact_metrics(session)
+    _ensure_sectors(session)
+    _ensure_obligations(session)
 
 
 def init() -> None:

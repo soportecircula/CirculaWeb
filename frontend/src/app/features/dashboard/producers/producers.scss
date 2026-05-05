@@ -1,0 +1,107 @@
+// Estilos de página productores: tokens Circula expuestos en :root desde
+// `src/assets/scss/custom.scss` (valores base en `src/assets/scss/_variables.scss`,
+// alineados con el tema Velzon en `velzon/src/assets/scss/`).
+//
+// No importamos el bundle completo del tema aquí para evitar duplicar CSS;
+// usamos las variables CSS globales que ya carga `app.scss`.
+
+:host {
+  display: block;
+}
+
+.producers-page {
+  color: var(--circula-text-dark);
+
+  .page-title-box {
+    h4 {
+      color: var(--circula-text-dark);
+    }
+
+    p.text-muted {
+      color: var(--circula-text-muted);
+    }
+  }
+
+  h5,
+  .card-title {
+    color: var(--circula-text-dark);
+  }
+
+  h6.text-dark {
+    color: var(--circula-text-dark) !important;
+  }
+
+  p.text-muted,
+  .text-muted {
+    color: var(--circula-text-muted);
+  }
+
+  .card {
+    background-color: var(--circula-white);
+    border-color: var(--circula-border-subtle);
+    box-shadow: 0 0.125rem 0.25rem rgba(var(--circula-text-dark-rgb), 0.045);
+  }
+
+  .form-label {
+    color: var(--circula-text-dark);
+  }
+
+  .form-control,
+  .form-select {
+    border-color: var(--circula-border-subtle);
+    background-color: var(--circula-white);
+    color: var(--circula-text-dark);
+
+    &::placeholder {
+      color: var(--circula-text-muted);
+    }
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: var(--circula-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--circula-primary-rgb), 0.18);
+  }
+
+  .form-check-label {
+    color: var(--circula-text-dark);
+  }
+
+  code.fs-12 {
+    color: var(--circula-primary-darker);
+    background-color: var(--circula-highlight-bg);
+    border: 1px solid rgba(var(--circula-border-subtle-rgb), 0.65);
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+  }
+
+  // Prefijo del tema Velzon/Bootstrap en CirculaWeb: `vz-` (ver `_variables.scss`).
+  .table {
+    --vz-table-bg: var(--circula-white);
+    --vz-table-color: var(--circula-text-dark);
+    --vz-table-border-color: var(--circula-border-subtle);
+
+    thead.table-light th {
+      color: var(--circula-text-dark);
+      background-color: var(--circula-highlight-bg) !important;
+      border-color: var(--circula-border-subtle);
+    }
+
+    tbody td {
+      border-color: var(--circula-border-subtle);
+    }
+  }
+
+  .table-hover > tbody > tr:hover > * {
+    --vz-table-color-state: var(--circula-text-dark);
+    --vz-table-bg-state: var(--circula-bg-sky);
+  }
+
+  .spinner-border.text-primary {
+    color: var(--circula-primary) !important;
+  }
+
+  .text-center.py-5.text-muted {
+    color: var(--circula-text-muted);
+  }
+}

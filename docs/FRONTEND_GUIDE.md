@@ -42,8 +42,10 @@ frontend/src/
 │   ├── shared/components/
 │   │   └── toast-container/
 │   └── store/
-│       ├── Authentication/  # actions, effects, reducer, selectors
-│       └── Layout/          # actions, effects, reducer, selectors
+│       ├── Authentication/  # actions, effects, reducer, selectors (auth)
+│       ├── Layout/          # actions, effects, reducer, selectors (UI)
+│       ├── ImpactMetrics/   # métricas de impacto (landing)
+│       └── Contact/         # requests del dashboard, slots calendario, envío formulario
 └── client/                  # generado por ng-openapi (NO editar)
 ```
 
@@ -101,12 +103,242 @@ auth.isLoading()       // boolean
 
 ## Store NgRx
 
+### Regla general
+
+**Todo dato que provenga del backend debe vivir en el store, no en el componente.**
+
+| ¿Dónde va? | Criterio |
+|---|---|
+| **Store** | Datos de API, loading state, error state de llamadas HTTP |
+| **Local (`signal`)** | Estado puro de UI: toggles de visibilidad, modales, navegación de fecha, validación de formulario |
+
+Un componente que necesite datos del backend **nunca** inyecta `AlgunService` directamente para hacer HTTP. Despacha una action y lee del store con `selectSignal`.
+
+---
+
+### Stores disponibles
+
+| Store | Feature key | Sub-estados |
+|---|---|---|
+| `Authentication` | `auth` | `user`, `loading`, `error`, `initialized` |
+| `Layout` | `layout` | `layoutType`, `mode`, `sidebarSize`, ... |
+| `ImpactMetrics` | `impactMetrics` | `metrics`, `loading`, `error` |
+| `Contact` | `contact` | `requests`, `slots`, `submission` |
+
+---
+
+### Estructura de archivos de un store
+
+```
+store/NombreFeature/
+├── nombre-feature.models.ts    → interfaz de estado
+├── nombre-feature.actions.ts   → createAction con props
+├── nombre-feature.reducer.ts   → createReducer con on()
+├── nombre-feature.selectors.ts → createFeatureSelector + createSelector
+└── nombre-feature.effects.ts   → @Injectable() class con createEffect
+```
+
+Registrar en `store/index.ts` y `app.config.ts`:
+
+```typescript
+// store/index.ts
+export interface RootReducerState {
+  // ... existentes
+  nombreFeature: NombreFeatureState;
+}
+export const rootReducer = {
+  // ... existentes
+  nombreFeature: nombreFeatureReducer,
+};
+
+// app.config.ts
+provideEffects(..., NombreFeatureEffects),
+```
+
+---
+
+### Patrón de un store completo (ejemplo: ImpactMetrics)
+
+**models.ts**
+```typescript
+import { ImpactMetricRead } from '../../../client/models';
+
+export interface ImpactMetricsState {
+  metrics: ImpactMetricRead[];
+  loading: boolean;
+  error: boolean;
+}
+```
+
+**actions.ts**
+```typescript
+import { createAction, props } from '@ngrx/store';
+import { ImpactMetricRead } from '../../../client/models';
+
+export const loadMetrics = createAction('[ImpactMetrics] Load Metrics');
+export const loadMetricsSuccess = createAction(
+  '[ImpactMetrics] Load Metrics Success',
+  props<{ metrics: ImpactMetricRead[] }>(),
+);
+export const loadMetricsFailure = createAction('[ImpactMetrics] Load Metrics Failure');
+```
+
+**reducer.ts**
+```typescript
+import { createReducer, on } from '@ngrx/store';
+import { ImpactMetricsState } from './impact-metrics.models';
+import * as Actions from './impact-metrics.actions';
+
+export const initialState: ImpactMetricsState = { metrics: [], loading: false, error: false };
+
+export const impactMetricsReducer = createReducer(
+  initialState,
+  on(Actions.loadMetrics,        (state) => ({ ...state, loading: true, error: false })),
+  on(Actions.loadMetricsSuccess, (state, { metrics }) => ({ ...state, metrics, loading: false })),
+  on(Actions.loadMetricsFailure, (state) => ({ ...state, loading: false, error: true })),
+);
+```
+
+**selectors.ts**
+```typescript
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { ImpactMetricsState } from './impact-metrics.models';
+
+export const selectImpactMetricsState = createFeatureSelector<ImpactMetricsState>('impactMetrics');
+export const selectMetrics        = createSelector(selectImpactMetricsState, (s) => s.metrics);
+export const selectMetricsLoading = createSelector(selectImpactMetricsState, (s) => s.loading);
+export const selectMetricsError   = createSelector(selectImpactMetricsState, (s) => s.error);
+```
+
+**effects.ts**
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, map, of, switchMap } from 'rxjs';
+import { ImpactMetricsService } from '../../../client/services';
+import * as ImpactMetricsActions from './impact-metrics.actions';
+
+@Injectable()
+export class ImpactMetricsEffects {
+  private readonly actions$ = inject(Actions);
+  private readonly service  = inject(ImpactMetricsService);
+
+  loadMetrics$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ImpactMetricsActions.loadMetrics),
+      switchMap(() =>
+        this.service.impactMetricsGetImpactMetrics().pipe(
+          map((metrics) => ImpactMetricsActions.loadMetricsSuccess({ metrics })),
+          catchError(()  => of(ImpactMetricsActions.loadMetricsFailure())),
+        ),
+      ),
+    ),
+  );
+}
+```
+
+---
+
+### Uso en un componente
+
+```typescript
+import { Store } from '@ngrx/store';
+import * as ImpactMetricsActions from '../../store/ImpactMetrics/impact-metrics.actions';
+import { selectMetrics, selectMetricsLoading } from '../../store/ImpactMetrics/impact-metrics.selectors';
+
+export class MiComponente implements OnInit {
+  private readonly store = inject(Store);
+
+  // Señales reactivas del store (OnPush compatible)
+  readonly metrics = this.store.selectSignal(selectMetrics);
+  readonly loading = this.store.selectSignal(selectMetricsLoading);
+
+  ngOnInit(): void {
+    this.store.dispatch(ImpactMetricsActions.loadMetrics());
+  }
+}
+```
+
+El template usa los signals igual que cualquier signal local: `{{ loading() }}`, `@for (m of metrics())`.
+
+---
+
+### Operadores RxJS en effects
+
+| Operador | Cuándo usarlo |
+|---|---|
+| `exhaustMap` | Acciones que no deben repetirse mientras hay una en curso (load, submit de formulario) |
+| `switchMap` | Acciones que cancelan la petición anterior (búsquedas, cargas parametrizadas como slots por fecha) |
+| `mergeMap` | Acciones independientes por id (aprobar/rechazar items distintos en paralelo) |
+
+---
+
+### Effects de solo side-effects (sin dispatch)
+
+Para toasts de error o navegación, usar `{ dispatch: false }`:
+
+```typescript
+loadRequestsFailure$ = createEffect(
+  () =>
+    this.actions$.pipe(
+      ofType(ContactActions.loadRequestsFailure),
+      tap(({ error }) => this.notif.error(error)),
+    ),
+  { dispatch: false },
+);
+```
+
+---
+
+### Store Contact — sub-dominios
+
+El store `contact` tiene tres secciones independientes:
+
+| Sub-estado | Selector raíz | Uso |
+|---|---|---|
+| `requests` | `selectContactRequests` | Lista de solicitudes del dashboard admin |
+| `slots` | `selectContactSlots` | Slots disponibles para el calendario |
+| `submission` | `selectContactSubmission` | Estado del envío del formulario de contacto |
+
+Selectores disponibles:
+```typescript
+import {
+  // Requests
+  selectRequestItems, selectRequestsLoading, selectProcessingId,
+  // Slots
+  selectAvailableSlots, selectSlotsLoading, selectSelectedDate,
+  // Submission
+  selectSubmissionLoading, selectSubmissionSuccess, selectSubmissionErrorMsg,
+} from '../../store/Contact/contact.selectors';
+```
+
+Actions relevantes:
+```typescript
+import * as ContactActions from '../../store/Contact/contact.actions';
+
+// Requests
+store.dispatch(ContactActions.loadRequests());
+store.dispatch(ContactActions.approveRequest({ id }));
+store.dispatch(ContactActions.rejectRequest({ id, note }));
+store.dispatch(ContactActions.sendInvite({ id }));
+
+// Slots (carga parametrizada — cancela peticiones anteriores con switchMap)
+store.dispatch(ContactActions.loadSlots({ date, requirementType }));
+store.dispatch(ContactActions.clearSlots());
+
+// Submission
+store.dispatch(ContactActions.submitForm({ payload }));
+store.dispatch(ContactActions.resetSubmission()); // llamar en ngOnDestroy
+```
+
+---
+
 ### Auth actions disponibles
 
 ```typescript
 import * as AuthActions from '../../store/Authentication/authentication.actions';
 
-store.dispatch(AuthActions.login({ email, password }));
+store.dispatch(AuthActions.login({ email, password, rememberMe }));
 store.dispatch(AuthActions.logout());
 store.dispatch(AuthActions.updateUserFromProfile({ user }));
 ```
@@ -116,10 +348,25 @@ store.dispatch(AuthActions.updateUserFromProfile({ user }));
 ```typescript
 import * as AuthSelectors from '../../store/Authentication/authentication.selectors';
 
-store.select(AuthSelectors.selectUser)
-store.select(AuthSelectors.selectIsAuthenticated)
-store.select(AuthSelectors.selectIsSuperAdmin)
+store.selectSignal(AuthSelectors.selectUser)
+store.selectSignal(AuthSelectors.selectIsAuthenticated)
+store.selectSignal(AuthSelectors.selectIsSuperAdmin)
+store.selectSignal(AuthSelectors.selectAuthInitialized)
 ```
+
+---
+
+### Debugging con Redux DevTools
+
+`@ngrx/store-devtools` ya está configurado (`maxAge: 25`, deshabilitado en producción).
+
+Instalar la extensión de navegador: **Redux DevTools** (Chrome / Firefox).
+
+Con el servidor corriendo (`bun run start`) → DevTools del navegador → pestaña **Redux**:
+- **State**: árbol completo del store en cualquier momento
+- **Diff**: qué cambió exactamente por cada action
+- **Action**: payload de cada action despachada
+- Time-travel: clic en cualquier action pasada para revertir el estado a ese punto
 
 ---
 

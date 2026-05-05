@@ -16,6 +16,7 @@ import { AuthenticationEffects } from './store/Authentication/authentication.eff
 import { LayoutEffects } from './store/Layout/layout.effects';
 import { ImpactMetricsEffects } from './store/ImpactMetrics/impact-metrics.effects';
 import { ContactEffects } from './store/Contact/contact.effects';
+import { RepEffects }  from './store/rep/rep.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,7 +33,7 @@ export const appConfig: ApplicationConfig = {
       interceptors: [RefreshInterceptor, AuthClientInterceptor],
     }),
     provideStore(rootReducer),
-    provideEffects(AuthenticationEffects, LayoutEffects, ImpactMetricsEffects, ContactEffects),
+    provideEffects(AuthenticationEffects, LayoutEffects, ImpactMetricsEffects, ContactEffects, RepEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
   ],
 };
