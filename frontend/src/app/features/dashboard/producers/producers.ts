@@ -12,14 +12,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-import { firstValueFrom } from 'rxjs';
 import {
   CuentaConPlan,
   ProducerRead,
   ProducerUpsert,
   TipoProductor,
 } from '../../../../client/models';
-import { RepService } from '../../../../client/services/rep.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { COLOMBIA_DEPTOS, getCitiesForDepto } from '../../../core/data/colombia-geo';
 import * as RepActions from '../../../store/rep/rep.actions';
@@ -43,7 +41,6 @@ export class Producers {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly modalService = inject(NgbModal);
-  private readonly repService = inject(RepService);
   readonly auth = inject(AuthService);
 
   readonly TipoProductor = TipoProductor;
@@ -64,10 +61,6 @@ export class Producers {
   // Modal mode
   readonly editingProducer = signal<ProducerRead | null>(null);
 
-  // Sector "Otro" state
-  readonly creandoSector = signal(false);
-  readonly otroSectorError = signal<string | null>(null);
-
   // Can the current user add another producer?
   readonly canAddProducer = computed(() => {
     if (this.auth.isSuperAdmin()) return true;
@@ -76,9 +69,10 @@ export class Producers {
   });
 
   readonly sectorNombre = computed(() => {
-    const sectorId = this.producer()?.sector_id;
-    if (!sectorId) return null;
-    return this.sectors().find((s) => s.id === sectorId)?.nombre ?? null;
+    const p = this.producer();
+    if(!p) return null;
+    if (p.sector_id) return this.sectors().find((s)=> s.id === p.sector_id)?.nombre ?? null;
+    return p.other_sector ?? null;
   });
 
   readonly tableRows = computed(() => this.myProducers());
@@ -186,12 +180,12 @@ export class Producers {
       cuenta_con_plan: '',
     });
     this.selectedObligations.set(new Set());
-    this.otroSectorError.set(null);
   }
 
   private _patchForm(p: ProducerRead): void {
     this.form.patchValue({
-      sector_id: p.sector_id ?? '',
+      sector_id: p.other_sector ? this.OTRO_SECTOR_ID : (p.sector_id ?? ''),
+      otro_sector_nombre: p.other_sector ?? '',
       razon_social: p.razon_social,
       nit: p.nit,
       ciudad: p.ciudad ?? '',
@@ -204,13 +198,13 @@ export class Producers {
       cuenta_con_plan: p.cuenta_con_plan ?? '',
       en_incumplimiento_rep: p.en_incumplimiento_rep ?? false,
     });
-    this.selectedObligations.set(new Set(p.obligaciones_normativas ?? []));
+    this.selectedObligations.set(new Set((p.obligaciones_normativas ?? []).map(o => o.id)));
   }
 
-  toggleObligation(name: string): void {
+  toggleObligation(id: string): void {
     this.selectedObligations.update((set) => {
       const next = new Set(set);
-      next.has(name) ? next.delete(name) : next.add(name);
+      next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
   }
@@ -219,10 +213,9 @@ export class Producers {
     this.store.dispatch(RepActions.loadMyProducers());
   }
 
-  sectorNombreForRow(row: { sector_id?: string | null }): string {
-    const id = row.sector_id;
-    if (!id) return '—';
-    return this.sectors().find((s) => s.id === id)?.nombre ?? id;
+  sectorNombreForRow(row: ProducerRead): string {
+    if(row.sector_id) return this.sectors().find((s)=> s.id === row.sector_id)?.nombre ?? '-';
+    return row.other_sector ?? '-';
   }
 
   async submitProducer(): Promise<void> {
@@ -232,28 +225,16 @@ export class Producers {
     }
     const v = this.form.getRawValue();
 
-    let sectorId: string | null = v.sector_id.trim() ? v.sector_id : null;
+    const sectorId = this.isOtroSelected() ? null : (v.sector_id.trim() ||null);
 
-    if (this.isOtroSelected()) {
-      this.creandoSector.set(true);
-      this.otroSectorError.set(null);
-      try {
-        const sector = await firstValueFrom(
-          this.repService.repCreateSector({ nombre: v.otro_sector_nombre.trim() }),
-        );
-        sectorId = sector.id;
-      } catch {
-        this.otroSectorError.set('No se pudo crear el sector. Intente de nuevo.');
-        this.creandoSector.set(false);
-        return;
-      }
-      this.creandoSector.set(false);
-    }
+    const sectorOtro = this.isOtroSelected() ? v.otro_sector_nombre.trim() || null : null;
+
 
     const upsert: ProducerUpsert = {
       razon_social: v.razon_social,
       nit: v.nit,
       sector_id: sectorId,
+      other_sector: sectorOtro,
       ciudad: v.ciudad.trim() || null,
       departamento: v.departamento.trim() || null,
       direccion: v.direccion.trim() || null,
@@ -263,7 +244,7 @@ export class Producers {
       tipo: v.tipo ? (v.tipo as TipoProductor) : null,
       cuenta_con_plan: v.cuenta_con_plan ? (v.cuenta_con_plan as CuentaConPlan) : null,
       en_incumplimiento_rep: v.en_incumplimiento_rep,
-      obligaciones_normativas: this.selectedObligations().size > 0
+      obligation_ids: this.selectedObligations().size > 0
         ? Array.from(this.selectedObligations())
         : null,
     };
@@ -280,6 +261,5 @@ export class Producers {
 
   clearError(): void {
     this.store.dispatch(RepActions.clearProducerError());
-    this.otroSectorError.set(null);
   }
 }

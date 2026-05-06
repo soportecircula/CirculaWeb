@@ -4,19 +4,21 @@ import enum
 import uuid
 
 from sqlalchemy import (
-    JSON,
     Boolean,
+    Column,
     ForeignKey,
     String,
-    UniqueConstraint,  # kept for nit constraint
+    Table,
+    UniqueConstraint,
 )
 from sqlalchemy import (
     Enum as SAEnum,
 )
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 from app.models.base import TimestampMixin
+from app.models.obligation import NormativeObligation
 
 
 class TipoProductor(str, enum.Enum):
@@ -35,21 +37,38 @@ class EstadoProductor(str, enum.Enum):
     inactivo = "inactivo"
 
 
+producer_obligations = Table(
+    "producer_obligations",
+    Base.metadata,
+    Column(
+        "producer_id", ForeignKey("producers.id", ondelete="CASCADE"), primary_key=True
+    ),
+    Column(
+        "obligation_id",
+        ForeignKey("normative_obligations.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+)
+
+
 class Producer(TimestampMixin, Base):
     __tablename__ = "producers"
     __table_args__ = (UniqueConstraint("nit", name="uq_producers_nit"),)
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
 
-    # Relaciones
+    # Relations
     owner_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     sector_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("sectors.id", ondelete="SET NULL"), nullable=True, default=None
     )
+    other_sector: Mapped[str | None] = mapped_column(
+        String(100), nullable=True, default=None
+    )
 
-    # Información empresa
+    # Company info
     razon_social: Mapped[str] = mapped_column(String(200), nullable=False)
     nit: Mapped[str] = mapped_column(String(30), nullable=False)
     ciudad: Mapped[str | None] = mapped_column(String(100), nullable=True, default=None)
@@ -67,7 +86,7 @@ class Producer(TimestampMixin, Base):
         String(200), nullable=True, default=None
     )
 
-    # Clasificación REP
+    # REP classification
     tipo: Mapped[TipoProductor | None] = mapped_column(
         SAEnum(TipoProductor), nullable=True, default=None
     )
@@ -77,11 +96,13 @@ class Producer(TimestampMixin, Base):
     en_incumplimiento_rep: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=False
     )
-    obligaciones_normativas: Mapped[list[str] | None] = mapped_column(
-        JSON, nullable=True, default=None
+    obligaciones_normativas: Mapped[list[NormativeObligation]] = relationship(
+        "NormativeObligation",
+        secondary=producer_obligations,
+        lazy="selectin",
     )
 
-    # Estado
+    # Status
     estado: Mapped[EstadoProductor] = mapped_column(
         SAEnum(EstadoProductor), default=EstadoProductor.activo, nullable=False
     )

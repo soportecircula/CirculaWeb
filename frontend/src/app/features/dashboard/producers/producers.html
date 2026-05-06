@@ -105,7 +105,7 @@
               <p class="text-muted fs-11 fw-semibold text-uppercase mb-1 tracking-wider">Obligaciones normativas</p>
               <div class="d-flex flex-wrap gap-1 mt-1">
                 @for (o of producer()!.obligaciones_normativas!; track o) {
-                  <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-11">{{ o }}</span>
+                  <span class="badge bg-primary-subtle text-primary border border-primary-subtle fs-11">{{ o.name }}</span>
                 }
               </div>
             </div>
@@ -222,9 +222,9 @@
       Completa el formulario y guarda. Se crea o actualiza el registro asociado a tu usuario.
     </p>
 
-    @if (producerError() || otroSectorError()) {
+    @if (producerError()) {
       <div class="alert alert-danger alert-dismissible fade show py-2 fs-13" role="alert">
-        {{ producerError() || otroSectorError() }}
+        {{ producerError() }}
         <button type="button" class="btn-close btn-close-sm" aria-label="Cerrar" (click)="clearError()"></button>
       </div>
     }
@@ -376,8 +376,8 @@
                       class="form-check-input"
                       type="checkbox"
                       [id]="'oblig-' + i"
-                      [checked]="selectedObligations().has(o.name)"
-                      (change)="toggleObligation(o.name)"
+                      [checked]="selectedObligations().has(o.id)"
+                      (change)="toggleObligation(o.id)"
                     />
                     <label class="form-check-label fs-13" [for]="'oblig-' + i">{{ o.name }}</label>
                   </div>
@@ -389,8 +389,8 @@
       </div>
       <div class="mt-4 d-flex flex-wrap gap-2 justify-content-end">
         <button type="button" class="btn btn-light btn-sm" (click)="modal.dismiss('Cancel click')">Cancelar</button>
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving() || creandoSector()">
-          @if (saving() || creandoSector()) {
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving()">
+          @if (saving()) {
             <span class="spinner-border spinner-border-sm me-1" role="status"></span>
           }
           Guardar productor

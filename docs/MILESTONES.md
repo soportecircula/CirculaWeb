@@ -83,12 +83,33 @@
 
 ---
 
-## M1 — Módulo REP inicial
+## M1 — Módulo REP inicial (EN PROGRESO)
 
 **Objetivo**: primer módulo de gestión REP funcional.
 
-### Por definir según requerimientos:
-- [ ] Modelo de Productor (empresa registrada en el sistema REP)
+### Ficha del Productor (COMPLETADO 2026-05-06)
+
+#### Backend
+- [x] Modelo `Producer`: razón social, NIT, ciudad, departamento, dirección, correo, contacto, responsable, tipo (fabricante/importador), cuenta con plan, estado, incumplimiento REP
+- [x] Modelo `Sector` (catálogo predefinido + `es_predefinido` flag)
+- [x] Modelo `NormativeObligation` con seed en `initial_data.py`
+- [x] Tabla de asociación `producer_obligations` (muchos-a-muchos `Producer` ↔ `NormativeObligation`)
+- [x] Campo `other_sector` en `Producer` para sectores no predefinidos (texto libre, no crea sector nuevo)
+- [x] Campo `sector_id` FK a `sectors` (exclusión mutua con `other_sector` vía `model_validator`)
+- [x] Endpoints: `GET/PUT /rep/producers/me`, `GET/POST/PUT /rep/producers`, `GET/PATCH /rep/admin/producers/{id}`
+- [x] Endpoints catálogo: `GET /rep/sectors`, `POST /rep/sectors`, `GET /rep/obligations`
+- [x] CRUD con helper `_apply_obligations()` para manejar la relación M2M
+
+#### Frontend
+- [x] Vista `/dashboard/producers` con tarjetas de info + tabla de productores
+- [x] Modal agregar/editar con todos los campos del productor
+- [x] Dropdown de sector con opción "— Otro —" → campo de texto libre (`other_sector`)
+- [x] Checkboxes de obligaciones normativas vinculados por ID (no por nombre)
+- [x] Selector de departamento → ciudades dinámicas (`colombia-geo.ts`)
+- [x] NgRx store `rep`: sectors, obligations, producers (loading, saving, error)
+- [x] `canAddProducer` controlado por plan: `demo_col` y superadmin → N productores; resto → máximo 1
+
+### Por implementar:
 - [ ] Reporte de volúmenes (declaración de productos puestos en mercado)
 - [ ] Gestión de metas REP
 - [ ] Panel de cumplimiento

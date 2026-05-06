@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+import uuid
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    EmailStr,
+    Field,
+    field_validator,
+    model_validator,
+)
 
 from app.models.producer import CuentaConPlan, EstadoProductor, TipoProductor
 
@@ -37,6 +45,7 @@ class ProducerRead(BaseModel):
     id: UUID
     owner_id: UUID
     sector_id: UUID | None = None
+    other_sector: str | None = None
     razon_social: str
     nit: str
     ciudad: str | None = None
@@ -48,13 +57,13 @@ class ProducerRead(BaseModel):
     tipo: TipoProductor | None = None
     cuenta_con_plan: CuentaConPlan | None = None
     en_incumplimiento_rep: bool
-    obligaciones_normativas: list[str] | None = None
+    obligaciones_normativas: list[NormativeObligationRead] = []
     estado: EstadoProductor
     model_config = ConfigDict(from_attributes=True)
 
 
 class ProducerUpsert(BaseModel):
-    """Body para PUT /rep/producers/me — crea o actualiza el productor propio."""
+    """Body for PUT /rep/producers/me — creates or updates the own producer."""
 
     sector_id: UUID | None = Field(
         default=None,
@@ -64,6 +73,14 @@ class ProducerUpsert(BaseModel):
         ),
         examples=["550e8400-e29b-41d4-a716-446655440000"],
     )
+
+    other_sector: str | None = Field(default=None, max_length=100)
+
+    @model_validator(mode="after")
+    def mutual_exclusion(self) -> ProducerUpsert:
+        if self.other_sector and self.sector_id:
+            self.sector_id = None
+        return self
 
     @field_validator("sector_id", mode="before")
     @classmethod
@@ -92,10 +109,10 @@ class ProducerUpsert(BaseModel):
     tipo: TipoProductor | None = None
     cuenta_con_plan: CuentaConPlan | None = None
     en_incumplimiento_rep: bool = False
-    obligaciones_normativas: list[str] | None = None
+    obligation_ids: list[uuid.UUID] | None = None
 
 
 class ProducerAdminUpdate(ProducerUpsert):
-    """Body para PATCH /rep/admin/producers/{id} — incluye cambio de estado."""
+    """Body for PATCH /rep/admin/producers/{id} — includes status change."""
 
     estado: EstadoProductor = EstadoProductor.activo

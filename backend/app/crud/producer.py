@@ -3,8 +3,22 @@ import uuid
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.models.obligation import NormativeObligation
 from app.models.producer import Producer
 from app.schemas.rep import ProducerAdminUpdate, ProducerUpsert
+
+
+def _apply_obligations(
+    session: Session, producer: Producer, ids: list[uuid.UUID] | None
+) -> None:
+    if not ids:
+        producer.obligaciones_normativas = []
+        return
+    producer.obligaciones_normativas = list(
+        session.scalars(
+            select(NormativeObligation).where(NormativeObligation.id.in_(ids))
+        ).all()
+    )
 
 
 def get_producer_by_owner(session: Session, owner_id: uuid.UUID) -> Producer | None:
@@ -14,18 +28,21 @@ def get_producer_by_owner(session: Session, owner_id: uuid.UUID) -> Producer | N
 
 
 def get_producers_by_owner(session: Session, owner_id: uuid.UUID) -> list[Producer]:
-    return list(session.scalars(
-        select(Producer).where(Producer.owner_id == owner_id)
-    ).all())
+    return list(
+        session.scalars(select(Producer).where(Producer.owner_id == owner_id)).all()
+    )
 
 
 def create_producer(
     session: Session, owner_id: uuid.UUID, data: ProducerUpsert
 ) -> Producer:
     producer = Producer(owner_id=owner_id)
-    for field, value in data.model_dump(exclude_unset=False).items():
+    data_dict = data.model_dump(exclude_unset=False, exclude={"obligation_ids"})
+    for field, value in data_dict.items():
         setattr(producer, field, value)
     session.add(producer)
+    session.flush()
+    _apply_obligations(session, producer, data.obligation_ids)
     session.commit()
     session.refresh(producer)
     return producer
@@ -34,8 +51,10 @@ def create_producer(
 def update_producer_by_id(
     session: Session, producer: Producer, data: ProducerUpsert
 ) -> Producer:
-    for field, value in data.model_dump(exclude_unset=False).items():
+    data_dict = data.model_dump(exclude_unset=False, exclude={"obligation_ids"})
+    for field, value in data_dict.items():
         setattr(producer, field, value)
+    _apply_obligations(session, producer, data.obligation_ids)
     session.commit()
     session.refresh(producer)
     return producer
@@ -60,10 +79,12 @@ def upsert_producer(
     if producer is None:
         producer = Producer(owner_id=owner_id)
         session.add(producer)
+        session.flush()
 
-    for field, value in data.model_dump(exclude_unset=False).items():
+    data_dict = data.model_dump(exclude_unset=False, exclude={"obligation_ids"})
+    for field, value in data_dict.items():
         setattr(producer, field, value)
-
+    _apply_obligations(session, producer, data.obligation_ids)
     session.commit()
     session.refresh(producer)
     return producer
@@ -72,8 +93,10 @@ def upsert_producer(
 def admin_update_producer(
     session: Session, producer: Producer, data: ProducerAdminUpdate
 ) -> Producer:
-    for field, value in data.model_dump(exclude_unset=False).items():
+    data_dict = data.model_dump(exclude_unset=False, exclude={"obligation_ids"})
+    for field, value in data_dict.items():
         setattr(producer, field, value)
+    _apply_obligations(session, producer, data.obligation_ids)
     session.commit()
     session.refresh(producer)
     return producer

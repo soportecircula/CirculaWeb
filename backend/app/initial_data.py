@@ -111,9 +111,8 @@ def _ensure_sectors(session: Session) -> None:
 
 _OBLIGATIONS_SEED = [
     "Envases y empaques (Res. 1407)",
-    "Plásticos de un solo uso (Ley 2232)",
-    "Botellas PET agua/bebidas",
-    "PEAD frascos higiene personal",
+    "Envases y empaques (Res. 0803)",
+    "Plásticos de un solo uso (Ley 2232)",    
 ]
 
 

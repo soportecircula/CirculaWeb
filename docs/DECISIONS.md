@@ -182,14 +182,27 @@ Formato:
 - Motivo: el módulo REP es de autogestión — cada empresa (usuario) gestiona sus propios productores. El superadmin también puede ser una empresa con sus propios productores. No hay requerimiento de auditoría global.
 - Impacto: `GET /rep/producers` siempre filtra por `owner_id = current_user.id`. El store `allProducers` permanece en el modelo de estado pero no se usa en la vista actual.
 
-## 2026-05-05 — REP: creación de sector personalizado ("Otro") desde el modal de productor
+## 2026-05-06 — REP: "Otro sector" se guarda como texto libre en el productor
 
-- Decisión: el dropdown de sector incluye una opción "— Otro —". Al seleccionarla aparece un campo de texto; al guardar, el componente llama `RepService.repCreateSector()` directamente (sin pasar por el NgRx store) antes de despachar el upsert del productor.
-- Alternativas consideradas: añadir una nueva action/effect al store para el flujo de dos pasos (crear sector → guardar productor); mostrar un modal adicional para crear sectores.
-- Motivo: es una operación de un solo paso, prerrequisito inmediato del submit. Añadir una action al store solo para esto aumentaría la complejidad sin beneficio real. La excepción a la regla "todo por el store" aplica únicamente a llamadas síncronas de preparación que no producen estado compartido entre componentes.
+- Decisión: al seleccionar "— Otro —" en el dropdown de sector y escribir un nombre personalizado, el valor se guarda en el campo `other_sector` del propio productor. **No se crea un nuevo registro en la tabla `sectors`**.
+- Alternativas consideradas: crear un sector con `es_predefinido=False` y usar su UUID (implementación anterior descartada).
+- Motivo: crear sectores desde texto libre del usuario contamina el catálogo de sectores predefinidos con entradas no estandarizadas (ej. "Plásticos", "plasticos" y "Plastico" quedarían como tres sectores distintos). El catálogo de sectores debe mantenerse limpio. El nombre personalizado es solo un dato informativo del productor.
 - Impacto:
-  - `producers.ts`: `RepService` inyectado directamente; `submitProducer()` convertido a `async`; `firstValueFrom()` para esperar la respuesta del sector antes de continuar.
-  - El backend usa `get_or_create_sector()` (upsert por nombre), así que nombres duplicados reutilizan el sector existente.
-  - `es_predefinido=False` en los sectores creados por usuarios.
-  - Control `otro_sector_nombre` con validadores dinámicos (agrega/quita via `effect` según la selección).
-  - **Excepción documentada a la decisión 2026-05-04**: llamadas HTTP directas en el componente son aceptables cuando son pasos de preparación no compartidos (no producen estado que otros componentes consuman).
+  - Nueva columna `other_sector VARCHAR(100)` en `producers` (migración `b37c54b2dfde`).
+  - `ProducerUpsert.other_sector`; `model_validator` de exclusión mutua: si viene `other_sector`, se limpia `sector_id`.
+  - `producers.ts`: eliminados `creandoSector`, `otroSectorError` y la inyección de `RepService`. `submitProducer()` es función síncrona.
+  - `_patchForm()` detecta `p.other_sector` y pre-selecciona `OTRO_SECTOR_ID` en el dropdown para modo edición.
+  - `sectorNombre` computed y `sectorNombreForRow()` usan `other_sector` como fallback cuando `sector_id` es null.
+
+## 2026-05-06 — REP: obligaciones normativas como relación muchos-a-muchos
+
+- Decisión: la asociación entre `Producer` y `NormativeObligation` se implementa mediante una **tabla de asociación `producer_obligations`** con dos claves foráneas. Se elimina el campo JSON `obligaciones_normativas` del modelo `Producer`.
+- Alternativas consideradas: JSON column con UUIDs (descartado — no serializable por Python `json.dumps`, sin integridad referencial); JSON column con nombres (descartado — inconsistencia si el nombre cambia).
+- Motivo: la relación correcta para datos con integridad referencial es una tabla de asociación. Permite joins, filtros por obligación, y garantiza que solo existan UUIDs válidos vinculados al productor. Si se renombra una obligación, todos los productores la reflejan automáticamente.
+- Impacto:
+  - Nueva tabla `producer_obligations(producer_id FK, obligation_id FK)` (migración `c9efc60db78e`).
+  - `Producer.obligaciones_normativas`: `relationship("NormativeObligation", secondary=producer_obligations, lazy="selectin")`.
+  - `ProducerRead.obligaciones_normativas: list[NormativeObligationRead]` — devuelve objetos completos.
+  - `ProducerUpsert.obligation_ids: list[UUID] | None` — recibe IDs para guardar.
+  - CRUD: helper `_apply_obligations()` carga objetos por IDs y los asigna a la relación; todos los métodos de escritura usan `exclude={"obligation_ids"}` en `model_dump()`.
+  - Frontend: `_patchForm()` mapea `p.obligaciones_normativas.map(o => o.id)`. `submitProducer()` envía `obligation_ids`. Template usa `o.name` directamente (no requiere lookup en el store).
