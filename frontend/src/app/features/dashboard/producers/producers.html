@@ -222,9 +222,9 @@
       Completa el formulario y guarda. Se crea o actualiza el registro asociado a tu usuario.
     </p>
 
-    @if (producerError()) {
+    @if (producerError() || otroSectorError()) {
       <div class="alert alert-danger alert-dismissible fade show py-2 fs-13" role="alert">
-        {{ producerError() }}
+        {{ producerError() || otroSectorError() }}
         <button type="button" class="btn-close btn-close-sm" aria-label="Cerrar" (click)="clearError()"></button>
       </div>
     }
@@ -239,9 +239,24 @@
             @for (s of sectors(); track s.id) {
               <option [value]="s.id">{{ s.nombre }}</option>
             }
+            <option [value]="OTRO_SECTOR_ID">— Otro —</option>
           </select>
           @if (form.controls.sector_id.touched && form.controls.sector_id.invalid) {
             <div class="invalid-feedback">Seleccione un sector.</div>
+          }
+          @if (isOtroSelected()) {
+            <div class="mt-2">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="otro_sector_nombre"
+                placeholder="Escribe el nombre del sector..."
+                [class.is-invalid]="form.controls.otro_sector_nombre.touched && form.controls.otro_sector_nombre.invalid"
+              />
+              @if (form.controls.otro_sector_nombre.touched && form.controls.otro_sector_nombre.invalid) {
+                <div class="invalid-feedback">Mínimo 2 caracteres (máx. 100).</div>
+              }
+            </div>
           }
         </div>
         <div class="col-md-6 col-lg-4">
@@ -374,8 +389,8 @@
       </div>
       <div class="mt-4 d-flex flex-wrap gap-2 justify-content-end">
         <button type="button" class="btn btn-light btn-sm" (click)="modal.dismiss('Cancel click')">Cancelar</button>
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving()">
-          @if (saving()) {
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="saving() || creandoSector()">
+          @if (saving() || creandoSector()) {
             <span class="spinner-border spinner-border-sm me-1" role="status"></span>
           }
           Guardar productor

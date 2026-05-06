@@ -37,3 +37,17 @@ body {
   --circula-border-subtle-rgb: #{red($circula-border-subtle)}, #{green($circula-border-subtle)}, #{blue($circula-border-subtle)};
   --circula-white:             #{$circula-white};
 }
+
+[data-bs-theme="dark"] {
+  --circula-text-dark:         #{$body-color-dark};
+  --circula-text-dark-rgb:     #{red($body-color-dark)}, #{green($body-color-dark)}, #{blue($body-color-dark)};
+  --circula-text-muted:        #{$body-secondary-color-dark};
+  --circula-text-muted-rgb:    #{red($body-secondary-color-dark)}, #{green($body-secondary-color-dark)}, #{blue($body-secondary-color-dark)};
+  --circula-bg-subtle:         #{$body-bg-dark};
+  --circula-bg-sky:            #202328;
+  --circula-bg-sky-rgb:        32, 35, 40;
+  --circula-highlight-bg:      #{$body-tertiary-bg-dark};
+  --circula-border-subtle:     #{$border-color-dark};
+  --circula-border-subtle-rgb: #{red($border-color-dark)}, #{green($border-color-dark)}, #{blue($border-color-dark)};
+  --circula-white:             #{$body-secondary-bg-dark};
+}

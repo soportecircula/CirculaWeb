@@ -181,3 +181,15 @@ Formato:
 - Alternativas consideradas: tabla especial para superadmin con todos los productores.
 - Motivo: el módulo REP es de autogestión — cada empresa (usuario) gestiona sus propios productores. El superadmin también puede ser una empresa con sus propios productores. No hay requerimiento de auditoría global.
 - Impacto: `GET /rep/producers` siempre filtra por `owner_id = current_user.id`. El store `allProducers` permanece en el modelo de estado pero no se usa en la vista actual.
+
+## 2026-05-05 — REP: creación de sector personalizado ("Otro") desde el modal de productor
+
+- Decisión: el dropdown de sector incluye una opción "— Otro —". Al seleccionarla aparece un campo de texto; al guardar, el componente llama `RepService.repCreateSector()` directamente (sin pasar por el NgRx store) antes de despachar el upsert del productor.
+- Alternativas consideradas: añadir una nueva action/effect al store para el flujo de dos pasos (crear sector → guardar productor); mostrar un modal adicional para crear sectores.
+- Motivo: es una operación de un solo paso, prerrequisito inmediato del submit. Añadir una action al store solo para esto aumentaría la complejidad sin beneficio real. La excepción a la regla "todo por el store" aplica únicamente a llamadas síncronas de preparación que no producen estado compartido entre componentes.
+- Impacto:
+  - `producers.ts`: `RepService` inyectado directamente; `submitProducer()` convertido a `async`; `firstValueFrom()` para esperar la respuesta del sector antes de continuar.
+  - El backend usa `get_or_create_sector()` (upsert por nombre), así que nombres duplicados reutilizan el sector existente.
+  - `es_predefinido=False` en los sectores creados por usuarios.
+  - Control `otro_sector_nombre` con validadores dinámicos (agrega/quita via `effect` según la selección).
+  - **Excepción documentada a la decisión 2026-05-04**: llamadas HTTP directas en el componente son aceptables cuando son pasos de preparación no compartidos (no producen estado que otros componentes consuman).

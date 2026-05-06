@@ -12,12 +12,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
+import { firstValueFrom } from 'rxjs';
 import {
   CuentaConPlan,
   ProducerRead,
   ProducerUpsert,
   TipoProductor,
 } from '../../../../client/models';
+import { RepService } from '../../../../client/services/rep.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { COLOMBIA_DEPTOS, getCitiesForDepto } from '../../../core/data/colombia-geo';
 import * as RepActions from '../../../store/rep/rep.actions';
@@ -41,11 +43,13 @@ export class Producers {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly modalService = inject(NgbModal);
+  private readonly repService = inject(RepService);
   readonly auth = inject(AuthService);
 
   readonly TipoProductor = TipoProductor;
   readonly CuentaConPlan = CuentaConPlan;
   readonly COLOMBIA_DEPTOS = COLOMBIA_DEPTOS;
+  readonly OTRO_SECTOR_ID = '__otro__';
 
   // Store signals
   readonly saving = this.store.selectSignal(selectProducerSaving);
@@ -59,6 +63,10 @@ export class Producers {
 
   // Modal mode
   readonly editingProducer = signal<ProducerRead | null>(null);
+
+  // Sector "Otro" state
+  readonly creandoSector = signal(false);
+  readonly otroSectorError = signal<string | null>(null);
 
   // Can the current user add another producer?
   readonly canAddProducer = computed(() => {
@@ -79,6 +87,7 @@ export class Producers {
 
   readonly form = this.fb.group({
     sector_id: this.fb.nonNullable.control('', Validators.required),
+    otro_sector_nombre: this.fb.nonNullable.control(''),
     razon_social: this.fb.nonNullable.control('', [
       Validators.required,
       Validators.minLength(2),
@@ -105,7 +114,13 @@ export class Producers {
     { initialValue: this.form.controls.departamento.value },
   );
 
+  private readonly sectorIdValue = toSignal(
+    this.form.controls.sector_id.valueChanges,
+    { initialValue: this.form.controls.sector_id.value },
+  );
+
   readonly availableCities = computed(() => getCitiesForDepto(this.departamentoValue()));
+  readonly isOtroSelected = computed(() => this.sectorIdValue() === this.OTRO_SECTOR_ID);
 
   readonly selectedObligations = signal<Set<string>>(new Set());
 
@@ -121,6 +136,24 @@ export class Producers {
         if (current && !getCitiesForDepto(depto).includes(current)) {
           this.form.controls.ciudad.setValue('', { emitEvent: false });
         }
+      });
+    });
+
+    effect(() => {
+      const isOtro = this.isOtroSelected();
+      untracked(() => {
+        const ctrl = this.form.controls.otro_sector_nombre;
+        if (isOtro) {
+          ctrl.setValidators([
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(100),
+          ]);
+        } else {
+          ctrl.clearValidators();
+          ctrl.setValue('');
+        }
+        ctrl.updateValueAndValidity();
       });
     });
   }
@@ -140,6 +173,7 @@ export class Producers {
     this.form.reset({
       en_incumplimiento_rep: false,
       sector_id: '',
+      otro_sector_nombre: '',
       razon_social: '',
       nit: '',
       ciudad: '',
@@ -152,6 +186,7 @@ export class Producers {
       cuenta_con_plan: '',
     });
     this.selectedObligations.set(new Set());
+    this.otroSectorError.set(null);
   }
 
   private _patchForm(p: ProducerRead): void {
@@ -190,16 +225,35 @@ export class Producers {
     return this.sectors().find((s) => s.id === id)?.nombre ?? id;
   }
 
-  submitProducer(): void {
+  async submitProducer(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     const v = this.form.getRawValue();
+
+    let sectorId: string | null = v.sector_id.trim() ? v.sector_id : null;
+
+    if (this.isOtroSelected()) {
+      this.creandoSector.set(true);
+      this.otroSectorError.set(null);
+      try {
+        const sector = await firstValueFrom(
+          this.repService.repCreateSector({ nombre: v.otro_sector_nombre.trim() }),
+        );
+        sectorId = sector.id;
+      } catch {
+        this.otroSectorError.set('No se pudo crear el sector. Intente de nuevo.');
+        this.creandoSector.set(false);
+        return;
+      }
+      this.creandoSector.set(false);
+    }
+
     const upsert: ProducerUpsert = {
       razon_social: v.razon_social,
       nit: v.nit,
-      sector_id: v.sector_id.trim() ? v.sector_id : null,
+      sector_id: sectorId,
       ciudad: v.ciudad.trim() || null,
       departamento: v.departamento.trim() || null,
       direccion: v.direccion.trim() || null,
@@ -226,5 +280,6 @@ export class Producers {
 
   clearError(): void {
     this.store.dispatch(RepActions.clearProducerError());
+    this.otroSectorError.set(null);
   }
 }

@@ -17,13 +17,25 @@ depends_on = None
 
 
 def upgrade() -> None:
+    # 1. Borrar tablas y tipos existentes
     op.drop_table("producers")
     op.drop_table("sectors")
     for typ in ("tipoproductor", "cuentaconplan", "estadoproductor"):
         op.execute(sa.text(f"DROP TYPE IF EXISTS {typ} CASCADE"))
 
+    # 2. CREAR LOS TIPOS EXPLÍCITAMENTE ANTES DE USARLOS
+    tipoproductor = sa.Enum("fabricante", "importador", name="tipoproductor")
+    cuentaconplan = sa.Enum("individual", "colectivo", "no", name="cuentaconplan")
+    estadoproductor = sa.Enum("activo", "inactivo", name="estadoproductor")
+    
+    tipoproductor.create(op.get_bind())
+    cuentaconplan.create(op.get_bind())
+    estadoproductor.create(op.get_bind())
+
+    # 3. Crear tabla sectors
     op.create_table(
         "sectors",
+        # ... (tu código de sectors igual)
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("nombre", sa.String(length=100), nullable=False),
         sa.Column("es_predefinido", sa.Boolean(), nullable=False),
@@ -32,6 +44,8 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("nombre", name="uq_sectors_nombre"),
     )
+
+    # 4. Crear tabla producers (Asegúrate de usar las variables de arriba)
     op.create_table(
         "producers",
         sa.Column("id", sa.Uuid(), nullable=False),
@@ -45,23 +59,11 @@ def upgrade() -> None:
         sa.Column("correo", sa.String(length=255), nullable=True),
         sa.Column("contacto", sa.String(length=30), nullable=True),
         sa.Column("nombre_responsable", sa.String(length=200), nullable=True),
-        sa.Column(
-            "tipo",
-            sa.Enum("fabricante", "importador", name="tipoproductor"),
-            nullable=True,
-        ),
-        sa.Column(
-            "cuenta_con_plan",
-            sa.Enum("individual", "colectivo", "no", name="cuentaconplan"),
-            nullable=True,
-        ),
+        sa.Column("tipo", tipoproductor, nullable=True), # Usar variable
+        sa.Column("cuenta_con_plan", cuentaconplan, nullable=True), # Usar variable
         sa.Column("en_incumplimiento_rep", sa.Boolean(), nullable=False),
         sa.Column("obligaciones_normativas", sa.JSON(), nullable=True),
-        sa.Column(
-            "estado",
-            sa.Enum("activo", "inactivo", name="estadoproductor"),
-            nullable=False,
-        ),
+        sa.Column("estado", estadoproductor, nullable=False), # Usar variable
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(["owner_id"], ["users.id"], ondelete="CASCADE"),
