@@ -39,7 +39,8 @@
   .card {
     background-color: var(--circula-white);
     border-color: var(--circula-border-subtle);
-    box-shadow: 0 0.125rem 0.25rem rgba(var(--circula-text-dark-rgb), 0.045);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(var(--circula-text-dark-rgb), 0.06);
   }
 
   .form-label {
@@ -104,4 +105,24 @@
   .text-center.py-5.text-muted {
     color: var(--circula-text-muted);
   }
+}
+
+// ─── Validación de campos (modal) ───────────────────────────────────────────
+.has-error .form-control,
+.has-error .form-select {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.1);
+
+  &:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.15);
+  }
+}
+
+.field-error {
+  display: block;
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+  font-weight: 500;
 }

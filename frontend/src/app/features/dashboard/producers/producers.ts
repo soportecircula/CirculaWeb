@@ -8,9 +8,10 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
   CuentaConPlan,
@@ -32,7 +33,7 @@ import {
 
 @Component({
   selector: 'app-producers',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgbTooltip],
   templateUrl: './producers.html',
   styleUrl: './producers.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +42,8 @@ export class Producers {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly modalService = inject(NgbModal);
+  private readonly actions$ = inject(Actions);
+  private modalRef: NgbModalRef | null = null;
   readonly auth = inject(AuthService);
 
   readonly TipoProductor = TipoProductor;
@@ -55,8 +58,8 @@ export class Producers {
   readonly obligations = this.store.selectSignal(selectObligations);
   readonly myProducers = this.store.selectSignal(selectMyProducers);
   readonly myProducersLoading = this.store.selectSignal(selectMyProducersLoading);
-  // First producer for the info cards at top (single-user scenario)
-  readonly producer = computed((): ProducerRead | null => this.myProducers()[0] ?? null);
+  // Producer shown in the info cards — updated when user clicks a table row
+  readonly producer = signal<ProducerRead | null>(null);
 
   // Modal mode
   readonly editingProducer = signal<ProducerRead | null>(null);
@@ -79,6 +82,12 @@ export class Producers {
 
   readonly tableLoading = computed(() => this.myProducersLoading());
 
+  readonly isFormReady = computed(() => {
+    if (this.formStatus() !== 'VALID') return false;
+    if (this.obligations().length > 0 && this.selectedObligations().size === 0) return false;
+    return true;
+  });
+
   readonly form = this.fb.group({
     sector_id: this.fb.nonNullable.control('', Validators.required),
     otro_sector_nombre: this.fb.nonNullable.control(''),
@@ -96,7 +105,7 @@ export class Producers {
     departamento: this.fb.nonNullable.control('', Validators.required),
     direccion: this.fb.nonNullable.control('', Validators.required),
     correo: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
-    contacto: this.fb.nonNullable.control('', Validators.required),
+    contacto: this.fb.nonNullable.control('', [Validators.required, Validators.pattern(/^\d+$/)]),
     nombre_responsable: this.fb.nonNullable.control('', Validators.required),
     tipo: this.fb.nonNullable.control('', Validators.required),
     cuenta_con_plan: this.fb.nonNullable.control('', Validators.required),
@@ -113,6 +122,10 @@ export class Producers {
     { initialValue: this.form.controls.sector_id.value },
   );
 
+  private readonly formStatus = toSignal(this.form.statusChanges, {
+    initialValue: this.form.status,
+  });
+
   readonly availableCities = computed(() => getCitiesForDepto(this.departamentoValue()));
   readonly isOtroSelected = computed(() => this.sectorIdValue() === this.OTRO_SECTOR_ID);
 
@@ -122,6 +135,29 @@ export class Producers {
     this.store.dispatch(RepActions.loadMyProducers());
     this.store.dispatch(RepActions.loadSectors());
     this.store.dispatch(RepActions.loadObligations());
+
+    this.actions$.pipe(
+      ofType(
+        RepActions.saveMyProducerSuccess,
+        RepActions.addProducerSuccess,
+        RepActions.updateProducerByIdSuccess,
+      ),
+      takeUntilDestroyed(),
+    ).subscribe(({ producer }) => {
+      this._resetForm();
+      this.modalRef?.close();
+      this.modalRef = null;
+      this.producer.set(producer);
+    });
+
+    effect(() => {
+      const producers = this.myProducers();
+      untracked(() => {
+        if (this.producer() === null && producers.length > 0) {
+          this.producer.set(producers[0]);
+        }
+      });
+    });
 
     effect(() => {
       const depto = this.departamentoValue();
@@ -160,7 +196,7 @@ export class Producers {
       this._patchForm(row);
     }
 
-    this.modalService.open(content, { size: 'lg', centered: true });
+    this.modalRef = this.modalService.open(content, { size: 'lg', centered: true });
   }
 
   private _resetForm(): void {
@@ -209,6 +245,10 @@ export class Producers {
     });
   }
 
+  selectProducer(row: ProducerRead): void {
+    this.producer.set(row);
+  }
+
   refreshTable(): void {
     this.store.dispatch(RepActions.loadMyProducers());
   }
@@ -244,9 +284,7 @@ export class Producers {
       tipo: v.tipo ? (v.tipo as TipoProductor) : null,
       cuenta_con_plan: v.cuenta_con_plan ? (v.cuenta_con_plan as CuentaConPlan) : null,
       en_incumplimiento_rep: v.en_incumplimiento_rep,
-      obligation_ids: this.selectedObligations().size > 0
-        ? Array.from(this.selectedObligations())
-        : null,
+      obligation_ids: Array.from(this.selectedObligations()),
     };
 
     const editId = this.editingProducer()?.id;
@@ -261,5 +299,21 @@ export class Producers {
 
   clearError(): void {
     this.store.dispatch(RepActions.clearProducerError());
+  }
+
+  hasError(field: string): boolean {
+    const ctrl = this.form.get(field);
+    return !!(ctrl?.invalid && ctrl.touched);
+  }
+
+  getError(field: string): string {
+    const errors = this.form.get(field)?.errors;
+    if (!errors) return '';
+    if (errors['required']) return 'Este campo es obligatorio.';
+    if (errors['minlength']) return `Mínimo ${errors['minlength'].requiredLength} caracteres.`;
+    if (errors['maxlength']) return `Máximo ${errors['maxlength'].requiredLength} caracteres.`;
+    if (errors['email']) return 'Ingresa un correo electrónico válido.';
+    if (errors['pattern']) return 'Solo se permiten números.';
+    return '';
   }
 }

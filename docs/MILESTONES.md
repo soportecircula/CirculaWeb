@@ -108,6 +108,12 @@
 - [x] Selector de departamento → ciudades dinámicas (`colombia-geo.ts`)
 - [x] NgRx store `rep`: sectors, obligations, producers (loading, saving, error)
 - [x] `canAddProducer` controlado por plan: `demo_col` y superadmin → N productores; resto → máximo 1
+- [x] Validaciones frontend: `contacto` solo dígitos (`Validators.pattern`), `correo` formato email, botón deshabilitado hasta formulario completo + mínimo una obligación seleccionada
+- [x] Patrón `hasError(field)` / `getError(field)` en modal (consistente con `resources.ts`)
+- [x] Cierre automático del modal + reset del formulario tras guardado exitoso (via `Actions + ofType + takeUntilDestroyed`)
+- [x] Tooltip en campo "En incumplimiento REP" con mensaje explicativo (`NgbTooltip`)
+- [x] Selección de productor desde tabla → actualiza ficha superior; fila activa resaltada con `table-active`
+- [x] Cards con `border-radius: 16px` alineadas al estilo visual Circula
 
 ### Por implementar:
 - [ ] Reporte de volúmenes (declaración de productos puestos en mercado)

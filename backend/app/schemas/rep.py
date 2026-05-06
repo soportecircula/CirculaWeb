@@ -103,13 +103,20 @@ class ProducerUpsert(BaseModel):
     ciudad: str | None = Field(default=None, max_length=100)
     departamento: str | None = Field(default=None, max_length=100)
     direccion: str | None = Field(default=None, max_length=255)
-    correo: str | None = Field(default=None, max_length=255)
+    correo: EmailStr | None = Field(default=None, max_length=255)
     contacto: str | None = Field(default=None, max_length=30)
+
+    @field_validator("contacto")
+    @classmethod
+    def contacto_solo_numeros(cls, v: str | None) -> str | None:
+        if v is not None and not v.isdigit():
+            raise ValueError("El celular debe contener solo números.")
+        return v
     nombre_responsable: str | None = Field(default=None, max_length=200)
     tipo: TipoProductor | None = None
     cuenta_con_plan: CuentaConPlan | None = None
-    en_incumplimiento_rep: bool = False
-    obligation_ids: list[uuid.UUID] | None = None
+    en_incumplimiento_rep: bool
+    obligation_ids: list[uuid.UUID]
 
 
 class ProducerAdminUpdate(ProducerUpsert):

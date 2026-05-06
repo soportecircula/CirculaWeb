@@ -194,6 +194,52 @@ Formato:
   - `_patchForm()` detecta `p.other_sector` y pre-selecciona `OTRO_SECTOR_ID` en el dropdown para modo edición.
   - `sectorNombre` computed y `sectorNombreForRow()` usan `other_sector` como fallback cuando `sector_id` es null.
 
+## 2026-05-06 — REP: validaciones en ProducerUpsert (backend + frontend)
+
+- Decisión: el campo `contacto` acepta **solo dígitos** y `correo` es validado como email real en el schema Pydantic (`ProducerUpsert`). `en_incumplimiento_rep` y `obligation_ids` son **campos obligatorios sin valor por defecto** — el cliente siempre debe enviarlos explícitamente.
+- Alternativas consideradas: validar solo en frontend (rechazado — el contrato de API debe ser autocontenido); usar `EmailStr` de la stdlib `email-validator` en `correo` (ya estaba importado en el schema, sin dependencia nueva).
+- Motivo: un schema sin validaciones completas permite insertar datos corruptos desde la API directamente (Swagger, scripts, integraciones). El frontend es la primera capa, la API es la segunda.
+- Impacto:
+  - `backend/app/schemas/rep.py`: `correo: EmailStr | None`, `@field_validator("contacto")` que rechaza no-dígitos, `en_incumplimiento_rep: bool` (sin default), `obligation_ids: list[UUID]` (sin default).
+  - `frontend/producers.ts`: `Validators.pattern(/^\d+$/)` en campo `contacto`; `obligation_ids` en el payload siempre envía array (vacío `[]` cuando no hay selección).
+
+## 2026-05-06 — REP: patrón hasError/getError en formularios del dashboard
+
+- Decisión: los formularios del dashboard usan el mismo patrón `hasError(field)` / `getError(field)` que la landing (`resources.ts`). `[class.has-error]` va en el div contenedor; `<span class="field-error">` muestra el mensaje. Se eliminan los bloques `@if` múltiples por campo y el `[class.is-invalid]` de Bootstrap.
+- Alternativas consideradas: mantener `invalid-feedback` de Bootstrap (requiere múltiples bloques `@if` por tipo de error, código repetitivo y difícil de mantener).
+- Motivo: unificar el estilo de validación en toda la aplicación. Un solo punto donde vive el mensaje de error por campo; `getError()` centraliza la lógica de mensajes en español.
+- Impacto:
+  - `producers.ts`: métodos `hasError(field): boolean` y `getError(field): string` con mensajes en español para `required`, `minlength`, `maxlength`, `email` y `pattern`.
+  - `producers.scss`: estilos `.has-error .form-control/.form-select` (borde rojo) y `.field-error` (texto rojo) fuera de `.producers-page` para que apliquen dentro del modal NgBootstrap.
+  - `producers.html`: todos los campos del modal actualizados al nuevo patrón.
+
+## 2026-05-06 — REP: UX del modal de productor (botón, cierre automático, tooltip)
+
+- Decisión: el botón "Guardar productor" permanece **deshabilitado** hasta que el formulario sea válido Y haya al menos una obligación normativa seleccionada (cuando existen en el sistema). Al guardar con éxito el modal se **cierra automáticamente** y el formulario se **resetea**. El campo "En incumplimiento REP" tiene un tooltip explicativo en el `!` del label.
+- Motivo: evitar errores silenciosos (enviar formulario incompleto), mejorar la experiencia eliminando pasos manuales, y dar contexto legal al campo de incumplimiento.
+- Impacto:
+  - `producers.ts`:
+    - `formStatus = toSignal(form.statusChanges)` — necesario porque `form.invalid` no es reactivo como señal Angular; sin esto el `computed` no re-evalúa al cambiar la validez del formulario.
+    - `isFormReady = computed(...)` — combina `formStatus() === 'VALID'` con la validación de obligaciones.
+    - Suscripción a `saveMyProducerSuccess / addProducerSuccess / updateProducerByIdSuccess` via `Actions + ofType + takeUntilDestroyed()` para cerrar modal (`NgbModalRef`) y resetear formulario.
+    - `NgbTooltip` importado en el componente.
+  - `producers.html`: `[disabled]="saving() || !isFormReady()"` en el submit; `ngbTooltip` en el span `!`.
+
+## 2026-05-06 — REP: selección de productor desde tabla actualiza la ficha superior
+
+- Decisión: la "Ficha del productor" muestra el productor **seleccionado en la tabla**, no siempre el primero. Hacer clic en una fila actualiza la ficha. La fila seleccionada se resalta con `table-active`.
+- Alternativas consideradas: mantener `computed(() => myProducers()[0])` (no interactivo); despachar una action de store para `selectedProducer` (overhead para estado de UI puro).
+- Motivo: la ficha superior cobra utilidad real cuando hay múltiples productores. El productor seleccionado es estado de UI local (no necesita NgRx según la regla establecida en la decisión 2026-05-04).
+- Impacto:
+  - `producers.ts`: `producer` cambia de `computed` a `signal<ProducerRead | null>(null)`. Un `effect` lo inicializa con el primer productor cuando llegan los datos. `selectProducer(row)` actualiza la señal. La suscripción de éxito también actualiza `producer` con el productor guardado.
+  - `producers.html`: `<tr (click)="selectProducer(row)" [class.table-active]="producer()?.id === row.id" style="cursor:pointer">`.
+
+## 2026-05-06 — REP: border-radius 16px en cards del dashboard de productores
+
+- Decisión: las cards del módulo REP usan `border-radius: 16px` y sombra `0 8px 32px` para alinearse visualmente con las `hero-card` de la landing page (`border-radius: 20px`). Se usa 16px (no 20px) porque la escala del dashboard es más compacta.
+- Motivo: consistencia visual entre landing y dashboard. Las cards cuadradas del tema Velzon por defecto (~6px) generan discontinuidad perceptual con el estilo Circula.
+- Impacto: `producers.scss` → `.producers-page .card { border-radius: 16px; box-shadow: 0 8px 32px ... }`.
+
 ## 2026-05-06 — REP: obligaciones normativas como relación muchos-a-muchos
 
 - Decisión: la asociación entre `Producer` y `NormativeObligation` se implementa mediante una **tabla de asociación `producer_obligations`** con dos claves foráneas. Se elimina el campo JSON `obligaciones_normativas` del modelo `Producer`.
